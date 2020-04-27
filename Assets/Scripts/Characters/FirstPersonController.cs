@@ -8,7 +8,6 @@ public class FirstPersonController : MonoBehaviour
     [SerializeField] float minimumAxisValueToConsider = 0.25f;
 
     [Header("Collisions")]
-    [SerializeField] BoxCollider boxCollider = default;
     [SerializeField] BoxRaycaster boxRaycaster = default;
     [SerializeField] float movementThreshold = 0.001f;
 
