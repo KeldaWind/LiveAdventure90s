@@ -7,8 +7,8 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
 
     [Header("Main Characters")]
-    [SerializeField] FirstPersonController firstPersonController = default;
     [SerializeField] ThirdPersonController thirdPersonController = default;
+    [SerializeField] FirstPersonController firstPersonController = default;
 
     private void Awake()
     {
@@ -21,10 +21,10 @@ public class GameManager : MonoBehaviour
             Instance = this;
         }
 
-        thirdPersonController.SetFirstPersonRef(firstPersonController);
+        firstPersonController.SetFirstPersonRef(thirdPersonController);
     }
 
     #region Important Values
-    public Vector3 GetCameraWorldPosition => thirdPersonController.GetCameraWorldPosition;
+    public Vector3 GetCameraWorldPosition => firstPersonController.GetCameraWorldPosition;
     #endregion
 }

@@ -1,103 +1,161 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class ThirdPersonController : MonoBehaviour
 {
     [Header("Inputs")]
-    [SerializeField] KeyCode jetpackInput = KeyCode.JoystickButton2;
+    [SerializeField] string horizontalAxis = "ThirdPersonHorizontalAxis";
+    [SerializeField] KeyCode jumpingGamepadInput = KeyCode.JoystickButton0;
+    [SerializeField] KeyCode jumpingKeyboardInput = KeyCode.Space;
+    [SerializeField] float minimumAxisValueToConsider = 0.25f;
 
-    [Header("Important References")]
-    [SerializeField] Camera cameramanCamera = default;
-    FirstPersonController firstPersonController = default;
-    public Vector3 GetCameraWorldPosition => cameramanCamera.transform.position;
+    [Header("Collisions")]
+    [SerializeField] BoxRaycaster boxRaycaster = default;
+    [SerializeField] float movementThreshold = 0.001f;
 
-    public void SetFirstPersonRef(FirstPersonController reference)
+    private void Start()
     {
-        firstPersonController = reference;
+        jumpDurationSystem = new TimerSystem(jumpMaxDuration, EndJumping);
     }
 
+    // Update is called once per frame
     void Update()
     {
-        UpdateJetpackValues(Input.GetKey(jetpackInput));
-        //UpdateAutoFollowValues();
+        HandleActionsInputs();
+        UpdateHorizontalMovementValues(Input.GetAxis(horizontalAxis));
+        UpdateVerticalMovementValues();
 
-        UpdateMovement();
+        Vector3 movement = new Vector3(currentHorizontalSpeed, currentVerticalSpeed, 0) * Time.deltaTime;
+        Move(movement);
+    }
+
+    public void HandleActionsInputs()
+    {
+        if ((Input.GetKeyDown(jumpingGamepadInput) || Input.GetKeyDown(jumpingKeyboardInput)) && IsOnGround)
+        {
+            StartJumping();
+        }
+        else if((Input.GetKeyUp(jumpingGamepadInput) || Input.GetKeyUp(jumpingKeyboardInput)) && isJumping)
+        {
+            EndJumping();
+        }
     }
 
     #region Global Movement
-    public void UpdateMovement()
+    void Move(Vector3 movement)
     {
-        transform.position += (Vector3.up * currentJetpackVerticalSpeed) * Time.deltaTime;
+        Vector3 initialMovement = movement;
 
-        transform.position += (Vector3.right * currentAutoFollowHorizontalSpeed) * Time.deltaTime;
-    }
-    #endregion
+        if (movement.x != 0)
+            movement.x = boxRaycaster.RaycastHorizontal(movement.x);
+        if (Mathf.Abs(movement.x) < movementThreshold)
+            movement.x = 0;
 
-    #region Vertical Jetpack
-    [Header("Jetpack")]
-    [SerializeField] float jetpackMaxUpSpeed = 10f;
-    [SerializeField] float jetpackMaxDownSpeed = -10f;
-    [SerializeField] float jetpackUpAcceleration = 20f;
-    [SerializeField] float jetpackGravityWhenGoingUp = -10f;
-    [SerializeField] float jetpackGravityWhenGoingDown = -10f;
-    float currentJetpackVerticalSpeed = 0;
+        if (movement.y != 0)
+            movement.y = boxRaycaster.RaycastVertical(movement.y);
+        if (Mathf.Abs(movement.y) < movementThreshold)
+            movement.y = 0;
 
-    public void UpdateJetpackValues(bool isJetpackInputDown)
-    {
-        float currentVerticalAcceleration = isJetpackInputDown ? jetpackUpAcceleration : (currentJetpackVerticalSpeed > 0 ? jetpackGravityWhenGoingUp : jetpackGravityWhenGoingDown);
+        if (movement.x > 0) boxRaycaster.flags.left = false;
+        if (movement.x < 0) boxRaycaster.flags.right = false;
+        if (movement.y > 0) boxRaycaster.flags.below = false;
+        if (movement.y < 0) boxRaycaster.flags.above = false;
 
-        currentJetpackVerticalSpeed = Mathf.Clamp(currentJetpackVerticalSpeed + currentVerticalAcceleration * Time.deltaTime, jetpackMaxDownSpeed, jetpackMaxUpSpeed);
-    }
-    #endregion
-
-    #region Horizontal Auto Follow
-    [Header("Horizontal Auto Follow")]
-    [SerializeField] float maxHorizontalSpeed = 5f;
-    [SerializeField] float hozitontalAcceleration = 10f;
-    [SerializeField] float hozitontalBackAcceleration = 20f;
-    [SerializeField] float hozitontalDeceleration = 15f;
-    [SerializeField] float minimumTargetDistanceToMoveToward = 0.1f;
-    [SerializeField] float reachableDistanceStopCoefficient = 2f;
-    float currentAutoFollowHorizontalSpeed = 0;
-
-    public void UpdateAutoFollowValues()
-    {
-        if (!firstPersonController)
-            return;
-
-        float signedDistanceWithTarget = firstPersonController.transform.position.x - transform.position.x;
-
-        bool mustMoveTowardTarget = Mathf.Abs(signedDistanceWithTarget) > minimumTargetDistanceToMoveToward;
-        if (mustMoveTowardTarget)
+        if (initialMovement != movement)
         {
-            float nextTravelledDistance = currentAutoFollowHorizontalSpeed * Time.deltaTime;
-            if (Mathf.Abs(signedDistanceWithTarget) < Mathf.Abs(nextTravelledDistance) * reachableDistanceStopCoefficient)
-                mustMoveTowardTarget = false;
+            if (boxRaycaster.flags.right && initialMovement.x > 0)
+            {
+                currentHorizontalSpeed = 0;
+            }
+            else if (boxRaycaster.flags.left && initialMovement.x < 0)
+            {
+                currentHorizontalSpeed = 0;
+            }
+
+            if (initialMovement.y < 0 && IsOnGround)
+            {
+                currentVerticalSpeed = 0;
+            }
+
+            if (initialMovement.y > 0 && boxRaycaster.flags.above)
+            {
+                currentVerticalSpeed = 0;
+            }
         }
 
-        float autoInputValue = mustMoveTowardTarget ? Mathf.Sign(signedDistanceWithTarget) : 0;
+        
 
-        if (autoInputValue == 0)
+        transform.Translate(movement);
+    }
+    #endregion
+
+    #region Horizontal Movement
+    [Header("Horizontal Movement")]
+    [SerializeField] float maxHorizontalSpeed = 5f;
+    [SerializeField] float horizontalAcceleration = 20f;
+    [SerializeField] float horizontalAccelerationTurningBack = 20f;
+    [SerializeField] float horizontalDeceleration = 20f;
+    [SerializeField] float airControl = 0.75f;
+    [SerializeField] float airDrag = 0.1f;
+    float currentHorizontalSpeed = 0f;
+
+    public void UpdateHorizontalMovementValues(float input)
+    {
+        input = (Mathf.Abs(input) > minimumAxisValueToConsider) ? Mathf.Sign(input) : 0;
+        if(input == 0)
         {
-            if (currentAutoFollowHorizontalSpeed != 0)
-            {
-                currentAutoFollowHorizontalSpeed -= Mathf.Sign(currentAutoFollowHorizontalSpeed) * hozitontalDeceleration * Time.deltaTime;
-                currentAutoFollowHorizontalSpeed =
-                    Mathf.Clamp(currentAutoFollowHorizontalSpeed,
-                    currentAutoFollowHorizontalSpeed > 0 ? 0 : currentAutoFollowHorizontalSpeed,
-                    currentAutoFollowHorizontalSpeed < 0 ? 0 : currentAutoFollowHorizontalSpeed);
-            }
+            currentHorizontalSpeed = Mathf.Clamp(
+                currentHorizontalSpeed - Mathf.Sign(currentHorizontalSpeed) * horizontalDeceleration * Time.deltaTime * (IsOnGround ? 1 : airDrag), 
+                currentHorizontalSpeed > 0 ? 0 : currentHorizontalSpeed, 
+                currentHorizontalSpeed < 0 ? 0 : currentHorizontalSpeed );
         }
         else
         {
-            currentAutoFollowHorizontalSpeed = 
-                Mathf.Clamp(currentAutoFollowHorizontalSpeed + autoInputValue * Time.deltaTime * 
-                (Mathf.Sign(currentAutoFollowHorizontalSpeed) != Mathf.Sign(signedDistanceWithTarget) ? hozitontalBackAcceleration : hozitontalAcceleration), 
+            float usedAcceleration = Mathf.Sign(currentHorizontalSpeed) == input ? horizontalAcceleration : horizontalAccelerationTurningBack;
+            currentHorizontalSpeed = Mathf.Clamp(currentHorizontalSpeed + usedAcceleration * Time.deltaTime * input * (IsOnGround ? 1 : airControl), 
                 -maxHorizontalSpeed, maxHorizontalSpeed);
         }
-
-        //print(currentAutoFollowHorizontalSpeed);
+        //print(currentHorizontalSpeed);
     }
-    #endregion 
+    #endregion
+
+    #region Jump and Gravity
+    [Header("Jump and Gravity")]
+    [SerializeField] float jumpForce = 20.0f;
+    [SerializeField] float jumpMaxDuration = 0.3f;
+    [SerializeField] float verticalGravity = -9.81f;
+    [SerializeField] float maxVerticalDownVelocity = -20.0f;
+    [SerializeField] float onGroundCheckDistance = 0.1f;
+
+    float currentVerticalSpeed = 0f;
+    TimerSystem jumpDurationSystem = new TimerSystem();
+    bool isJumping = false;
+    public bool IsOnGround => boxRaycaster.flags.below == true;
+
+    public void UpdateVerticalMovementValues()
+    {
+        if (!isJumping)
+        {
+            if (IsOnGround)
+                boxRaycaster.CheckForGroundBelow(onGroundCheckDistance);
+            else
+                currentVerticalSpeed = Mathf.Clamp(currentVerticalSpeed + verticalGravity * Time.deltaTime, maxVerticalDownVelocity, currentVerticalSpeed);
+        }
+        else
+        {
+            jumpDurationSystem.UpdateTimer();
+        }
+    }
+
+    public void StartJumping()
+    {
+        isJumping = true;
+        currentVerticalSpeed = jumpForce;
+        jumpDurationSystem.StartTimer();
+    }
+
+    public void EndJumping()
+    {
+        isJumping = false;
+    }
+    #endregion
 }
