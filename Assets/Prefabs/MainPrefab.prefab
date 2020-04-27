@@ -125,11 +125,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4967143056407649486}
     m_Modifications:
-    - target: {fileID: 6236477104522032716, guid: bb9703e0af1a6da47aaf7c0b184c4f5c,
-        type: 3}
-      propertyPath: maxHorizontalSpeed
-      value: 8
-      objectReference: {fileID: 0}
     - target: {fileID: 6236477104522032717, guid: bb9703e0af1a6da47aaf7c0b184c4f5c,
         type: 3}
       propertyPath: m_Name

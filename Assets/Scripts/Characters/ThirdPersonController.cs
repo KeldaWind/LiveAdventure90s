@@ -20,7 +20,7 @@ public class ThirdPersonController : MonoBehaviour
     void Update()
     {
         UpdateJetpackValues(Input.GetKey(jetpackInput));
-        UpdateAutoFollowValues();
+        //UpdateAutoFollowValues();
 
         UpdateMovement();
     }
@@ -45,7 +45,7 @@ public class ThirdPersonController : MonoBehaviour
 
     public void UpdateJetpackValues(bool isJetpackInputDown)
     {
-        float currentVerticalAcceleration = (currentJetpackVerticalSpeed > 0 || isJetpackInputDown ? jetpackGravityWhenGoingUp : jetpackGravityWhenGoingDown) + (isJetpackInputDown ? jetpackUpAcceleration : 0);
+        float currentVerticalAcceleration = isJetpackInputDown ? jetpackUpAcceleration : (currentJetpackVerticalSpeed > 0 ? jetpackGravityWhenGoingUp : jetpackGravityWhenGoingDown);
 
         currentJetpackVerticalSpeed = Mathf.Clamp(currentJetpackVerticalSpeed + currentVerticalAcceleration * Time.deltaTime, jetpackMaxDownSpeed, jetpackMaxUpSpeed);
     }
