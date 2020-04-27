@@ -6,6 +6,7 @@ public class FirstPersonController : MonoBehaviour
 {
     [Header("Inputs")]
     [SerializeField] string horizontalAxis = "FirstPersonHorizontalAxis";
+    [SerializeField] float minimumAxisValueToConsider = 0.25f;
 
     // Update is called once per frame
     void Update()
@@ -18,6 +19,8 @@ public class FirstPersonController : MonoBehaviour
 
     public void UpdateLateralMovementValues(float input)
     {
+        input = (Mathf.Abs(input) > minimumAxisValueToConsider) ? Mathf.Sign(input) : 0;
+
         transform.position += Vector3.right * input * maxHorizontalSpeed * Time.deltaTime;
     }
 }

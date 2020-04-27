@@ -45,10 +45,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jetpackInput: 332
-  jetpackMaxUpSpeed: 30
-  jetpackMaxDownSpeed: -35
-  jetpackUpAcceleration: 90
-  jetpackGravity: -40
+  cameramanCamera: {fileID: 7992000932964528633}
+  jetpackMaxUpSpeed: 50
+  jetpackMaxDownSpeed: -40
+  jetpackUpAcceleration: 100
+  jetpackGravityWhenGoingUp: -50
+  jetpackGravityWhenGoingDown: -70
+  maxHorizontalSpeed: 8
+  hozitontalAcceleration: 28
+  hozitontalBackAcceleration: 56
+  hozitontalDeceleration: 12
+  minimumTargetDistanceToMoveToward: 0.25
+  reachableDistanceStopCoefficient: 4
 --- !u!1 &7992000932964528635
 GameObject:
   m_ObjectHideFlags: 0
@@ -106,7 +114,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 30
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
