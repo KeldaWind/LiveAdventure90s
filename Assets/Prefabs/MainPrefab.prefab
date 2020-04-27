@@ -44,12 +44,12 @@ PrefabInstance:
         type: 3}
       propertyPath: firstPersonController
       value: 
-      objectReference: {fileID: 1157172677245292072}
+      objectReference: {fileID: 1157172678052549753}
     - target: {fileID: 2437297877717078769, guid: 0d07c964d3a5e9940ad97b3a709c8fb8,
         type: 3}
       propertyPath: thirdPersonController
       value: 
-      objectReference: {fileID: 1157172678052549753}
+      objectReference: {fileID: 1157172677245292072}
     - target: {fileID: 7450393885856922763, guid: 0d07c964d3a5e9940ad97b3a709c8fb8,
         type: 3}
       propertyPath: m_Name
@@ -125,15 +125,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4967143056407649486}
     m_Modifications:
-    - target: {fileID: 6236477104522032716, guid: bb9703e0af1a6da47aaf7c0b184c4f5c,
-        type: 3}
-      propertyPath: maxHorizontalSpeed
-      value: 8
-      objectReference: {fileID: 0}
     - target: {fileID: 6236477104522032717, guid: bb9703e0af1a6da47aaf7c0b184c4f5c,
         type: 3}
       propertyPath: m_Name
-      value: FirstPersonController
+      value: ThirdPersonController
       objectReference: {fileID: 0}
     - target: {fileID: 6236477104522032719, guid: bb9703e0af1a6da47aaf7c0b184c4f5c,
         type: 3}
@@ -205,7 +200,7 @@ PrefabInstance:
     - target: {fileID: 7992000932914273569, guid: 7f41b66d1ad7e584f81301e7bb779ad8,
         type: 3}
       propertyPath: m_Name
-      value: ThirdPersonController
+      value: FirstPersonController
       objectReference: {fileID: 0}
     - target: {fileID: 7992000932914273598, guid: 7f41b66d1ad7e584f81301e7bb779ad8,
         type: 3}
