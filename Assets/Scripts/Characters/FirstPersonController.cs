@@ -14,7 +14,7 @@ public class FirstPersonController : MonoBehaviour
     ThirdPersonController thirdPersonController = default;
     public Vector3 GetCameraWorldPosition => cameramanCamera.transform.position;
 
-    public void SetFirstPersonRef(ThirdPersonController reference)
+    public void SetThirdPersonRef(ThirdPersonController reference)
     {
         thirdPersonController = reference;
     }

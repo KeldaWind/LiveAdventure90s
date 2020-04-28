@@ -20,12 +20,14 @@ public class ThirdPersonController : MonoBehaviour
     {
         jumpDurationSystem = new TimerSystem(jumpMaxDuration, EndJumping);
 
-        shootingFrequenceSystem = new FrequenceSystem(minDelayBetweenTwoShots);
+        shootingFrequenceSystem = new FrequenceSystem(bulletsPerSecond);
         shootingFrequenceSystem.SetUp(CheckForShootAgain);
+        shootingFrequenceSystem.Stop();
     }
 
     void Update()
     {
+        UpdateShooting();
         HandleInputs();
         UpdateHorizontalMovementValues(currentHorizontalInput);
         UpdateVerticalMovementValues();
@@ -183,31 +185,40 @@ public class ThirdPersonController : MonoBehaviour
 
     #region Shooting
     [Header("Shooting")]
-    //[SerializeField] Projectile projectilePrefab = default;
+    [SerializeField] ProjectileBase projectilePrefab = default;
     [SerializeField] Transform leftShootPosition = default;
     [SerializeField] Transform rightShootPosition = default;
     ShootDirection currentShootDirection = ShootDirection.Right;
 
-    [SerializeField] float minDelayBetweenTwoShots = 0.1f;
+    [SerializeField] float bulletsPerSecond = 10f;
     FrequenceSystem shootingFrequenceSystem = default;
 
     public void StartShooting()
     {
         if (shootingFrequenceSystem.IsStopped)
+        {
             ShootProjectile();
+            shootingFrequenceSystem.Resume();
+        }
     }
 
     public void UpdateShooting()
     {
         if (!shootingFrequenceSystem.IsStopped)
+        {
             shootingFrequenceSystem.UpdateFrequence();
+        }
     }
 
     public void ShootProjectile()
     {
-        print("SHOOT " + currentShootDirection);
-        Debug.DrawRay((currentShootDirection == ShootDirection.Right ? rightShootPosition : leftShootPosition).position, 
-            currentShootDirection == ShootDirection.Right ? Vector3.right : Vector3.left, Color.red, 0.05f);
+        //Debug.DrawRay((currentShootDirection == ShootDirection.Right ? rightShootPosition : leftShootPosition).position, 
+        //    (currentShootDirection == ShootDirection.Right ? Vector3.right : Vector3.left) * 5f, Color.red, 0.05f);
+
+        Vector3 shootPosition = (currentShootDirection == ShootDirection.Right ? rightShootPosition : leftShootPosition).position;
+        Quaternion shootRotation = (currentShootDirection == ShootDirection.Right ? rightShootPosition : leftShootPosition).rotation;
+        ProjectileBase newProjectile = Instantiate(projectilePrefab, shootPosition, shootRotation);
+        newProjectile.ShootProjectile(currentShootDirection == ShootDirection.Right ? Vector3.right : Vector3.left);
     }
 
     public void CheckForShootAgain()
@@ -215,7 +226,10 @@ public class ThirdPersonController : MonoBehaviour
         if (isShootingInputDown)
             ShootProjectile();
         else
+        {
             shootingFrequenceSystem.Stop();
+            shootingFrequenceSystem.ResetFrequence();
+        }
     }
     #endregion
 }
