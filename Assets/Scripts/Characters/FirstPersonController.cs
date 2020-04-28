@@ -51,10 +51,38 @@ public class FirstPersonController : MonoBehaviour
     [SerializeField] float jetpackMaxUpSpeed = 10f;
     [SerializeField] float jetpackMaxDownSpeed = -10f;
     [SerializeField] float jetpackUpAcceleration = 20f;
-    [SerializeField] float jetpackDownAccelerationBoost = 20f;
     [SerializeField] float jetpackGravityWhenGoingUp = -10f;
     [SerializeField] float jetpackGravityWhenGoingDown = -10f;
+    [SerializeField] float outOfBoundsAcceleration = 128f;
+    [SerializeField] float outOfBoundsMaxSpeed = 10f;
     float currentJetpackVerticalSpeed = 0;
+
+    Transform bottomBound = default;
+    Transform topBound = default;
+    public JetpackBoundsState GetJetpackBoundsState
+    {
+        get
+        {
+            if (bottomBound)
+            {
+                if (transform.position.y < bottomBound.position.y)
+                    return JetpackBoundsState.TooLow;
+            }
+            if(topBound)
+            {
+                if (transform.position.y > topBound.position.y)
+                    return JetpackBoundsState.TooHigh;
+            }
+
+            return JetpackBoundsState.Neutral;
+        }
+    }
+
+    public void SetUpBounds(Transform bottom, Transform top)
+    {
+        bottomBound = bottom;
+        topBound = top;
+    }
 
     public void SetUpJetpack()
     {
@@ -63,17 +91,37 @@ public class FirstPersonController : MonoBehaviour
             jetpackMaxUpSpeed = jetpackParameters.GetJetpackMaxUpSpeed;
             jetpackMaxDownSpeed = jetpackParameters.GetJetpackMaxDownSpeed;
             jetpackUpAcceleration = jetpackParameters.GetJetpackUpAcceleration;
-            jetpackDownAccelerationBoost = jetpackParameters.GetJetpackDownAccelerationBoost;
             jetpackGravityWhenGoingUp = jetpackParameters.GetJetpackGravityWhenGoingUp;
             jetpackGravityWhenGoingDown = jetpackParameters.GetJetpackGravityWhenGoingDown;
+            outOfBoundsAcceleration = jetpackParameters.GetOutOfBoundsAcceleration;
+            outOfBoundsMaxSpeed = jetpackParameters.GetOutOfBoundsMaxSpeed;
         }
     }
 
     public void UpdateJetpackValues(bool isJetpackInputDown)
     {
-        float currentVerticalAcceleration = isJetpackInputDown ? jetpackUpAcceleration : (currentJetpackVerticalSpeed > 0 ? jetpackGravityWhenGoingUp : jetpackGravityWhenGoingDown);
+        JetpackBoundsState boundsState = GetJetpackBoundsState;
+        float currentMaxUpSpeed = jetpackMaxUpSpeed;
+        float currentMaxDownSpeed = jetpackMaxDownSpeed;
+        float currentVerticalAcceleration = 0;
 
-        currentJetpackVerticalSpeed = Mathf.Clamp(currentJetpackVerticalSpeed + currentVerticalAcceleration * Time.deltaTime, jetpackMaxDownSpeed, jetpackMaxUpSpeed);
+        switch (boundsState)
+        {
+            case JetpackBoundsState.TooLow:
+                currentVerticalAcceleration = outOfBoundsAcceleration;
+                currentMaxUpSpeed = isJetpackInputDown ? currentMaxUpSpeed : outOfBoundsMaxSpeed;
+                break;
+
+            case JetpackBoundsState.Neutral:
+                currentVerticalAcceleration = isJetpackInputDown? jetpackUpAcceleration : (currentJetpackVerticalSpeed > 0 ? jetpackGravityWhenGoingUp : jetpackGravityWhenGoingDown);
+                break;
+
+            case JetpackBoundsState.TooHigh:
+                currentVerticalAcceleration = -outOfBoundsAcceleration;
+                currentMaxDownSpeed = -outOfBoundsMaxSpeed;
+                break;
+        }
+        currentJetpackVerticalSpeed = Mathf.Clamp(currentJetpackVerticalSpeed + currentVerticalAcceleration * Time.deltaTime, currentMaxDownSpeed, currentMaxUpSpeed);
     }
     #endregion
 
@@ -128,4 +176,4 @@ public class FirstPersonController : MonoBehaviour
     #endregion 
 }
 
-public enum JetpackInputMode { GoUp, Neutral, GoDown }
+public enum JetpackBoundsState { TooLow, Neutral, TooHigh }

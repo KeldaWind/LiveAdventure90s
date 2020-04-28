@@ -12,6 +12,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] ThirdPersonController thirdPersonController = default;
     [SerializeField] FirstPersonController firstPersonController = default;
 
+    [Header("Level Bounds")]
+    [SerializeField] Transform bottomBound = default;
+    [SerializeField] Transform topBound = default;
+
     private void Awake()
     {
         if(Instance && Instance != this)
@@ -26,6 +30,7 @@ public class GameManager : MonoBehaviour
         Application.targetFrameRate = targetFrameRate;
 
         firstPersonController.SetThirdPersonRef(thirdPersonController);
+        firstPersonController.SetUpBounds(bottomBound, topBound);
     }
 
     #region Important Values
