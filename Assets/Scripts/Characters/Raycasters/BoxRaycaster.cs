@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class BoxRaycaster : MonoBehaviour
 {
@@ -51,17 +52,19 @@ public class BoxRaycaster : MonoBehaviour
             float startPoint = selfTr.position.y + selfCollider.center.y + selfCollider.size.y * 0.5f * Mathf.Sign(distance);
             float newDistance = Mathf.Sign(distance) * Mathf.Abs(hit.point.y - startPoint);
 
-            if (distance < 0) { flags.below = true; /*Debug.Log("No, here !");*/ }
+            if (distance < 0) { flags.below = true; OnLanded?.Invoke(); }
             if (distance > 0) flags.above = true;
 
             return newDistance;
         }
 
-        if (distance < 0) { flags.below = false; /*Debug.Log("Here");*/ }
+        if (distance < 0) flags.below = false;
         if (distance > 0) flags.above = false;
 
         return distance;
     }
+
+    public Action OnLanded;
 
     public bool CheckForGroundBelow(float checkDistance)
     {
