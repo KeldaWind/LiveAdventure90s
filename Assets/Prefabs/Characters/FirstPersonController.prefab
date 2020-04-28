@@ -48,11 +48,11 @@ MonoBehaviour:
   jetpackGamepadAltInput: 334
   jetpackKeyboardInput: 273
   cameramanCamera: {fileID: 7992000932964528633}
-  jetpackMaxUpSpeed: 30
-  jetpackMaxDownSpeed: -25
-  jetpackUpAcceleration: 30
+  jetpackMaxUpSpeed: 50
+  jetpackMaxDownSpeed: -12.5
+  jetpackUpAcceleration: 10
   jetpackGravityWhenGoingUp: -30
-  jetpackGravityWhenGoingDown: -50
+  jetpackGravityWhenGoingDown: -12.5
   maxHorizontalSpeed: 8
   hozitontalAcceleration: 28
   hozitontalBackAcceleration: 56

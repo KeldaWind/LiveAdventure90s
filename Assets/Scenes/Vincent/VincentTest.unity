@@ -27751,35 +27751,20 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1157172677245292072, guid: 987b1e2d3570dca4ab0d20397d5b30cd,
-        type: 3}
-      propertyPath: verticalGravity
-      value: -70
-      objectReference: {fileID: 0}
     - target: {fileID: 1157172677245292075, guid: 987b1e2d3570dca4ab0d20397d5b30cd,
         type: 3}
       propertyPath: m_LocalPosition.y
       value: 4
       objectReference: {fileID: 0}
-    - target: {fileID: 1157172678052549753, guid: 987b1e2d3570dca4ab0d20397d5b30cd,
+    - target: {fileID: 1157172678052549752, guid: 987b1e2d3570dca4ab0d20397d5b30cd,
         type: 3}
-      propertyPath: jetpackUpAcceleration
-      value: 10
+      propertyPath: m_LocalPosition.z
+      value: -52.8
       objectReference: {fileID: 0}
-    - target: {fileID: 1157172678052549753, guid: 987b1e2d3570dca4ab0d20397d5b30cd,
+    - target: {fileID: 1157172678069516478, guid: 987b1e2d3570dca4ab0d20397d5b30cd,
         type: 3}
-      propertyPath: jetpackGravityWhenGoingDown
-      value: -12.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 1157172678052549753, guid: 987b1e2d3570dca4ab0d20397d5b30cd,
-        type: 3}
-      propertyPath: jetpackMaxDownSpeed
-      value: -12.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 1157172678052549753, guid: 987b1e2d3570dca4ab0d20397d5b30cd,
-        type: 3}
-      propertyPath: jetpackMaxUpSpeed
-      value: 50
+      propertyPath: field of view
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 3349801664879935139, guid: 987b1e2d3570dca4ab0d20397d5b30cd,
         type: 3}

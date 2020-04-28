@@ -203,7 +203,7 @@ MonoBehaviour:
   airDrag: 0.5
   jumpForce: 20
   jumpMaxDuration: 0.2
-  verticalGravity: -64
+  verticalGravity: -70
   maxVerticalDownVelocity: -128
   onGroundCheckDistance: 0.1
   extentJumpDelay: 0.2
