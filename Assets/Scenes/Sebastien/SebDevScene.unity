@@ -27540,16 +27540,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1157172677245292072, guid: 987b1e2d3570dca4ab0d20397d5b30cd,
-        type: 3}
-      propertyPath: extentJumpDelay
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1157172677245292072, guid: 987b1e2d3570dca4ab0d20397d5b30cd,
-        type: 3}
-      propertyPath: lateJumpDelay
-      value: 0.1
-      objectReference: {fileID: 0}
     - target: {fileID: 1157172677245292075, guid: 987b1e2d3570dca4ab0d20397d5b30cd,
         type: 3}
       propertyPath: m_LocalPosition.y
