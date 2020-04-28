@@ -4,32 +4,46 @@ public class ThirdPersonController : MonoBehaviour
 {
     [Header("Inputs")]
     [SerializeField] string horizontalAxis = "ThirdPersonHorizontalAxis";
+    [SerializeField] float minimumAxisValueToConsiderHorizontalMovement = 0.25f;
     [SerializeField] KeyCode jumpingGamepadInput = KeyCode.JoystickButton0;
     [SerializeField] KeyCode jumpingKeyboardInput = KeyCode.Space;
-    [SerializeField] float minimumAxisValueToConsider = 0.25f;
+    [SerializeField] KeyCode shootingGamepadInput = KeyCode.JoystickButton2;
+    [SerializeField] KeyCode shootingKeyboardInput = KeyCode.E;
+    float currentHorizontalInput = 0f;
+    bool isShootingInputDown = false;
 
     [Header("Collisions")]
     [SerializeField] BoxRaycaster boxRaycaster = default;
-    [SerializeField] float movementThreshold = 0.001f;
+    [SerializeField] float movementThreshold = 0.01f;
 
     private void Start()
     {
         jumpDurationSystem = new TimerSystem(jumpMaxDuration, EndJumping);
+
+        shootingFrequenceSystem = new FrequenceSystem(minDelayBetweenTwoShots);
+        shootingFrequenceSystem.SetUp(CheckForShootAgain);
     }
 
-    // Update is called once per frame
     void Update()
     {
-        HandleActionsInputs();
-        UpdateHorizontalMovementValues(Input.GetAxis(horizontalAxis));
+        HandleInputs();
+        UpdateHorizontalMovementValues(currentHorizontalInput);
         UpdateVerticalMovementValues();
 
         Vector3 movement = new Vector3(currentHorizontalSpeed, currentVerticalSpeed, 0) * Time.deltaTime;
         Move(movement);
     }
 
-    public void HandleActionsInputs()
+    public void HandleInputs()
     {
+        currentHorizontalInput = Input.GetAxis(horizontalAxis);
+        currentHorizontalInput = (Mathf.Abs(currentHorizontalInput) > minimumAxisValueToConsiderHorizontalMovement) ? Mathf.Sign(currentHorizontalInput) : 0;
+
+        if(currentHorizontalInput != 0)
+        {
+            currentShootDirection = currentHorizontalInput > 0 ? ShootDirection.Right : ShootDirection.Left;
+        }
+
         if ((Input.GetKeyDown(jumpingGamepadInput) || Input.GetKeyDown(jumpingKeyboardInput)) && IsOnGround)
         {
             StartJumping();
@@ -37,6 +51,16 @@ public class ThirdPersonController : MonoBehaviour
         else if((Input.GetKeyUp(jumpingGamepadInput) || Input.GetKeyUp(jumpingKeyboardInput)) && isJumping)
         {
             EndJumping();
+        }
+
+        if ((Input.GetKeyDown(shootingGamepadInput) || Input.GetKeyDown(shootingKeyboardInput)))
+        {
+            isShootingInputDown = true;
+            StartShooting();
+        }
+        else if ((Input.GetKeyUp(shootingGamepadInput) || Input.GetKeyUp(shootingKeyboardInput)))
+        {
+            isShootingInputDown = false;
         }
     }
 
@@ -100,7 +124,6 @@ public class ThirdPersonController : MonoBehaviour
 
     public void UpdateHorizontalMovementValues(float input)
     {
-        input = (Mathf.Abs(input) > minimumAxisValueToConsider) ? Mathf.Sign(input) : 0;
         if(input == 0)
         {
             currentHorizontalSpeed = Mathf.Clamp(
@@ -114,7 +137,6 @@ public class ThirdPersonController : MonoBehaviour
             currentHorizontalSpeed = Mathf.Clamp(currentHorizontalSpeed + usedAcceleration * Time.deltaTime * input * (IsOnGround ? 1 : airControl), 
                 -maxHorizontalSpeed, maxHorizontalSpeed);
         }
-        //print(currentHorizontalSpeed);
     }
     #endregion
 
@@ -158,4 +180,47 @@ public class ThirdPersonController : MonoBehaviour
         isJumping = false;
     }
     #endregion
+
+    #region Shooting
+    [Header("Shooting")]
+    //[SerializeField] Projectile projectilePrefab = default;
+    [SerializeField] Transform leftShootPosition = default;
+    [SerializeField] Transform rightShootPosition = default;
+    ShootDirection currentShootDirection = ShootDirection.Right;
+
+    [SerializeField] float minDelayBetweenTwoShots = 0.1f;
+    FrequenceSystem shootingFrequenceSystem = default;
+
+    public void StartShooting()
+    {
+        if (shootingFrequenceSystem.IsStopped)
+            ShootProjectile();
+    }
+
+    public void UpdateShooting()
+    {
+        if (!shootingFrequenceSystem.IsStopped)
+            shootingFrequenceSystem.UpdateFrequence();
+    }
+
+    public void ShootProjectile()
+    {
+        print("SHOOT " + currentShootDirection);
+        Debug.DrawRay((currentShootDirection == ShootDirection.Right ? rightShootPosition : leftShootPosition).position, 
+            currentShootDirection == ShootDirection.Right ? Vector3.right : Vector3.left, Color.red, 0.05f);
+    }
+
+    public void CheckForShootAgain()
+    {
+        if (isShootingInputDown)
+            ShootProjectile();
+        else
+            shootingFrequenceSystem.Stop();
+    }
+    #endregion
+}
+
+public enum ShootDirection
+{
+    Right, Left
 }

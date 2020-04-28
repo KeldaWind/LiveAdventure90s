@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jetpackGamepadInput: 335
+  jetpackGamepadAltInput: 334
   jetpackKeyboardInput: 273
   cameramanCamera: {fileID: 7992000932964528633}
   jetpackMaxUpSpeed: 30
