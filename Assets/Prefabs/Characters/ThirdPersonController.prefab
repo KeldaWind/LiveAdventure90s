@@ -298,6 +298,14 @@ MonoBehaviour:
   rightShootPosition: {fileID: 2582463428784489348}
   bulletsPerSecond: 8
   lifeSystem: {fileID: 3541430697146294809}
+  onDamagedHorizontalSpeed: 9
+  onDamagedVerticalSpeed: 12
+  onDamagedStunDuration: 0.1
+  onDamagedRecoveringDuration: 1
+  recoveringBlinkingFrequence: 10
+  characterRenderer: {fileID: 1398840853937944863}
+  normalMaterial: {fileID: 2100000, guid: 62869b7d9926bef47a8baa877eaf8b3e, type: 2}
+  blinkingMaterial: {fileID: 2100000, guid: dfecd4286f948bd41b3df5a3a6ece127, type: 2}
 --- !u!114 &8933795941873096121
 MonoBehaviour:
   m_ObjectHideFlags: 0

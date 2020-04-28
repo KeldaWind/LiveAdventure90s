@@ -83,7 +83,6 @@ public class ProjectileEnemyBarrel : ProjectileBase
 
             if (Mathf.Abs(Vector3.Dot(averageNormal, Vector3.up)) < 0.5f)
             {
-                print("Destroy from collision");
                 mustDestroy = true;
             }
         }
@@ -92,7 +91,7 @@ public class ProjectileEnemyBarrel : ProjectileBase
         if (hitDamageableEntity)
         {
             if (hitDamageableEntity.GetDamageTag != damageTag && damageTag != DamageTag.Environment)
-                hitDamageableEntity.ReceiveDamage(projectileDamages);
+                hitDamageableEntity.ReceiveDamage(projectileDamages, gameObject);
 
             mustDestroy = true;
         }
@@ -191,7 +190,7 @@ public class ProjectileEnemyBarrel : ProjectileBase
         }
     }
 
-    public void PlayHitFeedback(int delta, int remainingLife)
+    public void PlayHitFeedback(int delta, int remainingLife, GameObject damageInstigator)
     {
         StartCoroutine(HitFeedbackCoroutine());
     }

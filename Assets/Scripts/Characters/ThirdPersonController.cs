@@ -37,7 +37,8 @@ public class ThirdPersonController : MonoBehaviour
         shootingFrequenceSystem.Stop();
 
         SetUpLifeSystem();
-        //boxRaycaster.OnLanded = CheckForExtentJump;
+
+        characterRenderer.material = normalMaterial;
     }
 
     void Update()
@@ -46,6 +47,7 @@ public class ThirdPersonController : MonoBehaviour
         HandleInputs();
         UpdateHorizontalMovementValues(currentHorizontalInput);
         UpdateVerticalMovementValues();
+        UpdateRecovering();
 
         //Vector3 movement = new Vector3(currentHorizontalSpeed, currentVerticalSpeed, 0) * Time.deltaTime;
 
@@ -60,6 +62,12 @@ public class ThirdPersonController : MonoBehaviour
 
     public void HandleInputs()
     {
+        if (IsStunned)
+        {
+            currentHorizontalInput = 0;
+            return;
+        }
+
         currentHorizontalInput = Input.GetAxis(horizontalAxis);
         currentHorizontalInput = (Mathf.Abs(currentHorizontalInput) > minimumAxisValueToConsiderHorizontalMovement) ? Mathf.Sign(currentHorizontalInput) : 0;
 
@@ -151,13 +159,16 @@ public class ThirdPersonController : MonoBehaviour
         selfBody.velocity = new Vector3(currentHorizontalSpeed, currentVerticalSpeed, 0);
     }
 
+    RaycastHit currentGround = new RaycastHit();
     public void CheckForGround()
     {
         bool startIsOnGround = isOnGround;
 
         Vector3 actualSize = new Vector3(selfCollider.size.x * transform.lossyScale.x, selfCollider.size.y * transform.lossyScale.y, selfCollider.size.z * transform.lossyScale.z) * skinWidthMultiplier;
 
-        isOnGround = Physics.BoxCast(transform.position + selfCollider.center, actualSize * 0.5f, Vector3.down, transform.rotation, onGroundCheckDistance, movementsCheckMask);
+        Collider previousCollider = currentGround.collider;
+        RaycastHit hit = new RaycastHit();
+        isOnGround = Physics.BoxCast(transform.position + selfCollider.center, actualSize * 0.5f, Vector3.down, out hit, transform.rotation, onGroundCheckDistance, movementsCheckMask);
         if (isOnGround && currentVerticalSpeed < 0)
         {
             currentVerticalSpeed = 0;
@@ -167,6 +178,19 @@ public class ThirdPersonController : MonoBehaviour
         if (startIsOnGround && startIsOnGround != isOnGround)
         {
             StartLateJumpDelay();
+        }
+
+        if (IsOnGround)
+        {
+            if(previousCollider != hit.collider)
+            {
+                HandleCollision(null, hit.collider);
+                currentGround = hit;
+            }
+        }
+        else
+        {
+            currentGround = new RaycastHit();
         }
     }
 
@@ -193,6 +217,9 @@ public class ThirdPersonController : MonoBehaviour
     {
         if (input == 0)
         {
+            if (IsStunned)
+                return;
+
             currentHorizontalSpeed = Mathf.Clamp(
                 currentHorizontalSpeed - Mathf.Sign(currentHorizontalSpeed) * horizontalDeceleration * Time.deltaTime * (IsOnGround ? 1 : airDrag),
                 currentHorizontalSpeed > 0 ? 0 : currentHorizontalSpeed,
@@ -362,21 +389,102 @@ public class ThirdPersonController : MonoBehaviour
     #endregion
 
     #region Collisions
+    private void OnCollisionEnter(Collision collision)
+    {
+        HandleCollision(collision, collision.collider);
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        if (checkCollisionAgain)
+        {
+            HandleCollision(collision, collision.collider);
+
+            checkCollisionAgain = false;
+        }
+    }
+
+    public void HandleCollision(Collision collision, Collider hitCollider)
+    {
+        EnemyBase hitEnemy = hitCollider.GetComponent<EnemyBase>();
+        if (hitEnemy)
+        {
+            lifeSystem.ReceiveDamage(hitEnemy.GetMeleeDamages, hitEnemy.gameObject);
+        }
+    }
     #endregion
 
     #region Life Management and Debug
     [Header("Life System")]
     [SerializeField] DamageableEntity lifeSystem = default;
+    [SerializeField] float onDamagedHorizontalSpeed = 6f;
+    [SerializeField] float onDamagedVerticalSpeed = 12f;
+    [SerializeField] float onDamagedStunDuration = 0.1f;
+    [SerializeField] float onDamagedRecoveringDuration = 0.5f;
+    [SerializeField] float recoveringBlinkingFrequence = 10f;
+
+    public DamageableEntity GetLifeSystem => lifeSystem;
+    TimerSystem stunTimer = new TimerSystem();
+    TimerSystem recoveringTimer = new TimerSystem();
+
+    bool IsStunned => !stunTimer.TimerOver;
+    bool IsRecovering => !recoveringTimer.TimerOver;
 
     public void SetUpLifeSystem()
     {
         lifeSystem.OnReceivedDamages = OnReceivedDamages;
         lifeSystem.OnLifeReachedZero = Die;
+
+        stunTimer = new TimerSystem(onDamagedStunDuration, null);
+        recoveringTimer = new TimerSystem(onDamagedRecoveringDuration, EndRecover);
     }
 
-    public void OnReceivedDamages(int delta, int remainingLife)
+    public void UpdateRecovering()
+    {
+        if (IsStunned)
+            stunTimer.UpdateTimer();
+
+        if (IsRecovering)
+        {
+            recoveringTimer.UpdateTimer();
+            if (IsRecovering)
+            {
+                float blinkingCoeff = Mathf.Cos(recoveringTimer.GetTimerCounter * Mathf.PI * 2 * recoveringBlinkingFrequence);
+                characterRenderer.material = blinkingCoeff > 0 ? blinkingMaterial : normalMaterial;
+            }
+            else
+                characterRenderer.material = normalMaterial;
+        }
+    }
+
+    bool checkCollisionAgain = false;
+    public void EndRecover()
+    {
+        lifeSystem.ResetCanReceiveDamages();
+        checkCollisionAgain = true;
+
+        if (currentGround.collider)
+            HandleCollision(null, currentGround.collider);
+    }
+
+    public void OnReceivedDamages(int delta, int remainingLife, GameObject damageInstigator)
     {
         print("Remaining life : " + remainingLife);
+        if (isJumping)
+        {
+            EndJumping();
+            if (!jumpDurationSystem.TimerOver)
+                jumpDurationSystem.EndTimer();
+        }
+
+        float xOffset = transform.position.x - damageInstigator.transform.position.x;
+        currentHorizontalSpeed = onDamagedHorizontalSpeed * Mathf.Sign(xOffset);
+        currentVerticalSpeed = onDamagedVerticalSpeed;
+
+        lifeSystem.SetImmuneToDamages();
+
+        stunTimer.StartTimer();
+        recoveringTimer.StartTimer();
     }
 
     public void Die()
@@ -384,6 +492,11 @@ public class ThirdPersonController : MonoBehaviour
         print("I'm die");
     }
     #endregion
+
+    [Header("Rendering")]
+    [SerializeField] Renderer characterRenderer = default;
+    [SerializeField] Material normalMaterial = default;
+    [SerializeField] Material blinkingMaterial = default;
 }
 
 public enum ShootDirection

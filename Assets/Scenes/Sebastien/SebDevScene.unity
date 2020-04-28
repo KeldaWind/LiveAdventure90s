@@ -28013,7 +28013,7 @@ PrefabInstance:
     - target: {fileID: 6762457594237305860, guid: f79a40f52ecf5dd40bbf0ad012ad66fa,
         type: 3}
       propertyPath: projectilesPerSecond
-      value: 3
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 6762457594237305861, guid: f79a40f52ecf5dd40bbf0ad012ad66fa,
         type: 3}
