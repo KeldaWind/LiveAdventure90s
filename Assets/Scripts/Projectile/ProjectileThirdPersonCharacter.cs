@@ -7,6 +7,7 @@ public class ProjectileThirdPersonCharacter : ProjectileBase
     [Header("Player Projectile")]
     [SerializeField] SphereCollider projectileCollider = default;
     [SerializeField] float projectileSpeed = 20f;
+    Vector3 beforeMovementPosition = Vector3.zero;
 
     public override void UpdateTrajectory()
     {
@@ -14,11 +15,7 @@ public class ProjectileThirdPersonCharacter : ProjectileBase
 
         RaycastHit hitOnWay = CheckForObjectOnTrajectory(nextMovement);
 
-        if (hitOnWay.collider != null)
-        {
-            HandleCollision(hitOnWay);
-        }
-        else
+        if (!hitOnWay.collider)
         {
             transform.position += nextMovement;
         }
@@ -30,14 +27,14 @@ public class ProjectileThirdPersonCharacter : ProjectileBase
 
         if (Physics.SphereCast(transform.position + projectileCollider.center, projectileCollider.radius, nextMovement, out hitOnWay, nextMovement.magnitude, checkMask))
         {
-
+            HandleCollision(hitOnWay.collider, hitOnWay);
         }
         return hitOnWay;
     }
 
-    public override void HandleCollision(RaycastHit hit)
+    public override void HandleCollision(Collider hitCollider, RaycastHit hit)
     {
-        Destroy(gameObject);
         Debug.DrawRay(hit.point, hit.normal, Color.red, 0.2f);
+        DestroyProjectile();
     }
 }

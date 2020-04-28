@@ -18,6 +18,7 @@ public class ThirdPersonController : MonoBehaviour
     bool isShootingInputDown = false;
 
     [Header("Collisions")]
+    [SerializeField] BoxCollider selfCollider = default;
     [SerializeField] BoxRaycaster boxRaycaster = default;
     [SerializeField] float movementThreshold = 0.01f;
 
@@ -42,6 +43,7 @@ public class ThirdPersonController : MonoBehaviour
         UpdateVerticalMovementValues();
 
         Vector3 movement = new Vector3(currentHorizontalSpeed, currentVerticalSpeed, 0) * Time.deltaTime;
+
         Move(movement);
     }
 
@@ -90,11 +92,15 @@ public class ThirdPersonController : MonoBehaviour
 
         if (movement.x != 0)
             movement.x = boxRaycaster.RaycastHorizontal(movement.x);
+        else
+            boxRaycaster.ResetLastHorizontalHitResult();
         if (Mathf.Abs(movement.x) < movementThreshold)
             movement.x = 0;
 
         if (movement.y != 0)
             movement.y = boxRaycaster.RaycastVertical(movement.y);
+        else
+            boxRaycaster.ResetLastVerticalHitResult();
         if (Mathf.Abs(movement.y) < movementThreshold)
             movement.y = 0;
 
@@ -125,7 +131,22 @@ public class ThirdPersonController : MonoBehaviour
             }
         }
 
-
+        /*if (boxRaycaster.GetLastHorizontalHitResult.collider)
+        {
+            ProjectileBase hitProjectile = boxRaycaster.GetLastHorizontalHitResult.collider.GetComponent<ProjectileBase>();
+            if (hitProjectile != null)
+            {
+                hitProjectile.HandleCollision(selfCollider, new RaycastHit());
+            }
+        }
+        if (boxRaycaster.GetLastVerticalHitResult.collider && boxRaycaster.GetLastHorizontalHitResult.collider != boxRaycaster.GetLastVerticalHitResult.collider)
+        {
+            ProjectileBase hitProjectile = boxRaycaster.GetLastVerticalHitResult.collider.GetComponent<ProjectileBase>();
+            if (hitProjectile != null)
+            {
+                hitProjectile.HandleCollision(selfCollider, new RaycastHit());
+            }
+        }*/
 
         transform.Translate(movement);
     }

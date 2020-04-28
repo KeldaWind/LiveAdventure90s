@@ -8,6 +8,9 @@ public abstract class ProjectileBase : MonoBehaviour
     bool shot = false;
     [Header("Base Projectile Parameters")]
     [SerializeField] protected LayerMask checkMask = default;
+    [SerializeField] protected int projectileDamages = 1;
+    [SerializeField] protected DamageTag damageTag = DamageTag.Player;
+    public DamageTag GetDamageTag => damageTag;
 
     public virtual void ShootProjectile(Vector3 direction)
     {
@@ -17,10 +20,16 @@ public abstract class ProjectileBase : MonoBehaviour
 
     public abstract void UpdateTrajectory();
 
-    public abstract void HandleCollision(RaycastHit hit);
+    public abstract void HandleCollision(Collider hitCollider, RaycastHit hit);
+
+    public virtual void DestroyProjectile()
+    {
+        Destroy(gameObject);
+    }
 
     public virtual void Update()
     {
-        UpdateTrajectory();
+        if (shot)
+            UpdateTrajectory();
     }
 }

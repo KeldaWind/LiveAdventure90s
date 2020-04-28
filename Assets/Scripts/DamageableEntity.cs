@@ -1,49 +1,65 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class DamageableEntity : MonoBehaviour
 {
     [Header("Life parameters")]
-    private int maxLife;
-    private int currentLife;
+    [SerializeField] DamageTag damageTag = DamageTag.Player;
+    public DamageTag GetDamageTag => damageTag;
+    [SerializeField] int maxLife = 10;
+    int currentLife = 10;
 
+    public Action<int, int> OnLifeAmountChanged;
 
+    public Action<int, int> OnReceivedDamages;
+
+    public Action OnLifeReachedZero;
+
+    private void Start()
+    {
+        Initialize();
+    }
+
+    public void Initialize()
+    {
+        currentLife = maxLife;
+    }
 
     void LoseLife(int amount)
     {
-        currentLife -= amount;
+        amount = Mathf.Abs(amount);
 
-        LifeManager.Instance.OnLifeAmountChanged.Invoke(amount, currentLife);
+        currentLife = Mathf.Clamp(currentLife - amount, 0, maxLife);
+
+        OnLifeAmountChanged?.Invoke(-amount, currentLife);
 
         if (currentLife <= 0)
-            LifeManager.Instance.OnLifeReachedZero.Invoke();
+            LifeReachedZero();
     }
 
     public void RecoverLife(int amount)
     {
-        int newLife = currentLife + amount;
+        amount = Mathf.Abs(amount);
+        currentLife = Mathf.Clamp(currentLife + amount, 0, maxLife);
 
-        LifeManager.Instance.OnLifeAmountChanged.Invoke(amount, currentLife);
-
-        if (newLife == maxLife)
-            return;
-
-        if(newLife > maxLife)
-        {
-            int newAmount = amount - (newLife - maxLife);
-            currentLife += newAmount;
-        }
-        else
-        {
-            currentLife = newLife;
-        }
+        OnLifeAmountChanged?.Invoke(amount, currentLife);
     }
 
     public void ReceiveDamage(int amount)
     {
+        amount = Mathf.Abs(amount);
+
         LoseLife(amount);
 
-        LifeManager.Instance.OnReceivedDamages.Invoke(amount, currentLife);
+        OnReceivedDamages?.Invoke(-amount, currentLife);
+    }
+
+    public void LifeReachedZero()
+    {
+        OnLifeReachedZero?.Invoke();
     }
 }
+
+public enum DamageTag { Player, Enemy, Environment }

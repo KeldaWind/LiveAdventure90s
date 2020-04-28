@@ -17,6 +17,10 @@ public class JetpackParameters : ScriptableObject
     public float GetJetpackUpAcceleration => jetpackUpAcceleration;
 
 
+    [SerializeField] float jetpackDownAccelerationBoost = 20f;
+    public float GetJetpackDownAccelerationBoost => jetpackDownAccelerationBoost;
+
+
     [SerializeField] float jetpackGravityWhenGoingUp = -10f;
     public float GetJetpackGravityWhenGoingUp => jetpackGravityWhenGoingUp;
 

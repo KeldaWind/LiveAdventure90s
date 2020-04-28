@@ -14,9 +14,9 @@ TagManager:
   - 
   - 
   - BlockingElement
-  - FirstPersonCharacter
-  - 
-  - 
+  - ThirdPersonCharacter
+  - Enemies
+  - EnemiesDetectionZone
   - 
   - 
   - 

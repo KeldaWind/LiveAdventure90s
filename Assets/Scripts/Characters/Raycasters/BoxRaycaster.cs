@@ -6,7 +6,11 @@ using System;
 public class BoxRaycaster : MonoBehaviour
 {
     RaycastHit lastHorizontalHitResult = default;
+    public RaycastHit GetLastHorizontalHitResult => lastHorizontalHitResult;
+
+
     RaycastHit lastVerticalHitResult = default;
+    public RaycastHit GetLastVerticalHitResult => lastVerticalHitResult;
 
     [Header("References")]
     [SerializeField] BoxCollider selfCollider = default;
@@ -48,6 +52,11 @@ public class BoxRaycaster : MonoBehaviour
         return distance;
     }
 
+    public void ResetLastHorizontalHitResult()
+    {
+        lastHorizontalHitResult = new RaycastHit();
+    }
+
     public float RaycastVertical(float distance)
     {
         RaycastHit hit = new RaycastHit();
@@ -62,13 +71,22 @@ public class BoxRaycaster : MonoBehaviour
             if (distance < 0) { flags.below = true; OnLanded?.Invoke(); }
             if (distance > 0) flags.above = true;
 
+            lastVerticalHitResult = hit;
+
             return newDistance;
         }
+
+        lastVerticalHitResult = hit;
 
         if (distance < 0) flags.below = false;
         if (distance > 0) flags.above = false;
 
         return distance;
+    }
+
+    public void ResetLastVerticalHitResult()
+    {
+        lastVerticalHitResult = new RaycastHit();
     }
 
     public Action OnLanded;
