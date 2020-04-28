@@ -151,5 +151,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lineRenderer: {fileID: 3774516838788396375}
-  startPos: {x: 0, y: 0, z: 0}
+  startPos: {x: 7, y: 0, z: 0}
   targetPos: {fileID: 0}
