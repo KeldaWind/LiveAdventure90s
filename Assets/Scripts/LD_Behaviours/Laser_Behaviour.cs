@@ -10,7 +10,7 @@ public class Laser_Behaviour : MonoBehaviour
     public Vector3 startPos;
     public GameObject targetPos;
 
-    private Transform laserCollider;
+    public Transform laserCollider;
 
     private bool isActive = true;
 
@@ -38,9 +38,9 @@ public class Laser_Behaviour : MonoBehaviour
     void SetLaserCollider(float magnitude, Vector3 direction)
     {
         Quaternion newRotation = Quaternion.LookRotation(direction, Vector3.up);
-        laserCollider.localScale = new Vector3(magnitude, 0.5f, 1f);
+        laserCollider.localScale = new Vector3(0.5f, 0.5f, magnitude);
         laserCollider.rotation = newRotation;
-        laserCollider.localPosition = direction * (magnitude * 0.5f);
+        laserCollider.localPosition = startPos + (direction * (magnitude * 0.5f));
     }
 
     void FindNextTarget()
@@ -58,8 +58,7 @@ public class Laser_Behaviour : MonoBehaviour
             lineRenderer.SetPosition(1, impactPos);
 
 
-
-            //SetLaserCollider(magnitude, direction);
+            SetLaserCollider(magnitude, direction);
 
             if (IsCollidingWithPlayer(hit))
             {

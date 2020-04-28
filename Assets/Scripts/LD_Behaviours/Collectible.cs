@@ -5,12 +5,15 @@ using UnityEngine.Events;
 
 public class Collectible : MonoBehaviour
 {
-    UnityEvent OnCollectEvent;
+    public UnityEvent OnCollectEvent;
 
 
     private void OnTriggerEnter(Collider other)
     {
-        OnCollectEvent.Invoke();
-        gameObject.SetActive(false);
+        if(other.gameObject.tag == "Player")
+        {
+            OnCollectEvent.Invoke();
+            gameObject.SetActive(false);
+        }
     }
 }
