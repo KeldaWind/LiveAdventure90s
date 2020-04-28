@@ -5,6 +5,9 @@ using System;
 
 public class BoxRaycaster : MonoBehaviour
 {
+    RaycastHit lastHorizontalHitResult = default;
+    RaycastHit lastVerticalHitResult = default;
+
     [Header("References")]
     [SerializeField] BoxCollider selfCollider = default;
     [SerializeField] Transform selfTr = default;
@@ -32,8 +35,12 @@ public class BoxRaycaster : MonoBehaviour
             if (distance < 0) flags.left = true;
             if (distance > 0) flags.right = true;
 
+            lastHorizontalHitResult = hit;
+
             return newDistance;
         }
+
+        lastHorizontalHitResult = hit;
 
         if (distance < 0) flags.left = false;
         if (distance > 0) flags.right = false;
