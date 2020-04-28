@@ -30,6 +30,17 @@ public class FrequenceSystem
 
     System.Action OnFrequenceEvent;
 
+    bool stopped = false;
+    public bool IsStopped => stopped;
+    public void Stop()
+    {
+        stopped = true;
+    }
+    public void Resume()
+    {
+        stopped = false;
+    }
+
     /// <summary>
     /// Puts the remaining frequence time to its maximum value
     /// </summary>
@@ -58,13 +69,7 @@ public class FrequenceSystem
     /// </summary>
     public void UpdateFrequence()
     {
-        currentFrequenceTime -= Time.deltaTime;
-
-        while(currentFrequenceTime < 0)
-        {
-            currentFrequenceTime += FrqTime;
-            OnFrequenceEvent?.Invoke();
-        }
+        UpdateFrequence(1, true);
     }
 
     /// <summary>
@@ -72,13 +77,7 @@ public class FrequenceSystem
     /// </summary>
     public void UpdateFrequence(float timeScale)
     {
-        currentFrequenceTime -= Time.deltaTime * timeScale;
-
-        while (currentFrequenceTime < 0)
-        {
-            currentFrequenceTime += FrqTime;
-            OnFrequenceEvent?.Invoke();
-        }
+        UpdateFrequence(timeScale, true);
     }
 
     /// <summary>
@@ -86,17 +85,7 @@ public class FrequenceSystem
     /// </summary>
     public void UpdateFrequence(bool canTrigger)
     {
-        if(currentFrequenceTime > 0)
-            currentFrequenceTime -= Time.deltaTime;
-
-        if (canTrigger)
-        {
-            while (currentFrequenceTime < 0)
-            {
-                currentFrequenceTime += FrqTime;
-                OnFrequenceEvent?.Invoke();
-            }
-        }
+        UpdateFrequence(1, canTrigger);
     }
 
     /// <summary>

@@ -128,6 +128,8 @@ MonoBehaviour:
   horizontalAxis: ThirdPersonHorizontalAxis
   jumpingGamepadInput: 330
   jumpingKeyboardInput: 32
+  shootingGamepadInput: 332
+  shootingKeyboardInput: 101
   minimumAxisValueToConsider: 0.25
   boxRaycaster: {fileID: 8933795941873096121}
   movementThreshold: 0.01
@@ -142,6 +144,8 @@ MonoBehaviour:
   verticalGravity: -64
   maxVerticalDownVelocity: -128
   onGroundCheckDistance: 0.1
+  leftShootPosition: {fileID: 0}
+  rightShootPosition: {fileID: 0}
 --- !u!114 &8933795941873096121
 MonoBehaviour:
   m_ObjectHideFlags: 0

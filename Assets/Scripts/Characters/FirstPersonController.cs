@@ -5,7 +5,8 @@ using UnityEngine;
 public class FirstPersonController : MonoBehaviour
 {
     [Header("Inputs")]
-    [SerializeField] KeyCode jetpackGamepadInput = KeyCode.JoystickButton2;
+    [SerializeField] KeyCode jetpackGamepadInput = KeyCode.JoystickButton5;
+    [SerializeField] KeyCode jetpackGamepadAltInput = KeyCode.JoystickButton6;
     [SerializeField] KeyCode jetpackKeyboardInput = KeyCode.UpArrow;
 
     [Header("Important References")]
@@ -20,7 +21,7 @@ public class FirstPersonController : MonoBehaviour
 
     void Update()
     {
-        UpdateJetpackValues(Input.GetKey(jetpackGamepadInput) || Input.GetKey(jetpackKeyboardInput));
+        UpdateJetpackValues(Input.GetKey(jetpackGamepadInput) || Input.GetKey(jetpackKeyboardInput) || Input.GetKey(jetpackGamepadAltInput));
 
         UpdateMovement();
     }
