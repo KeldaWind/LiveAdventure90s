@@ -7,6 +7,17 @@ public class ThirdPersonEnemiesDetectionBox : MonoBehaviour
     [SerializeField] ThirdPersonController thirdPersonCharacter = default;
     List<EnemyBase> inZoneEnemies = new List<EnemyBase>();
 
+    private void Start()
+    {
+        transform.SetParent(null);
+        transform.position = thirdPersonCharacter.transform.position;
+    }
+
+    private void Update()
+    {
+        transform.position = thirdPersonCharacter.transform.position;
+    }
+
     public void AddEnemyInZone(EnemyBase enemy)
     {
         inZoneEnemies.Add(enemy);

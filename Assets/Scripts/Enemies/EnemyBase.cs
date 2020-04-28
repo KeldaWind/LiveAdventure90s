@@ -9,6 +9,8 @@ public class EnemyBase : MonoBehaviour
         shootFrequenceSystem = new FrequenceSystem(projectilesPerSecond);
         shootFrequenceSystem.SetUp(CheckIfShoot);
         shootFrequenceSystem.Stop();
+
+        lifeSystem.OnLifeReachedZero += Die;
     }
 
     private void Update()
@@ -39,6 +41,19 @@ public class EnemyBase : MonoBehaviour
         UpdateShooting();
     }
 
+    [Header("Life")]
+    [SerializeField] DamageableEntity lifeSystem = default;
+
+    bool pendingKill = false;
+    public virtual void Die()
+    {
+        if (pendingKill)
+            return;
+
+        pendingKill = true;
+        Destroy(gameObject);
+    }
+
     #region Shoot
     [Header("Shooting")]
     [SerializeField] ProjectileBase enemyProjectilePrefab = default;
@@ -66,7 +81,7 @@ public class EnemyBase : MonoBehaviour
         /*print("SHOOT");
         Debug.DrawRay(shootPosition, shootDirection * 5.0f, Color.magenta, 0.25f);*///
         ProjectileBase newProj = Instantiate(enemyProjectilePrefab, shootPosition, Quaternion.identity);
-        newProj.ShootProjectile(shootDirection);
+        newProj.ShootProjectile(shootDirection, gameObject);
     }
 
     public void CheckIfShoot()

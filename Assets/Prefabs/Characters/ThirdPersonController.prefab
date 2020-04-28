@@ -227,6 +227,7 @@ GameObject:
   - component: {fileID: 8933795941873096121}
   - component: {fileID: 7246618163430893962}
   - component: {fileID: 3541430697146294809}
+  - component: {fileID: 4698746383479318269}
   m_Layer: 9
   m_Name: ThirdPersonController
   m_TagString: Untagged
@@ -270,9 +271,13 @@ MonoBehaviour:
   jumpingKeyboardInput: 32
   shootingGamepadInput: 332
   shootingKeyboardInput: 101
+  selfBody: {fileID: 4698746383479318269}
   selfCollider: {fileID: 7246618163430893962}
-  boxRaycaster: {fileID: 8933795941873096121}
+  movementsCheckMask:
+    serializedVersion: 2
+    m_Bits: 311
   movementThreshold: 0.01
+  skinWidthMultiplier: 0.99
   maxHorizontalSpeed: 12
   horizontalAcceleration: 120
   horizontalAccelerationTurningBack: 160
@@ -284,6 +289,7 @@ MonoBehaviour:
   verticalGravity: -70
   maxVerticalDownVelocity: -128
   onGroundCheckDistance: 0.1
+  ceilingCheckDistance: 0.05
   extentJumpDelay: 0.2
   lateJumpDelay: 0.1
   projectilePrefab: {fileID: 187310165543794603, guid: 28dc791e181797b45bf3f8654ac22d94,
@@ -291,6 +297,7 @@ MonoBehaviour:
   leftShootPosition: {fileID: 5275521740204262344}
   rightShootPosition: {fileID: 2582463428784489348}
   bulletsPerSecond: 8
+  lifeSystem: {fileID: 3541430697146294809}
 --- !u!114 &8933795941873096121
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -316,7 +323,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6236477104522032717}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: f2b5e249d67f7884aa122b2c5d61a977, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -336,3 +343,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damageTag: 0
   maxLife: 10
+--- !u!54 &4698746383479318269
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6236477104522032717}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 120
+  m_CollisionDetection: 0

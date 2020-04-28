@@ -18,9 +18,13 @@ public class ThirdPersonController : MonoBehaviour
     bool isShootingInputDown = false;
 
     [Header("Collisions")]
+    [SerializeField] Rigidbody selfBody = default;
     [SerializeField] BoxCollider selfCollider = default;
-    [SerializeField] BoxRaycaster boxRaycaster = default;
+    //[SerializeField] BoxRaycaster boxRaycaster = default;
+    [SerializeField] LayerMask movementsCheckMask = default;
     [SerializeField] float movementThreshold = 0.01f;
+    [SerializeField] float skinWidthMultiplier = 0.99f;
+    bool isOnGround = false;
 
     private void Start()
     {
@@ -32,7 +36,8 @@ public class ThirdPersonController : MonoBehaviour
         shootingFrequenceSystem.SetUp(CheckForShootAgain);
         shootingFrequenceSystem.Stop();
 
-        boxRaycaster.OnLanded = CheckForExtentJump;
+        SetUpLifeSystem();
+        //boxRaycaster.OnLanded = CheckForExtentJump;
     }
 
     void Update()
@@ -42,9 +47,15 @@ public class ThirdPersonController : MonoBehaviour
         UpdateHorizontalMovementValues(currentHorizontalInput);
         UpdateVerticalMovementValues();
 
-        Vector3 movement = new Vector3(currentHorizontalSpeed, currentVerticalSpeed, 0) * Time.deltaTime;
+        //Vector3 movement = new Vector3(currentHorizontalSpeed, currentVerticalSpeed, 0) * Time.deltaTime;
 
-        Move(movement);
+        //Move(movement);
+        //UpdatePhysics();
+    }
+
+    private void FixedUpdate()
+    {
+        UpdatePhysics();
     }
 
     public void HandleInputs()
@@ -69,11 +80,6 @@ public class ThirdPersonController : MonoBehaviour
             EndJumping();
         }
 
-        /*if(CanExtentJump && (GetJumpKeyUp))
-        {
-            InterruptExtentJumpDelay();
-        }*/
-
         if ((Input.GetKeyDown(shootingGamepadInput) || Input.GetKeyDown(shootingKeyboardInput)))
         {
             isShootingInputDown = true;
@@ -85,70 +91,91 @@ public class ThirdPersonController : MonoBehaviour
         }
     }
 
+    #region Global Movement - OLD
+    /* void Move(Vector3 movement)
+     {
+         Vector3 initialMovement = movement;
+
+         if (movement.x != 0)
+             movement.x = boxRaycaster.RaycastHorizontal(movement.x);
+         else
+             boxRaycaster.ResetLastHorizontalHitResult();
+         if (Mathf.Abs(movement.x) < movementThreshold)
+             movement.x = 0;
+
+         if (movement.y != 0)
+             movement.y = boxRaycaster.RaycastVertical(movement.y);
+         else
+             boxRaycaster.ResetLastVerticalHitResult();
+         if (Mathf.Abs(movement.y) < movementThreshold)
+             movement.y = 0;
+
+         if (movement.x > 0) boxRaycaster.flags.left = false;
+         if (movement.x < 0) boxRaycaster.flags.right = false;
+         if (movement.y > 0) boxRaycaster.flags.below = false;
+         if (movement.y < 0) boxRaycaster.flags.above = false;
+
+         if (initialMovement != movement)
+         {
+             if (boxRaycaster.flags.right && initialMovement.x > 0)
+             {
+                 currentHorizontalSpeed = 0;
+             }
+             else if (boxRaycaster.flags.left && initialMovement.x < 0)
+             {
+                 currentHorizontalSpeed = 0;
+             }
+
+             if (initialMovement.y < 0 && IsOnGround && currentVerticalSpeed < 0)
+             {
+                 currentVerticalSpeed = 0;
+             }
+
+             if (initialMovement.y > 0 && boxRaycaster.flags.above)
+             {
+                 currentVerticalSpeed = 0;
+             }
+         }
+
+         transform.Translate(movement);
+     }*/
+    #endregion
+
     #region Global Movement
-    void Move(Vector3 movement)
+    public void UpdatePhysics()
     {
-        Vector3 initialMovement = movement;
+        CheckForGround();
+        if (currentVerticalSpeed > 0)
+            CheckForCeiling();
 
-        if (movement.x != 0)
-            movement.x = boxRaycaster.RaycastHorizontal(movement.x);
-        else
-            boxRaycaster.ResetLastHorizontalHitResult();
-        if (Mathf.Abs(movement.x) < movementThreshold)
-            movement.x = 0;
+        selfBody.velocity = new Vector3(currentHorizontalSpeed, currentVerticalSpeed, 0);
+    }
 
-        if (movement.y != 0)
-            movement.y = boxRaycaster.RaycastVertical(movement.y);
-        else
-            boxRaycaster.ResetLastVerticalHitResult();
-        if (Mathf.Abs(movement.y) < movementThreshold)
-            movement.y = 0;
+    public void CheckForGround()
+    {
+        bool startIsOnGround = isOnGround;
 
-        if (movement.x > 0) boxRaycaster.flags.left = false;
-        if (movement.x < 0) boxRaycaster.flags.right = false;
-        if (movement.y > 0) boxRaycaster.flags.below = false;
-        if (movement.y < 0) boxRaycaster.flags.above = false;
+        Vector3 actualSize = new Vector3(selfCollider.size.x * transform.lossyScale.x, selfCollider.size.y * transform.lossyScale.y, selfCollider.size.z * transform.lossyScale.z) * skinWidthMultiplier;
 
-        if (initialMovement != movement)
+        isOnGround = Physics.BoxCast(transform.position + selfCollider.center, actualSize * 0.5f, Vector3.down, transform.rotation, onGroundCheckDistance, movementsCheckMask);
+        if (isOnGround && currentVerticalSpeed < 0)
         {
-            if (boxRaycaster.flags.right && initialMovement.x > 0)
-            {
-                currentHorizontalSpeed = 0;
-            }
-            else if (boxRaycaster.flags.left && initialMovement.x < 0)
-            {
-                currentHorizontalSpeed = 0;
-            }
-
-            if (initialMovement.y < 0 && IsOnGround && currentVerticalSpeed < 0)
-            {
-                currentVerticalSpeed = 0;
-            }
-
-            if (initialMovement.y > 0 && boxRaycaster.flags.above)
-            {
-                currentVerticalSpeed = 0;
-            }
+            currentVerticalSpeed = 0;
+            CheckForExtentJump();
         }
 
-        /*if (boxRaycaster.GetLastHorizontalHitResult.collider)
+        if (startIsOnGround && startIsOnGround != isOnGround)
         {
-            ProjectileBase hitProjectile = boxRaycaster.GetLastHorizontalHitResult.collider.GetComponent<ProjectileBase>();
-            if (hitProjectile != null)
-            {
-                hitProjectile.HandleCollision(selfCollider, new RaycastHit());
-            }
+            StartLateJumpDelay();
         }
-        if (boxRaycaster.GetLastVerticalHitResult.collider && boxRaycaster.GetLastHorizontalHitResult.collider != boxRaycaster.GetLastVerticalHitResult.collider)
-        {
-            ProjectileBase hitProjectile = boxRaycaster.GetLastVerticalHitResult.collider.GetComponent<ProjectileBase>();
-            if (hitProjectile != null)
-            {
-                hitProjectile.HandleCollision(selfCollider, new RaycastHit());
-            }
-        }*/
+    }
 
-        transform.Translate(movement);
+    public void CheckForCeiling()
+    {
+        Vector3 actualSize = new Vector3(selfCollider.size.x * transform.lossyScale.x, selfCollider.size.y * transform.lossyScale.y, selfCollider.size.z * transform.lossyScale.z) * skinWidthMultiplier;
+        bool hitCeiling = Physics.BoxCast(transform.position + selfCollider.center, actualSize * 0.5f, Vector3.up, transform.rotation, ceilingCheckDistance, movementsCheckMask);
+        if (hitCeiling)
+            currentVerticalSpeed = 0;
     }
     #endregion
 
@@ -187,25 +214,21 @@ public class ThirdPersonController : MonoBehaviour
     [SerializeField] float verticalGravity = -9.81f;
     [SerializeField] float maxVerticalDownVelocity = -20.0f;
     [SerializeField] float onGroundCheckDistance = 0.1f;
+    [SerializeField] float ceilingCheckDistance = 0.05f;
 
     float currentVerticalSpeed = 0f;
     TimerSystem jumpDurationSystem = new TimerSystem();
     bool isJumping = false;
-    public bool IsOnGround => boxRaycaster.flags.below == true;
+    //public bool IsOnGround => boxRaycaster.flags.below == true;
+    public bool IsOnGround => isOnGround;
 
     public void UpdateVerticalMovementValues()
     {
         UpdateJumpAssists();
         if (!isJumping)
         {
-            if (IsOnGround)
-            {
-                boxRaycaster.CheckForGroundBelow(onGroundCheckDistance);
-                if (!IsOnGround)
-                    StartLateJumpDelay();
-            }
-            else
-                currentVerticalSpeed = Mathf.Clamp(currentVerticalSpeed + verticalGravity * Time.deltaTime, maxVerticalDownVelocity, currentVerticalSpeed);
+
+            currentVerticalSpeed = Mathf.Clamp(currentVerticalSpeed + verticalGravity * Time.deltaTime, maxVerticalDownVelocity, currentVerticalSpeed);
         }
         else
         {
@@ -323,7 +346,7 @@ public class ThirdPersonController : MonoBehaviour
         Vector3 shootPosition = (currentShootDirection == ShootDirection.Right ? rightShootPosition : leftShootPosition).position;
         Quaternion shootRotation = (currentShootDirection == ShootDirection.Right ? rightShootPosition : leftShootPosition).rotation;
         ProjectileBase newProjectile = Instantiate(projectilePrefab, shootPosition, shootRotation);
-        newProjectile.ShootProjectile(currentShootDirection == ShootDirection.Right ? Vector3.right : Vector3.left);
+        newProjectile.ShootProjectile(currentShootDirection == ShootDirection.Right ? Vector3.right : Vector3.left, gameObject);
     }
 
     public void CheckForShootAgain()
@@ -335,6 +358,30 @@ public class ThirdPersonController : MonoBehaviour
             shootingFrequenceSystem.Stop();
             shootingFrequenceSystem.ResetFrequence();
         }
+    }
+    #endregion
+
+    #region Collisions
+    #endregion
+
+    #region Life Management and Debug
+    [Header("Life System")]
+    [SerializeField] DamageableEntity lifeSystem = default;
+
+    public void SetUpLifeSystem()
+    {
+        lifeSystem.OnReceivedDamages = OnReceivedDamages;
+        lifeSystem.OnLifeReachedZero = Die;
+    }
+
+    public void OnReceivedDamages(int delta, int remainingLife)
+    {
+        print("Remaining life : " + remainingLife);
+    }
+
+    public void Die()
+    {
+        print("I'm die");
     }
     #endregion
 }

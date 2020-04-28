@@ -4,64 +4,109 @@ using UnityEngine;
 
 public class ProjectileEnemyBarrel : ProjectileBase
 {
+    private void Start()
+    {
+        barrelRenderer.material = normalMaterial;
+        lifeSystem.OnLifeReachedZero += DestroyProjectile;
+        lifeSystem.OnReceivedDamages += PlayHitFeedback;
+    }
+
     public override void Update()
     {
-        if (mustBeDestroyed)
-        {
-            DestroyProjectile();
-            return;
-        }
-
         UpdateVerticalMovementValues();
         base.Update();
     }
 
+    private void FixedUpdate()
+    {
+        UpdatePhysics();
+    }
+
     [Header("Physics and Movements")]
     [SerializeField] BoxCollider barrelCollider = default;
-    [SerializeField] BoxRaycaster barrelRaycaster = default;
+    [SerializeField] LayerMask movementsCheckMask = default;
     [SerializeField] float gravity = -30f;
     [SerializeField] float maxVerticalDownSpeed = -30f;
-    [SerializeField] float movementThreshold = 0.001f;
+    [SerializeField] float skinWidthMultiplier = 0.99f;
     [SerializeField] float onGroundCheckDistance = 0.1f;
     float currentHorizontalSpeed = 0f;
     float currentVerticalSpeed = 0f;
+    bool isOnGround = false;
 
     Vector3 beforeMovementPosition = Vector3.zero;
 
-    bool IsOnGround => barrelRaycaster.flags.below;
+    bool IsOnGround => isOnGround;
 
     [Header("Barrel")]
     [SerializeField] float shootForce = 10f;
-    bool mustBeDestroyed = false;
+    [SerializeField] DamageableEntity lifeSystem = default;
 
-    public override void ShootProjectile(Vector3 direction)
+    [Header("Rendering")]
+    [SerializeField] Renderer barrelRenderer = default;
+    [SerializeField] Material normalMaterial = default;
+    [SerializeField] Material hitMaterial = default;
+    [SerializeField] float hitFeedbackDuration = 0.05f;
+
+    public override void ShootProjectile(Vector3 direction, GameObject instigator)
     {
-        base.ShootProjectile(direction);
+        base.ShootProjectile(direction, instigator);
 
         currentHorizontalSpeed = direction.x * shootForce;
         currentVerticalSpeed = direction.y * shootForce;
     }
 
-    public override void HandleCollision(Collider hitCollider, RaycastHit hit)
+    public override void HandleCollision(Collider collider, Collision collision)
     {
-        if (mustBeDestroyed)
+        GameObject hitObject = collider.gameObject;
+
+        if (shootInstigator == hitObject)
             return;
 
-        print("Barrel Collision : " + hitCollider.gameObject.name);
-        DamageableEntity hitDamageableEntity = hitCollider.GetComponent<DamageableEntity>();
+        bool mustDestroy = false;
+        bool preventDestroyOnWall = false;
+
+        ProjectileBase hitProjectile = hitObject.GetComponent<ProjectileBase>();
+        if (hitProjectile)
+        {
+            preventDestroyOnWall = true;
+        }
+
+        if (!preventDestroyOnWall && collision != null)
+        {
+            Vector3 averageNormal = Vector3.zero;
+            ContactPoint[] points = collision.contacts;
+            foreach(ContactPoint point in points)
+            {
+                averageNormal += point.normal;
+            }
+            averageNormal /= points.Length;
+
+            if (Mathf.Abs(Vector3.Dot(averageNormal, Vector3.up)) < 0.5f)
+            {
+                print("Destroy from collision");
+                mustDestroy = true;
+            }
+        }
+
+        DamageableEntity hitDamageableEntity = hitObject.GetComponent<DamageableEntity>();
         if (hitDamageableEntity)
         {
-            if (hitDamageableEntity.GetDamageTag != damageTag)
-            {
+            if (hitDamageableEntity.GetDamageTag != damageTag && damageTag != DamageTag.Environment)
                 hitDamageableEntity.ReceiveDamage(projectileDamages);
-                mustBeDestroyed = true;
-            }
+
+            mustDestroy = true;
+        }
+
+        if (mustDestroy)
+        {
+            DestroyProjectile();
         }
     }
 
     public override void UpdateTrajectory()
     {
-        Vector3 movement = new Vector3(currentHorizontalSpeed, currentVerticalSpeed, 0) * Time.deltaTime;
+        #region OLD
+        /*Vector3 movement = new Vector3(currentHorizontalSpeed, currentVerticalSpeed, 0) * Time.deltaTime;
         Vector3 initialMovement = movement;
 
         if (movement.x != 0)
@@ -106,7 +151,8 @@ public class ProjectileEnemyBarrel : ProjectileBase
         if (mustBeDestroyed)
         {
             DestroyProjectile();
-        }
+        }*/
+        #endregion
     }
 
     public void UpdateVerticalMovementValues()
@@ -118,9 +164,41 @@ public class ProjectileEnemyBarrel : ProjectileBase
                 currentVerticalSpeed = Mathf.Clamp(currentVerticalSpeed + gravity * Time.deltaTime, maxVerticalDownSpeed, currentVerticalSpeed);
             }
         }
-        else
+    }
+
+    public void UpdatePhysics()
+    {
+        CheckForGround();
+
+        selfBody.velocity = new Vector3(currentHorizontalSpeed, currentVerticalSpeed, 0);
+    }
+
+    public void CheckForGround()
+    {
+        bool startOnGround = isOnGround;
+
+        Vector3 actualSize = new Vector3(barrelCollider.size.x * transform.lossyScale.x, barrelCollider.size.y * transform.lossyScale.y, barrelCollider.size.z * transform.lossyScale.z) * skinWidthMultiplier;
+
+        RaycastHit hit = new RaycastHit();
+        isOnGround = Physics.BoxCast(transform.position + barrelCollider.center, actualSize * 0.5f, Vector3.down, out hit, transform.rotation, onGroundCheckDistance, movementsCheckMask);
+
+        if (isOnGround && currentVerticalSpeed < 0)
+            currentVerticalSpeed = 0;
+
+        if (!startOnGround && isOnGround != startOnGround)
         {
-            barrelRaycaster.CheckForGroundBelow(onGroundCheckDistance);
+            HandleCollision(hit.collider, null);
         }
+    }
+
+    public void PlayHitFeedback(int delta, int remainingLife)
+    {
+        StartCoroutine(HitFeedbackCoroutine());
+    }
+    public IEnumerator HitFeedbackCoroutine()
+    {
+        barrelRenderer.material = hitMaterial;
+        yield return new WaitForSeconds(hitFeedbackDuration);
+        barrelRenderer.material = normalMaterial;
     }
 }

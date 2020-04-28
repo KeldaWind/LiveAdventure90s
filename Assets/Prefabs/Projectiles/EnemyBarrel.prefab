@@ -11,8 +11,9 @@ GameObject:
   - component: {fileID: 2451139120977189096}
   - component: {fileID: 2451139120977189097}
   - component: {fileID: 2451139120977189099}
-  - component: {fileID: 2451139120977189098}
-  m_Layer: 0
+  - component: {fileID: 5700027043688227679}
+  - component: {fileID: 9122032928857912134}
+  m_Layer: 13
   m_Name: EnemyBarrel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41,7 +42,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2451139120977189102}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: b070bcde04401f1438488aa7ea585d43, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -59,19 +60,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 666a33b2611eeb34eb84374275503149, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  checkMask:
-    serializedVersion: 2
-    m_Bits: 823
+  selfBody: {fileID: 5700027043688227679}
   projectileDamages: 1
   damageTag: 1
   barrelCollider: {fileID: 2451139120977189097}
-  barrelRaycaster: {fileID: 2451139120977189098}
+  movementsCheckMask:
+    serializedVersion: 2
+    m_Bits: 1847
   gravity: -30
   maxVerticalDownSpeed: -30
-  movementThreshold: 0.001
+  skinWidthMultiplier: 0.99
   onGroundCheckDistance: 0.1
   shootForce: 10
---- !u!114 &2451139120977189098
+  lifeSystem: {fileID: 9122032928857912134}
+  barrelRenderer: {fileID: 2451139120990389888}
+  normalMaterial: {fileID: 2100000, guid: 09c114d049a9eb945bcc097a0694fb2c, type: 2}
+  hitMaterial: {fileID: 2100000, guid: 62869b7d9926bef47a8baa877eaf8b3e, type: 2}
+  hitFeedbackDuration: 0.05
+--- !u!54 &5700027043688227679
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2451139120977189102}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 0
+--- !u!114 &9122032928857912134
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -80,15 +102,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 2451139120977189102}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0dd4810f0f848b41be4ac530dd8001a, type: 3}
+  m_Script: {fileID: 11500000, guid: 64264c7646494a24b91f1977e04c8b13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selfCollider: {fileID: 2451139120977189097}
-  selfTr: {fileID: 2451139120977189096}
-  checkMask:
-    serializedVersion: 2
-    m_Bits: 823
-  skinWidthMultiplier: 0.99
+  damageTag: 1
+  maxLife: 3
 --- !u!1 &2451139120990389894
 GameObject:
   m_ObjectHideFlags: 0
@@ -100,7 +118,7 @@ GameObject:
   - component: {fileID: 2451139120990389889}
   - component: {fileID: 2451139120990389891}
   - component: {fileID: 2451139120990389888}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}

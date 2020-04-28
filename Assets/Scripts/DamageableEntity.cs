@@ -10,6 +10,16 @@ public class DamageableEntity : MonoBehaviour
     public DamageTag GetDamageTag => damageTag;
     [SerializeField] int maxLife = 10;
     int currentLife = 10;
+    bool canReceiveDamages = true;
+    public void SetImmuneToDamages()
+    {
+        canReceiveDamages = false;
+    }
+
+    public void ResetCanReceiveDamages()
+    {
+        canReceiveDamages = true;
+    }
 
     public Action<int, int> OnLifeAmountChanged;
 

@@ -17,8 +17,8 @@ TagManager:
   - ThirdPersonCharacter
   - Enemies
   - EnemiesDetectionZone
-  - 
-  - 
+  - PlayerProjectiles
+  - EnemiesProjectiles
   - 
   - 
   - 
