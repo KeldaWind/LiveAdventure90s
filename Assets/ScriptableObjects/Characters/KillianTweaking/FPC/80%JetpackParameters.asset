@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7540dcd5b2fdc384d8e6218b5cb1a331, type: 3}
-  m_Name: SebJetpackParameters
+  m_Name: 80%JetpackParameters
   m_EditorClassIdentifier: 
-  jetpackMaxUpSpeed: 50
-  jetpackMaxDownSpeed: -36
-  jetpackUpAcceleration: 15
+  jetpackMaxUpSpeed: 15
+  jetpackMaxDownSpeed: -24
+  jetpackUpAcceleration: 50
   jetpackGravityWhenGoingUp: -24
-  jetpackGravityWhenGoingDown: -11
+  jetpackGravityWhenGoingDown: -6

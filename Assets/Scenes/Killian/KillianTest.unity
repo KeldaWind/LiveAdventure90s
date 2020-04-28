@@ -104016,6 +104016,12 @@ PrefabInstance:
       propertyPath: jetpackMaxUpSpeed
       value: 20
       objectReference: {fileID: 0}
+    - target: {fileID: 1157172678052549753, guid: 987b1e2d3570dca4ab0d20397d5b30cd,
+        type: 3}
+      propertyPath: jetpackParameters
+      value: 
+      objectReference: {fileID: 11400000, guid: ab488fdc3ff214944abf6f7bf5adb0c6,
+        type: 2}
     - target: {fileID: 1157172678069516478, guid: 987b1e2d3570dca4ab0d20397d5b30cd,
         type: 3}
       propertyPath: field of view
