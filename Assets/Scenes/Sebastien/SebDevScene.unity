@@ -27750,6 +27750,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1157172678052549753, guid: 987b1e2d3570dca4ab0d20397d5b30cd,
         type: 3}
+      propertyPath: jetpackParameters
+      value: 
+      objectReference: {fileID: 11400000, guid: d9224ac570abc0447be66421803d0088,
+        type: 2}
+    - target: {fileID: 1157172678052549753, guid: 987b1e2d3570dca4ab0d20397d5b30cd,
+        type: 3}
       propertyPath: jetpackMaxUpSpeed
       value: 0
       objectReference: {fileID: 0}
