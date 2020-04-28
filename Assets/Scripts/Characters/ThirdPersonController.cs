@@ -9,6 +9,11 @@ public class ThirdPersonController : MonoBehaviour
     [SerializeField] KeyCode jumpingKeyboardInput = KeyCode.Space;
     [SerializeField] KeyCode shootingGamepadInput = KeyCode.JoystickButton2;
     [SerializeField] KeyCode shootingKeyboardInput = KeyCode.E;
+
+    public bool GetJumpKeyDown => (Input.GetKeyDown(jumpingGamepadInput) || Input.GetKeyDown(jumpingKeyboardInput));
+    public bool GetJumpKey => (Input.GetKey(jumpingGamepadInput) || Input.GetKey(jumpingKeyboardInput));
+    public bool GetJumpKeyUp => (Input.GetKeyUp(jumpingGamepadInput) || Input.GetKeyUp(jumpingKeyboardInput));
+
     float currentHorizontalInput = 0f;
     bool isShootingInputDown = false;
 
@@ -19,10 +24,14 @@ public class ThirdPersonController : MonoBehaviour
     private void Start()
     {
         jumpDurationSystem = new TimerSystem(jumpMaxDuration, EndJumping);
+        lateJumpDurationSystem = new TimerSystem(lateJumpDelay, null);
+        extentJumpDurationSystem = new TimerSystem(extentJumpDelay, null);
 
         shootingFrequenceSystem = new FrequenceSystem(bulletsPerSecond);
         shootingFrequenceSystem.SetUp(CheckForShootAgain);
         shootingFrequenceSystem.Stop();
+
+        boxRaycaster.OnLanded = CheckForExtentJump;
     }
 
     void Update()
@@ -41,19 +50,27 @@ public class ThirdPersonController : MonoBehaviour
         currentHorizontalInput = Input.GetAxis(horizontalAxis);
         currentHorizontalInput = (Mathf.Abs(currentHorizontalInput) > minimumAxisValueToConsiderHorizontalMovement) ? Mathf.Sign(currentHorizontalInput) : 0;
 
-        if(currentHorizontalInput != 0)
+        if (currentHorizontalInput != 0)
         {
             currentShootDirection = currentHorizontalInput > 0 ? ShootDirection.Right : ShootDirection.Left;
         }
 
-        if ((Input.GetKeyDown(jumpingGamepadInput) || Input.GetKeyDown(jumpingKeyboardInput)) && IsOnGround)
+        if (GetJumpKeyDown)
         {
-            StartJumping();
+            if(IsOnGround || CanLateJump)
+                StartJumping();
+            else
+                StartExtentJumpDelay();
         }
-        else if((Input.GetKeyUp(jumpingGamepadInput) || Input.GetKeyUp(jumpingKeyboardInput)) && isJumping)
+        else if (GetJumpKeyUp && isJumping)
         {
             EndJumping();
         }
+
+        /*if(CanExtentJump && (GetJumpKeyUp))
+        {
+            InterruptExtentJumpDelay();
+        }*/
 
         if ((Input.GetKeyDown(shootingGamepadInput) || Input.GetKeyDown(shootingKeyboardInput)))
         {
@@ -97,7 +114,7 @@ public class ThirdPersonController : MonoBehaviour
                 currentHorizontalSpeed = 0;
             }
 
-            if (initialMovement.y < 0 && IsOnGround)
+            if (initialMovement.y < 0 && IsOnGround && currentVerticalSpeed < 0)
             {
                 currentVerticalSpeed = 0;
             }
@@ -108,7 +125,7 @@ public class ThirdPersonController : MonoBehaviour
             }
         }
 
-        
+
 
         transform.Translate(movement);
     }
@@ -126,17 +143,17 @@ public class ThirdPersonController : MonoBehaviour
 
     public void UpdateHorizontalMovementValues(float input)
     {
-        if(input == 0)
+        if (input == 0)
         {
             currentHorizontalSpeed = Mathf.Clamp(
-                currentHorizontalSpeed - Mathf.Sign(currentHorizontalSpeed) * horizontalDeceleration * Time.deltaTime * (IsOnGround ? 1 : airDrag), 
-                currentHorizontalSpeed > 0 ? 0 : currentHorizontalSpeed, 
-                currentHorizontalSpeed < 0 ? 0 : currentHorizontalSpeed );
+                currentHorizontalSpeed - Mathf.Sign(currentHorizontalSpeed) * horizontalDeceleration * Time.deltaTime * (IsOnGround ? 1 : airDrag),
+                currentHorizontalSpeed > 0 ? 0 : currentHorizontalSpeed,
+                currentHorizontalSpeed < 0 ? 0 : currentHorizontalSpeed);
         }
         else
         {
             float usedAcceleration = Mathf.Sign(currentHorizontalSpeed) == input ? horizontalAcceleration : horizontalAccelerationTurningBack;
-            currentHorizontalSpeed = Mathf.Clamp(currentHorizontalSpeed + usedAcceleration * Time.deltaTime * input * (IsOnGround ? 1 : airControl), 
+            currentHorizontalSpeed = Mathf.Clamp(currentHorizontalSpeed + usedAcceleration * Time.deltaTime * input * (IsOnGround ? 1 : airControl),
                 -maxHorizontalSpeed, maxHorizontalSpeed);
         }
     }
@@ -157,10 +174,15 @@ public class ThirdPersonController : MonoBehaviour
 
     public void UpdateVerticalMovementValues()
     {
+        UpdateJumpAssists();
         if (!isJumping)
         {
             if (IsOnGround)
+            {
                 boxRaycaster.CheckForGroundBelow(onGroundCheckDistance);
+                if (!IsOnGround)
+                    StartLateJumpDelay();
+            }
             else
                 currentVerticalSpeed = Mathf.Clamp(currentVerticalSpeed + verticalGravity * Time.deltaTime, maxVerticalDownVelocity, currentVerticalSpeed);
         }
@@ -175,12 +197,77 @@ public class ThirdPersonController : MonoBehaviour
         isJumping = true;
         currentVerticalSpeed = jumpForce;
         jumpDurationSystem.StartTimer();
+
+        if (CanLateJump)
+            InterruptLateJumpDelay();
+
+        if (CanExtentJump)
+        {
+            InterruptExtentJumpDelay();
+            if (!GetJumpKey)
+                EndJumping();
+        }
     }
 
     public void EndJumping()
     {
         isJumping = false;
     }
+
+    #region Jump Assists
+    [Header("Jump Assists")]
+    [Tooltip("Duration during which the jump input is consider before jumping")]
+    [SerializeField] float extentJumpDelay = 0.2f;
+    [Tooltip("Duration during which the player can still jump after getting down a ledge without jumping")]
+    [SerializeField] float lateJumpDelay = 0.2f;
+
+    TimerSystem extentJumpDurationSystem = new TimerSystem();
+    TimerSystem lateJumpDurationSystem = new TimerSystem();
+
+    public bool CanExtentJump => !extentJumpDurationSystem.TimerOver;
+    public bool CanLateJump => !lateJumpDurationSystem.TimerOver;
+
+    public void UpdateJumpAssists()
+    {
+        if (!lateJumpDurationSystem.TimerOver)
+        {
+            lateJumpDurationSystem.UpdateTimer();
+        }
+
+        if (!extentJumpDurationSystem.TimerOver)
+        {
+            extentJumpDurationSystem.UpdateTimer();
+        }
+    }
+
+    public void StartLateJumpDelay()
+    {
+        lateJumpDurationSystem.StartTimer();
+    }
+
+    public void InterruptLateJumpDelay()
+    {
+        lateJumpDurationSystem.EndTimer();
+    }
+
+    public void StartExtentJumpDelay()
+    {
+        extentJumpDurationSystem.StartTimer();
+    }
+
+    public void InterruptExtentJumpDelay()
+    {
+        extentJumpDurationSystem.EndTimer();
+    }
+
+    public void CheckForExtentJump()
+    {
+        if (CanExtentJump)
+        {
+            StartJumping();
+        }
+    }
+    #endregion
     #endregion
 
     #region Shooting
@@ -212,9 +299,6 @@ public class ThirdPersonController : MonoBehaviour
 
     public void ShootProjectile()
     {
-        //Debug.DrawRay((currentShootDirection == ShootDirection.Right ? rightShootPosition : leftShootPosition).position, 
-        //    (currentShootDirection == ShootDirection.Right ? Vector3.right : Vector3.left) * 5f, Color.red, 0.05f);
-
         Vector3 shootPosition = (currentShootDirection == ShootDirection.Right ? rightShootPosition : leftShootPosition).position;
         Quaternion shootRotation = (currentShootDirection == ShootDirection.Right ? rightShootPosition : leftShootPosition).rotation;
         ProjectileBase newProjectile = Instantiate(projectilePrefab, shootPosition, shootRotation);

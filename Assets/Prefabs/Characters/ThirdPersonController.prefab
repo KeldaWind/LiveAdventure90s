@@ -206,6 +206,8 @@ MonoBehaviour:
   verticalGravity: -64
   maxVerticalDownVelocity: -128
   onGroundCheckDistance: 0.1
+  extentJumpDelay: 0.2
+  lateJumpDelay: 0.1
   projectilePrefab: {fileID: 187310165543794603, guid: 28dc791e181797b45bf3f8654ac22d94,
     type: 3}
   leftShootPosition: {fileID: 5275521740204262344}
