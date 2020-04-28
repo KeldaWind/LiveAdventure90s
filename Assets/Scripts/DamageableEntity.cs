@@ -23,7 +23,7 @@ public class DamageableEntity : MonoBehaviour
 
     public Action<int, int> OnLifeAmountChanged;
 
-    public Action<int, int> OnReceivedDamages;
+    public Action<int, int, GameObject> OnReceivedDamages;
 
     public Action OnLifeReachedZero;
 
@@ -57,13 +57,16 @@ public class DamageableEntity : MonoBehaviour
         OnLifeAmountChanged?.Invoke(amount, currentLife);
     }
 
-    public void ReceiveDamage(int amount)
+    public void ReceiveDamage(int amount, GameObject damageInstigator)
     {
+        if (!canReceiveDamages)
+            return;
+
         amount = Mathf.Abs(amount);
 
         LoseLife(amount);
 
-        OnReceivedDamages?.Invoke(-amount, currentLife);
+        OnReceivedDamages?.Invoke(-amount, currentLife, damageInstigator);
     }
 
     public void LifeReachedZero()

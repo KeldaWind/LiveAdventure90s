@@ -31,7 +31,7 @@ public class ProjectileThirdPersonCharacter : ProjectileBase
         if (hitDamageableEntity)
         {
             if (hitDamageableEntity.GetDamageTag != damageTag && damageTag != DamageTag.Environment)
-                hitDamageableEntity.ReceiveDamage(projectileDamages);
+                hitDamageableEntity.ReceiveDamage(projectileDamages, gameObject);
         }
 
         DestroyProjectile();

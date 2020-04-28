@@ -10,7 +10,9 @@ public class EnemyBase : MonoBehaviour
         shootFrequenceSystem.SetUp(CheckIfShoot);
         shootFrequenceSystem.Stop();
 
+        lifeSystem.OnReceivedDamages += PlayHitFeedback;
         lifeSystem.OnLifeReachedZero += Die;
+        enemyRenderer.material = normalMaterial;
     }
 
     private void Update()
@@ -43,6 +45,23 @@ public class EnemyBase : MonoBehaviour
 
     [Header("Life")]
     [SerializeField] DamageableEntity lifeSystem = default;
+    [SerializeField] float hitFeedbackDuration = 0.1f;
+
+    public void PlayHitFeedback(int delta, int remainingLife, GameObject damageInstigator)
+    {
+        StartCoroutine(HitFeedbackCoroutine());
+    }
+    public IEnumerator HitFeedbackCoroutine()
+    {
+        enemyRenderer.material = hitMaterial;
+        yield return new WaitForSeconds(hitFeedbackDuration);
+        enemyRenderer.material = normalMaterial;
+    }
+
+    [Header("Rendering")]
+    [SerializeField] Renderer enemyRenderer = default;
+    [SerializeField] Material normalMaterial = default;
+    [SerializeField] Material hitMaterial = default;
 
     bool pendingKill = false;
     public virtual void Die()
@@ -53,6 +72,10 @@ public class EnemyBase : MonoBehaviour
         pendingKill = true;
         Destroy(gameObject);
     }
+
+    [Header("Melee damaging")]
+    [SerializeField] int meleeDamages = 2;
+    public int GetMeleeDamages => meleeDamages;
 
     #region Shoot
     [Header("Shooting")]

@@ -109,6 +109,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lifeSystem: {fileID: 3531756367104804636}
+  hitFeedbackDuration: 0.1
+  enemyRenderer: {fileID: 6762457594735239115}
+  normalMaterial: {fileID: 2100000, guid: 09c114d049a9eb945bcc097a0694fb2c, type: 2}
+  hitMaterial: {fileID: 2100000, guid: 62869b7d9926bef47a8baa877eaf8b3e, type: 2}
   enemyProjectilePrefab: {fileID: 2451139120977189099, guid: 718ddec6156d68e429b69acaf5834a02,
     type: 3}
   projectilesPerSecond: 0.5
