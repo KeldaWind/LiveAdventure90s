@@ -14,9 +14,16 @@ public class Following_Object : MonoBehaviour
     private float plateformSpeed = 10f;
     public float followingMinRange = 0.35f;
     public float followingMaxRange = 2f;
+    [SerializeField] private float accelerationModifier;
 
     public bool isObjectFallingOutOfRange;
     public bool canObjectMove = true;
+    private bool isGoingUp;
+    [SerializeField] private bool isMoving;
+    [SerializeField] private bool isAccelerating;
+
+
+    public AnimationCurve accelerationCurve;
 
     public LayerMask blockingElementsLayerMask;
 
@@ -48,17 +55,11 @@ public class Following_Object : MonoBehaviour
 
             if (isObjectFallingOutOfRange)
             {
-                if (canObjectMove)
-                {
-                    if (!IsThereAnObstacleInThisDirection(Vector3.up * -1f))
-                    {
-                        MoveToThisDirection(-1f);
-                    }
-                }
+                MoveObject(-1f);
             }
             else
             {
-                MoveObject();
+                MoveObject(Math.Sign(diff));
             }
         }
         else
@@ -67,27 +68,61 @@ public class Following_Object : MonoBehaviour
 
             if (Mathf.Abs(diff) > followingMinRange)
             {
-                MoveObject();
+                MoveObject(Math.Sign(diff));
+            }
+            else
+            {
+                isGoingUp = false;
+                isAccelerating = false;
+                isMoving = false;
             }
         }
     }
 
-    void MoveObject()
+    void MoveObject(float direction)
     {
         if (canObjectMove)
         {
-            if (!IsThereAnObstacleInThisDirection(Vector3.up * Math.Sign(diff)))
+            if (!IsThereAnObstacleInThisDirection(Vector3.up * direction))
             {
+                if (Math.Sign(diff) > 0)
+                    isGoingUp = true;
+                else
+                    isGoingUp = false;
+
+
+                if (!isAccelerating && !isMoving)
+                {
+                    accelerationModifier = 0;
+                    isAccelerating = true;
+                }
+                else if (accelerationModifier < 1)
+                {
+                    accelerationModifier += Time.deltaTime * 1f;
+                }
+                else
+                {
+                    accelerationModifier = 1f;
+                }
+
                 MoveToThisDirection(Math.Sign(diff));
+            }
+            else
+            {
+                isGoingUp = false;
+                isAccelerating = false;
+                isMoving = false;
             }
         }
     }
 
     void MoveToThisDirection(float direction)
     {
-        float newYPos = objectPos.position.y + direction * plateformSpeed * Time.deltaTime;
+        float newYPos = objectPos.position.y + direction * plateformSpeed * accelerationCurve.Evaluate(accelerationModifier) * Time.deltaTime;
 
         objectPos.position = new Vector3(objectPos.position.x, newYPos, objectPos.position.z);
+
+        isMoving = true;
     }
 
     bool IsThereAnObstacleInThisDirection(Vector3 direction)
