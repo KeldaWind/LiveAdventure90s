@@ -8,20 +8,30 @@ public class FirstPersonController : MonoBehaviour
     [SerializeField] KeyCode jetpackGamepadInput = KeyCode.JoystickButton5;
     [SerializeField] KeyCode jetpackGamepadAltInput = KeyCode.JoystickButton6;
     [SerializeField] KeyCode jetpackKeyboardInput = KeyCode.UpArrow;
+    /*[SerializeField] KeyCode jetpackDownGamepadInput = KeyCode.JoystickButton6;
+    [SerializeField] KeyCode jetpackDownKeyboardInput = KeyCode.DownArrow;*/
+
+    public bool GetJetpackUpInput => Input.GetKey(jetpackGamepadInput) || Input.GetKey(jetpackKeyboardInput) || Input.GetKey(jetpackGamepadAltInput);
+    //public bool GetJetpackDownInput => Input.GetKey(jetpackDownGamepadInput) || Input.GetKey(jetpackDownKeyboardInput);
 
     [Header("Important References")]
     [SerializeField] Camera cameramanCamera = default;
     ThirdPersonController thirdPersonController = default;
     public Vector3 GetCameraWorldPosition => cameramanCamera.transform.position;
 
-    public void SetFirstPersonRef(ThirdPersonController reference)
+    public void SetThirdPersonRef(ThirdPersonController reference)
     {
         thirdPersonController = reference;
     }
 
+    private void Start()
+    {
+        SetUpJetpack();
+    }
+
     void Update()
     {
-        UpdateJetpackValues(Input.GetKey(jetpackGamepadInput) || Input.GetKey(jetpackKeyboardInput) || Input.GetKey(jetpackGamepadAltInput));
+        UpdateJetpackValues(GetJetpackUpInput);
 
         UpdateMovement();
     }
@@ -37,12 +47,27 @@ public class FirstPersonController : MonoBehaviour
 
     #region Vertical Jetpack
     [Header("Jetpack")]
+    [SerializeField] JetpackParameters jetpackParameters = default;
     [SerializeField] float jetpackMaxUpSpeed = 10f;
     [SerializeField] float jetpackMaxDownSpeed = -10f;
     [SerializeField] float jetpackUpAcceleration = 20f;
+    [SerializeField] float jetpackDownAccelerationBoost = 20f;
     [SerializeField] float jetpackGravityWhenGoingUp = -10f;
     [SerializeField] float jetpackGravityWhenGoingDown = -10f;
     float currentJetpackVerticalSpeed = 0;
+
+    public void SetUpJetpack()
+    {
+        if (jetpackParameters)
+        {
+            jetpackMaxUpSpeed = jetpackParameters.GetJetpackMaxUpSpeed;
+            jetpackMaxDownSpeed = jetpackParameters.GetJetpackMaxDownSpeed;
+            jetpackUpAcceleration = jetpackParameters.GetJetpackUpAcceleration;
+            jetpackDownAccelerationBoost = jetpackParameters.GetJetpackDownAccelerationBoost;
+            jetpackGravityWhenGoingUp = jetpackParameters.GetJetpackGravityWhenGoingUp;
+            jetpackGravityWhenGoingDown = jetpackParameters.GetJetpackGravityWhenGoingDown;
+        }
+    }
 
     public void UpdateJetpackValues(bool isJetpackInputDown)
     {
@@ -102,3 +127,5 @@ public class FirstPersonController : MonoBehaviour
     }
     #endregion 
 }
+
+public enum JetpackInputMode { GoUp, Neutral, GoDown }

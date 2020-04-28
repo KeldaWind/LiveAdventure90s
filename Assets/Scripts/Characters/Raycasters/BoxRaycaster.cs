@@ -1,9 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class BoxRaycaster : MonoBehaviour
 {
+    RaycastHit lastHorizontalHitResult = default;
+    public RaycastHit GetLastHorizontalHitResult => lastHorizontalHitResult;
+
+
+    RaycastHit lastVerticalHitResult = default;
+    public RaycastHit GetLastVerticalHitResult => lastVerticalHitResult;
+
     [Header("References")]
     [SerializeField] BoxCollider selfCollider = default;
     [SerializeField] Transform selfTr = default;
@@ -31,13 +39,22 @@ public class BoxRaycaster : MonoBehaviour
             if (distance < 0) flags.left = true;
             if (distance > 0) flags.right = true;
 
+            lastHorizontalHitResult = hit;
+
             return newDistance;
         }
+
+        lastHorizontalHitResult = hit;
 
         if (distance < 0) flags.left = false;
         if (distance > 0) flags.right = false;
 
         return distance;
+    }
+
+    public void ResetLastHorizontalHitResult()
+    {
+        lastHorizontalHitResult = new RaycastHit();
     }
 
     public float RaycastVertical(float distance)
@@ -51,17 +68,28 @@ public class BoxRaycaster : MonoBehaviour
             float startPoint = selfTr.position.y + selfCollider.center.y + selfCollider.size.y * 0.5f * Mathf.Sign(distance);
             float newDistance = Mathf.Sign(distance) * Mathf.Abs(hit.point.y - startPoint);
 
-            if (distance < 0) { flags.below = true; /*Debug.Log("No, here !");*/ }
+            if (distance < 0) { flags.below = true; OnLanded?.Invoke(); }
             if (distance > 0) flags.above = true;
+
+            lastVerticalHitResult = hit;
 
             return newDistance;
         }
 
-        if (distance < 0) { flags.below = false; /*Debug.Log("Here");*/ }
+        lastVerticalHitResult = hit;
+
+        if (distance < 0) flags.below = false;
         if (distance > 0) flags.above = false;
 
         return distance;
     }
+
+    public void ResetLastVerticalHitResult()
+    {
+        lastVerticalHitResult = new RaycastHit();
+    }
+
+    public Action OnLanded;
 
     public bool CheckForGroundBelow(float checkDistance)
     {

@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7992000932914273569}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -35}
+  m_LocalPosition: {x: 0, y: 0, z: -52.8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7992000932964528630}
@@ -48,11 +48,11 @@ MonoBehaviour:
   jetpackGamepadAltInput: 334
   jetpackKeyboardInput: 273
   cameramanCamera: {fileID: 7992000932964528633}
-  jetpackMaxUpSpeed: 30
-  jetpackMaxDownSpeed: -25
-  jetpackUpAcceleration: 30
-  jetpackGravityWhenGoingUp: -30
-  jetpackGravityWhenGoingDown: -50
+  jetpackMaxUpSpeed: 50
+  jetpackMaxDownSpeed: -36
+  jetpackUpAcceleration: 15
+  jetpackGravityWhenGoingUp: -24
+  jetpackGravityWhenGoingDown: -11
   maxHorizontalSpeed: 8
   hozitontalAcceleration: 28
   hozitontalBackAcceleration: 56

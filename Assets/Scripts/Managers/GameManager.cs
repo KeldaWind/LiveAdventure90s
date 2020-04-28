@@ -6,6 +6,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
+    [SerializeField] int targetFrameRate = 60;
+
     [Header("Main Characters")]
     [SerializeField] ThirdPersonController thirdPersonController = default;
     [SerializeField] FirstPersonController firstPersonController = default;
@@ -21,7 +23,9 @@ public class GameManager : MonoBehaviour
             Instance = this;
         }
 
-        firstPersonController.SetFirstPersonRef(thirdPersonController);
+        Application.targetFrameRate = targetFrameRate;
+
+        firstPersonController.SetThirdPersonRef(thirdPersonController);
     }
 
     #region Important Values
