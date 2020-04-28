@@ -9,6 +9,8 @@ public class EnemyBase : MonoBehaviour
         shootFrequenceSystem = new FrequenceSystem(projectilesPerSecond);
         shootFrequenceSystem.SetUp(CheckIfShoot);
         shootFrequenceSystem.Stop();
+
+        lifeSystem.OnLifeReachedZero += Die;
     }
 
     private void Update()
@@ -39,10 +41,24 @@ public class EnemyBase : MonoBehaviour
         UpdateShooting();
     }
 
+    [Header("Life")]
+    [SerializeField] DamageableEntity lifeSystem = default;
+
+    bool pendingKill = false;
+    public virtual void Die()
+    {
+        if (pendingKill)
+            return;
+
+        pendingKill = true;
+        Destroy(gameObject);
+    }
+
     #region Shoot
     [Header("Shooting")]
-    [SerializeField] ProjectileBase enemyProjectile = default;
+    [SerializeField] ProjectileBase enemyProjectilePrefab = default;
     [SerializeField] float projectilesPerSecond = 0.5f;
+    [SerializeField] float shootAngle = 45f;
     [SerializeField] Transform rightShootPosition = default;
     [SerializeField] Transform leftShootPosition = default;
 
@@ -60,8 +76,12 @@ public class EnemyBase : MonoBehaviour
         Vector3 shootPosition = shootDirectionEnum == ShootDirection.Right ? rightShootPosition.position : leftShootPosition.position;
         Vector3 shootDirection = shootDirectionEnum == ShootDirection.Right ? Vector3.right : Vector3.left;
 
-        print("SHOOT");
-        Debug.DrawRay(shootPosition, shootDirection * 5.0f, Color.magenta, 0.25f);
+        shootDirection = Quaternion.Euler(0, 0, shootAngle * (shootDirectionEnum == ShootDirection.Right ? 1 : -1)) * shootDirection;
+
+        /*print("SHOOT");
+        Debug.DrawRay(shootPosition, shootDirection * 5.0f, Color.magenta, 0.25f);*///
+        ProjectileBase newProj = Instantiate(enemyProjectilePrefab, shootPosition, Quaternion.identity);
+        newProj.ShootProjectile(shootDirection, gameObject);
     }
 
     public void CheckIfShoot()
