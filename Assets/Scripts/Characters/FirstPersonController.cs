@@ -150,8 +150,34 @@ public class FirstPersonController : MonoBehaviour
             case JetpackVersion.Version2:
                 break;
         }
+
+        #region Manage Pitch
+        float targetPitchValue = 0;
+        if(currentJetpackVerticalSpeed > 0)
+        {
+            targetPitchValue = Mathf.Lerp(0, maxPitchWhenGoingUp, goingUpPitchCurve.Evaluate((Mathf.Abs(currentJetpackVerticalSpeed) / jetpackMaxUpSpeed) * pitchUpMultiplicator));
+        }
+        else
+        {
+            targetPitchValue = Mathf.Lerp(0, -maxPitchWhenGoingDown, goingDownPitchCurve.Evaluate((Mathf.Abs(currentJetpackVerticalSpeed) / Mathf.Abs(jetpackMaxDownSpeed)) * pitchDownMultiplicator));
+        }
+        #endregion
+
+        currentPitch = Mathf.Lerp(currentPitch, targetPitchValue, pitchChangingCoeff);
+        //print(currentPitch);
+        transform.rotation = Quaternion.Euler(currentPitch, 0, 0);
     }
     #endregion
+
+    [Header("Jetpack Camera Movements")]
+    [SerializeField] float maxPitchWhenGoingUp = 3f;
+    [SerializeField] float pitchUpMultiplicator = 1f;
+    [SerializeField] AnimationCurve goingUpPitchCurve = AnimationCurve.Linear(0, 0, 1, 1);
+    [SerializeField] float maxPitchWhenGoingDown = 3f;
+    [SerializeField] float pitchDownMultiplicator = 1f;
+    [SerializeField] AnimationCurve goingDownPitchCurve = AnimationCurve.Linear(0, 0, 1, 1);
+    [SerializeField] float pitchChangingCoeff = 0.3f;
+    float currentPitch = 0f;
 
     #region Horizontal Auto Follow
     /*[Header("Horizontal Auto Follow")]
