@@ -12,11 +12,31 @@ public class Laser_Behaviour : MonoBehaviour
     public GameObject targetPos;
 
     public BoxCollider laserCollider;
+    public int laserDamages = 1;
 
     private bool isActive = true;
 
     private Vector3 impactPos;
 
+    public void DeactivateForDuration(float duration)
+    {
+        deactivationTimer = new TimerSystem(duration, EndDeactivation);
+        deactivationTimer.StartTimer();
+
+        laserCollider.enabled = false;
+    }
+    TimerSystem deactivationTimer = new TimerSystem();
+
+    public void UpdateDeactivation()
+    {
+        deactivationTimer.UpdateTimer();
+    }
+
+    public void EndDeactivation()
+    {
+        if (isActive)
+            laserCollider.enabled = true;
+    }
 
 
 
@@ -29,6 +49,9 @@ public class Laser_Behaviour : MonoBehaviour
     {
         if (isActive)
             FindNextTarget();
+
+        if (!deactivationTimer.TimerOver)
+            UpdateDeactivation();
     }
 
     public void SetLaserState(bool value)

@@ -4,17 +4,21 @@ using UnityEngine;
 
 public class GameAssets : MonoBehaviour
 {
-    
+    private void Awake()
+    {
+        if (_i && _i != this)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            _i = this;
+        }
+    }
 
     private static GameAssets _i;
 
-    public static GameAssets i  {
-        get {
-            if (_i == null) _i = Instantiate(Resources.Load<GameAssets>("GameAssets"));
-            return _i;
-
-        }
-    }
+    public static GameAssets i => _i;
 
     public SoundAudioClip[] soundAudioClipArray;
 

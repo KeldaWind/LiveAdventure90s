@@ -388,6 +388,8 @@ public class ThirdPersonController : MonoBehaviour
     [SerializeField] ProjectileBase projectilePrefab = default;
     [SerializeField] Transform leftShootPosition = default;
     [SerializeField] Transform rightShootPosition = default;
+    [SerializeField] float shootRandomAngle = 8f;
+    [SerializeField] float shootRecoil = 5f;
     ShootDirection currentShootDirection = ShootDirection.Right;
 
     [SerializeField] float bulletsPerSecond = 10f;
@@ -412,10 +414,16 @@ public class ThirdPersonController : MonoBehaviour
 
     public void ShootProjectile()
     {
+        float randomAngle = Random.Range(-shootRandomAngle, shootRandomAngle);
+        Vector3 shootDirection = currentShootDirection == ShootDirection.Right ? Vector3.right : Vector3.left;
+        shootDirection = Quaternion.Euler(0, 0, randomAngle) * shootDirection;
+
         Vector3 shootPosition = (currentShootDirection == ShootDirection.Right ? rightShootPosition : leftShootPosition).position;
         Quaternion shootRotation = (currentShootDirection == ShootDirection.Right ? rightShootPosition : leftShootPosition).rotation;
         ProjectileBase newProjectile = Instantiate(projectilePrefab, shootPosition, shootRotation);
-        newProjectile.ShootProjectile(currentShootDirection == ShootDirection.Right ? Vector3.right : Vector3.left, gameObject);
+        newProjectile.ShootProjectile(shootDirection, gameObject);
+
+        currentHorizontalSpeed += shootRecoil * (currentShootDirection == ShootDirection.Right ? -1 : 1);
 
         PlayShootFeedback();
     }
@@ -454,6 +462,51 @@ public class ThirdPersonController : MonoBehaviour
         if (hitEnemy)
         {
             lifeSystem.ReceiveDamage(hitEnemy.GetMeleeDamages, hitEnemy.gameObject);
+        }
+        else
+        {
+            Laser_Behaviour hitLaser = hitCollider.GetComponentInParent<Laser_Behaviour>();
+            if (hitLaser)
+            {
+                bool alreadyRecovering = IsRecovering;
+                lifeSystem.ReceiveDamage(hitLaser.laserDamages, hitLaser.gameObject);
+                //hitLaser.DeactivateForDuration(onDamagedRecoveringDuration);
+
+                #region Handle knockback direction and laser deactivation
+                if (!alreadyRecovering)
+                {
+                    if (collision != null)
+                    {
+                        Vector3 averagePosition = Vector3.zero;
+                        Vector3 averageNormal = Vector3.zero;
+                        float count = collision.contactCount;
+                        foreach (ContactPoint point in collision.contacts)
+                        {
+                            averagePosition += point.point;
+                            averageNormal += point.normal;
+                        }
+                        averagePosition /= count;
+                        averageNormal /= count;
+
+                        float horizontalDot = Vector3.Dot(Vector3.right, averageNormal);
+                        float verticalDot = Vector3.Dot(Vector3.up, averageNormal);
+
+                        currentHorizontalSpeed = onDamagedHorizontalSpeed *  Mathf.Sign(horizontalDot);
+                        currentVerticalSpeed = onDamagedVerticalSpeed * Mathf.Sign(verticalDot);
+
+                        if(verticalDot > 0.5f)
+                        {
+                            hitLaser.DeactivateForDuration(onDamagedRecoveringDuration);
+                        }
+                    }
+                    else
+                    {
+
+                        hitLaser.DeactivateForDuration(onDamagedRecoveringDuration);
+                    }
+                }
+                #endregion
+            }
         }
     }
     #endregion
@@ -563,6 +616,7 @@ public class ThirdPersonController : MonoBehaviour
         Transform source = currentShootDirection == ShootDirection.Left ? leftShootPosition : rightShootPosition;
 
         // FEEDBACK : PLAY SHOOT SOUND 
+        AudioManager.PlaySound(AudioManager.Sound.H_GunShoot);
         FxManager.Instance.PlayFx(shootFxTag, source.position, source.rotation, Vector3.one);
     }
 
