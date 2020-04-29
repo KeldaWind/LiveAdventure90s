@@ -1470,6 +1470,7 @@ MonoBehaviour:
         m_CallState: 2
   startLootFxTag: PlaceHolder
   lootFxTag: PlaceHolder
+  lootSound: 20
 --- !u!1001 &5798225516460016014
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1876,6 +1877,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_textInfo.pageCount
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8141126480333357480, guid: 238c6d137086d00408c538d986a978de,
+        type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 3825205503
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 238c6d137086d00408c538d986a978de, type: 3}
