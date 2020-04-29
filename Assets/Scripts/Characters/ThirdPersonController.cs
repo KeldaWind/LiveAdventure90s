@@ -569,13 +569,13 @@ public class ThirdPersonController : MonoBehaviour
     public void PlayOnLandedFeedback()
     {
         // FEEDBACK : PLAY LANDING SOUND 
-        FxManager.Instance.PlayFx(landingFxTag, transform.position, Quaternion.Euler(0, 0, 90), Vector3.one);
+        FxManager.Instance.PlayFx(landingFxTag, transform.position, Quaternion.identity, Vector3.one);
     }
 
     public void PlayJumpFeedback()
     {
         // FEEDBACK : PLAY JUMP SOUND 
-        FxManager.Instance.PlayFx(jumpFxTag, transform.position, Quaternion.Euler(0, 0, -90), Vector3.one);
+        FxManager.Instance.PlayFx(jumpFxTag, transform.position, Quaternion.identity, Vector3.one);
     }
 
     public void PlayFootFeedbackSound()

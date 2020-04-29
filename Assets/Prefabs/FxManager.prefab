@@ -50,3 +50,18 @@ MonoBehaviour:
   - fxTag: PlaceHolderShoot
     fxObject: {fileID: 1981062164471582482, guid: 80a563e918ad40541896f0c5a669cbae,
       type: 3}
+  - fxTag: EnemyDeath
+    fxObject: {fileID: 6536611695603152369, guid: cc478cbd8c8163c439d911481d73be6d,
+      type: 3}
+  - fxTag: HeroShoot
+    fxObject: {fileID: 1744752510811280959, guid: ec0af18a96488b14e9c5b8e51c23627d,
+      type: 3}
+  - fxTag: ProjectileDestroy
+    fxObject: {fileID: 6633070385872472566, guid: 65bbce1b1bf330044b401132ce5f363d,
+      type: 3}
+  - fxTag: JumpLand
+    fxObject: {fileID: 6514557177986421044, guid: 69f7337c7bffc4c4a96a0f68c7bf4d1f,
+      type: 3}
+  - fxTag: HeroStep
+    fxObject: {fileID: 6070656760861631504, guid: c0ac69bd8d81dc940a30726188af4df1,
+      type: 3}

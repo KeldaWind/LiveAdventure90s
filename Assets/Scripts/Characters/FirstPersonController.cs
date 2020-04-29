@@ -62,6 +62,8 @@ public class FirstPersonController : MonoBehaviour
     [SerializeField] float outOfBoundsDownMaxSpeed = 10f;
     float currentJetpackVerticalSpeed = 0;
 
+    public float GetJetpackJaugeCoefficient => Mathf.Clamp(currentJetpackVerticalSpeed, 0, jetpackMaxUpSpeed) / jetpackMaxUpSpeed;
+
     /*[Header("Jetpack 2")]
     [SerializeField]*/
     
