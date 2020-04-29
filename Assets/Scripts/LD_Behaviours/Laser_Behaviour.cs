@@ -8,7 +8,7 @@ public class Laser_Behaviour : MonoBehaviour
 {
     [Header("Getting Components")]
     public LineRenderer lineRenderer;
-    public Vector3 startPos;
+    public GameObject startPos;
     public GameObject targetPos;
 
     public BoxCollider laserCollider;
@@ -22,7 +22,7 @@ public class Laser_Behaviour : MonoBehaviour
 
     private void Awake()
     {
-        lineRenderer.SetPosition(0, startPos);
+        lineRenderer.SetPosition(0, startPos.transform.localPosition);
     }
 
     private void Update()
@@ -47,16 +47,16 @@ public class Laser_Behaviour : MonoBehaviour
         Quaternion newRotation = Quaternion.LookRotation(direction, Vector3.up);
         laserCollider.transform.localScale = new Vector3(0.5f, 0.5f, magnitude);
         laserCollider.transform.rotation = newRotation;
-        laserCollider.transform.position = startPos + (direction * (magnitude * 0.5f));
+        laserCollider.transform.position = startPos.transform.localPosition + (direction * (magnitude * 0.5f));
     }
 
     void FindNextTarget()
     {
-        float magnitude = (targetPos.transform.position - lineRenderer.GetPosition(0)).magnitude;
-        Vector3 direction = (targetPos.transform.position - lineRenderer.GetPosition(0)).normalized;
+        float magnitude = (targetPos.transform.localPosition - startPos.transform.localPosition).magnitude;
+        Vector3 direction = (targetPos.transform.localPosition - startPos.transform.localPosition).normalized;
         RaycastHit hit;
 
-        Physics.Raycast(lineRenderer.GetPosition(0), direction, out hit, Mathf.Infinity);
+        Physics.Raycast(startPos.transform.localPosition, direction, out hit, Mathf.Infinity);
 
         if (hit.collider != null)
             impactPos = hit.point;

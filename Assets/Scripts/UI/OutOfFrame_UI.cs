@@ -8,7 +8,11 @@ public class OutOfFrame_UI : MonoBehaviour
     [Header("Get Components")]
     public TextMeshProUGUI outOfFrameWarning;
     public TextMeshProUGUI outOfFrameTimer;
-    public RectTransform herosDirectionIndicator;
+
+    public RectTransform herosUpIndicator;
+    public RectTransform herosDownIndicator;
+    private RectTransform currentIndicator;
+    
 
     private bool isHeroOutOfFrame;
     private float currentOutOfFrameTime;
@@ -18,7 +22,17 @@ public class OutOfFrame_UI : MonoBehaviour
     {
         if (isHeroOutOfFrame)
         {
-            herosDirectionIndicator.gameObject.SetActive(true);
+            if (GameManager.Instance.herosDirection.y > 0)
+            {
+                herosDownIndicator.gameObject.SetActive(true);
+                currentIndicator = herosDownIndicator;
+            }
+            else
+            {
+                herosUpIndicator.gameObject.SetActive(true);
+                currentIndicator = herosUpIndicator;
+            }
+
             RefreshOutOfFrameTimer();
 
             if (!GameManager.Instance.IsPlayerOutOfFrame())
@@ -28,7 +42,8 @@ public class OutOfFrame_UI : MonoBehaviour
         }
         else
         {
-            herosDirectionIndicator.gameObject.SetActive(false);
+            herosDownIndicator.gameObject.SetActive(false);
+            herosUpIndicator.gameObject.SetActive(false);
 
             if (GameManager.Instance.IsPlayerOutOfFrame())
             {
@@ -71,17 +86,28 @@ public class OutOfFrame_UI : MonoBehaviour
 
     void ShowHeroDirection()
     {
-        Quaternion newRotation = Quaternion.LookRotation(GameManager.Instance.herosDirection, Vector3.forward);
-        herosDirectionIndicator.rotation = newRotation;
+        Vector2 viewPos = WorldToCanvasPosition(transform.parent.GetComponent<RectTransform>(), Camera.main, GameManager.Instance.herosPos);
 
         if (GameManager.Instance.herosDirection.y < 0)
-            herosDirectionIndicator.anchoredPosition = new Vector3(0, 250, 0);
+        {
+            currentIndicator.anchoredPosition3D = new Vector3(viewPos.x, -145, 0);
+        }
         else
-            herosDirectionIndicator.anchoredPosition = new Vector3(0, -260, 0);
+        {
+            currentIndicator.anchoredPosition3D = new Vector3(viewPos.x, -45, 0);
+        }
     }
 
-    void AnimIndicator()
+    private Vector2 WorldToCanvasPosition(RectTransform canvas, Camera camera, Vector3 position)
     {
+        Vector2 temp = camera.WorldToViewportPoint(position);
 
+        temp.x *= canvas.sizeDelta.x;
+        temp.y *= canvas.sizeDelta.y;
+
+        temp.x -= canvas.sizeDelta.x * canvas.pivot.x;
+        temp.y -= canvas.sizeDelta.y * canvas.pivot.y;
+
+        return temp;
     }
 }
