@@ -49,7 +49,11 @@ public class EnemyBase : MonoBehaviour
 
     public void PlayHitFeedback(int delta, int remainingLife, GameObject damageInstigator)
     {
-        StartCoroutine(HitFeedbackCoroutine());
+        if (remainingLife > 0)
+        {
+            StartCoroutine(HitFeedbackCoroutine());
+            PlayDamagedFeedback();
+        }
     }
     public IEnumerator HitFeedbackCoroutine()
     {
@@ -70,6 +74,9 @@ public class EnemyBase : MonoBehaviour
             return;
 
         pendingKill = true;
+
+        PlayDeathFeedback();
+
         Destroy(gameObject);
     }
 
@@ -105,6 +112,8 @@ public class EnemyBase : MonoBehaviour
         Debug.DrawRay(shootPosition, shootDirection * 5.0f, Color.magenta, 0.25f);*///
         ProjectileBase newProj = Instantiate(enemyProjectilePrefab, shootPosition, Quaternion.identity);
         newProj.ShootProjectile(shootDirection, gameObject);
+
+        PlayShootFeedback();
     }
 
     public void CheckIfShoot()
@@ -129,4 +138,29 @@ public class EnemyBase : MonoBehaviour
     }
     ShootDirection lastShootDirection = ShootDirection.Left;
     #endregion
+
+    [Header("Feedbacks")]
+    [SerializeField] string shootFxTag = "PlaceHolderShoot";
+    [SerializeField] string damagedFxTag = "PlaceHolder";
+    [SerializeField] string deathFxTag = "PlaceHolder";
+
+    public void PlayDamagedFeedback()
+    {
+        // FEEDBACK : PLAY DAMAGED SOUND 
+        FxManager.Instance.PlayFx(damagedFxTag, transform.position + Vector3.up, Quaternion.identity, Vector3.one);
+    }
+
+    public void PlayShootFeedback()
+    {        
+        Transform source = GetShootDirection == ShootDirection.Left ? leftShootPosition : rightShootPosition;
+
+        // FEEDBACK : PLAY SHOOT SOUND 
+        FxManager.Instance.PlayFx(shootFxTag, source.position, source.rotation, Vector3.one);
+    }
+
+    public void PlayDeathFeedback()
+    {
+        // FEEDBACK : PLAY DEATH SOUND 
+        FxManager.Instance.PlayFx(deathFxTag, transform.position, Quaternion.identity, Vector3.one);
+    }
 }

@@ -23,13 +23,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6762457592992562198}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -1, z: -0, w: 0.0000029653306}
   m_LocalPosition: {x: -0.5, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6762457594237305863}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -180.00002, z: 0}
 --- !u!1 &6762457594133044539
 GameObject:
   m_ObjectHideFlags: 0
@@ -113,12 +113,16 @@ MonoBehaviour:
   enemyRenderer: {fileID: 6762457594735239115}
   normalMaterial: {fileID: 2100000, guid: 09c114d049a9eb945bcc097a0694fb2c, type: 2}
   hitMaterial: {fileID: 2100000, guid: 62869b7d9926bef47a8baa877eaf8b3e, type: 2}
+  meleeDamages: 2
   enemyProjectilePrefab: {fileID: 2451139120977189099, guid: 718ddec6156d68e429b69acaf5834a02,
     type: 3}
   projectilesPerSecond: 0.5
   shootAngle: 45
   rightShootPosition: {fileID: 6762457594133044538}
   leftShootPosition: {fileID: 6762457592992562201}
+  shootFxTag: PlaceHolderShoot
+  damagedFxTag: PlaceHolder
+  deathFxTag: PlaceHolder
 --- !u!65 &6762457594237305862
 BoxCollider:
   m_ObjectHideFlags: 0

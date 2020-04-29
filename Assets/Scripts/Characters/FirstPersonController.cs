@@ -42,12 +42,14 @@ public class FirstPersonController : MonoBehaviour
     {
         transform.position += (Vector3.up * currentJetpackVerticalSpeed) * Time.deltaTime;
 
-        transform.position += (Vector3.right * currentAutoFollowHorizontalSpeed) * Time.deltaTime;
+        //transform.position += (Vector3.right * currentAutoFollowHorizontalSpeed) * Time.deltaTime;
     }
     #endregion
 
     #region Vertical Jetpack
-    [Header("Jetpack")]
+    [Header("Jetpack Version")]
+    [SerializeField] JetpackVersion inUseVersion = JetpackVersion.Version1;
+    [Header("Jetpack 1")]
     [SerializeField] JetpackParameters jetpackParameters = default;
     [SerializeField] float jetpackMaxUpSpeed = 10f;
     [SerializeField] float jetpackMaxDownSpeed = -10f;
@@ -60,6 +62,11 @@ public class FirstPersonController : MonoBehaviour
     [SerializeField] float outOfBoundsDownMaxSpeed = 10f;
     float currentJetpackVerticalSpeed = 0;
 
+    public float GetJetpackJaugeCoefficient => Mathf.Clamp(currentJetpackVerticalSpeed, 0, jetpackMaxUpSpeed) / jetpackMaxUpSpeed;
+
+    /*[Header("Jetpack 2")]
+    [SerializeField]*/
+    
     Transform bottomBound = default;
     Transform topBound = default;
     public JetpackBoundsState GetJetpackBoundsState
@@ -106,39 +113,48 @@ public class FirstPersonController : MonoBehaviour
             outOfBoundsUpAcceleration = jetpackParameters.GetOutOfBoundsUpAcceleration;
             outOfBoundsUpMaxSpeed = jetpackParameters.GetOutOfBoundsMaxUpSpeed;
             outOfBoundsDownAcceleration = jetpackParameters.GetOutOfBoundsDownAcceleration;
-            outOfBoundsDownMaxSpeed = jetpackParameters.GetJetpackMaxDownSpeed;
+            outOfBoundsDownMaxSpeed = jetpackParameters.GetOutOfBoundsMaxDownSpeed;
         }
     }
 
     public void UpdateJetpackValues(bool isJetpackInputDown)
     {
-        JetpackBoundsState boundsState = GetJetpackBoundsState;
-        float currentMaxUpSpeed = jetpackMaxUpSpeed;
-        float currentMaxDownSpeed = jetpackMaxDownSpeed;
-        float currentVerticalAcceleration = 0;
-
-        switch (boundsState)
+        switch (inUseVersion)
         {
-            case JetpackBoundsState.TooLow:
-                currentVerticalAcceleration = outOfBoundsUpAcceleration;
-                currentMaxUpSpeed = isJetpackInputDown ? currentMaxUpSpeed : outOfBoundsUpMaxSpeed;
-                break;
+            case JetpackVersion.Version1:
+                #region V1
+                JetpackBoundsState boundsState = GetJetpackBoundsState;
+                float currentMaxUpSpeed = jetpackMaxUpSpeed;
+                float currentMaxDownSpeed = jetpackMaxDownSpeed;
+                float currentVerticalAcceleration = 0;
 
-            case JetpackBoundsState.Neutral:
-                currentVerticalAcceleration = isJetpackInputDown? jetpackUpAcceleration : (currentJetpackVerticalSpeed > 0 ? jetpackGravityWhenGoingUp : jetpackGravityWhenGoingDown);
-                break;
+                switch (boundsState)
+                {
+                    case JetpackBoundsState.TooLow:
+                        currentVerticalAcceleration = outOfBoundsUpAcceleration;
+                        currentMaxUpSpeed = isJetpackInputDown ? currentMaxUpSpeed : outOfBoundsUpMaxSpeed;
+                        break;
 
-            case JetpackBoundsState.TooHigh:
-                currentVerticalAcceleration = -outOfBoundsDownAcceleration;
-                currentMaxDownSpeed = -outOfBoundsDownMaxSpeed;
+                    case JetpackBoundsState.Neutral:
+                        currentVerticalAcceleration = isJetpackInputDown ? jetpackUpAcceleration : (currentJetpackVerticalSpeed > 0 ? jetpackGravityWhenGoingUp : jetpackGravityWhenGoingDown);
+                        break;
+
+                    case JetpackBoundsState.TooHigh:
+                        currentVerticalAcceleration = -outOfBoundsDownAcceleration;
+                        currentMaxDownSpeed = -outOfBoundsDownMaxSpeed;
+                        break;
+                }
+                currentJetpackVerticalSpeed = Mathf.Clamp(currentJetpackVerticalSpeed + currentVerticalAcceleration * Time.deltaTime, currentMaxDownSpeed, currentMaxUpSpeed);
+                #endregion
+                break;
+            case JetpackVersion.Version2:
                 break;
         }
-        currentJetpackVerticalSpeed = Mathf.Clamp(currentJetpackVerticalSpeed + currentVerticalAcceleration * Time.deltaTime, currentMaxDownSpeed, currentMaxUpSpeed);
     }
     #endregion
 
     #region Horizontal Auto Follow
-    [Header("Horizontal Auto Follow")]
+    /*[Header("Horizontal Auto Follow")]
     [SerializeField] float maxHorizontalSpeed = 5f;
     [SerializeField] float hozitontalAcceleration = 10f;
     [SerializeField] float hozitontalBackAcceleration = 20f;
@@ -182,10 +198,9 @@ public class FirstPersonController : MonoBehaviour
                 (Mathf.Sign(currentAutoFollowHorizontalSpeed) != Mathf.Sign(signedDistanceWithTarget) ? hozitontalBackAcceleration : hozitontalAcceleration), 
                 -maxHorizontalSpeed, maxHorizontalSpeed);
         }
-
-        //print(currentAutoFollowHorizontalSpeed);
-    }
+    }*/
     #endregion 
 }
 
 public enum JetpackBoundsState { TooLow, Neutral, TooHigh }
+public enum JetpackVersion { Version1, Version2 }

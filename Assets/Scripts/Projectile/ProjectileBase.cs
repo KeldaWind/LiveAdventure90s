@@ -33,6 +33,9 @@ public abstract class ProjectileBase : MonoBehaviour
             return;
 
         pendingKill = true;
+
+        PlayDestroyFeedback();
+        
         Destroy(gameObject);
     }
 
@@ -45,5 +48,15 @@ public abstract class ProjectileBase : MonoBehaviour
     public virtual void OnCollisionEnter(Collision collision)
     {
         HandleCollision(collision.collider, collision);
+    }
+
+    [Header("Feedbacks")]
+    [SerializeField] string destroyFxTag = "PlaceHolder";
+    [SerializeField] float destroyFxSize = 1f;
+
+    public virtual void PlayDestroyFeedback()
+    {
+        // FEEDBACK : PLAY DEATH SOUND 
+        FxManager.Instance.PlayFx(destroyFxTag, transform.position, Quaternion.identity, Vector3.one * destroyFxSize);
     }
 }

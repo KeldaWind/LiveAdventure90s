@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
 
     public float frameRange;
     public Vector3 herosDirection;
+    public Vector3 herosPos;
 
     [SerializeField] int targetFrameRate = 60;
 
@@ -42,6 +43,7 @@ public class GameManager : MonoBehaviour
     {
         float distance = firstPersonController.gameObject.transform.localPosition.y - thirdPersonController.gameObject.transform.localPosition.y;
         herosDirection = (firstPersonController.gameObject.transform.localPosition - thirdPersonController.gameObject.transform.localPosition).normalized;
+        herosPos = thirdPersonController.gameObject.transform.position;
 
         if (Math.Abs(distance) > frameRange)
         {
