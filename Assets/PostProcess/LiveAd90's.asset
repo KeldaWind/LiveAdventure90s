@@ -21,13 +21,13 @@ MonoBehaviour:
     value: 0
   intensity:
     overrideState: 1
-    value: 0.357
+    value: 0.198
   size:
     overrideState: 1
-    value: 0.79
+    value: 0.62
   lumContrib:
     overrideState: 1
-    value: 0.868
+    value: 0
 --- !u!114 &-840608882992509219
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -119,7 +119,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 556797029e73b2347956b6579e77e05b, type: 3}
   m_Name: DepthOfField
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   enabled:
     overrideState: 1
     value: 1
@@ -188,7 +188,7 @@ MonoBehaviour:
     value: 1
   temperature:
     overrideState: 1
-    value: -10
+    value: -8
   tint:
     overrideState: 0
     value: 0
@@ -239,13 +239,13 @@ MonoBehaviour:
     value: 100
   lift:
     overrideState: 1
-    value: {x: 0.9909056, y: 1, z: 0.9903532, w: -0.52104205}
+    value: {x: 1, y: 0.78469664, z: 0.66439116, w: -0.46850267}
   gamma:
     overrideState: 1
-    value: {x: 1, y: 1, z: 1, w: -0.14028057}
+    value: {x: 0.9847443, y: 0.9694883, z: 1, w: -0.28021014}
   gain:
     overrideState: 1
-    value: {x: 1, y: 1, z: 1, w: 0.3607215}
+    value: {x: 1, y: 1, z: 1, w: 0.55336595}
   masterCurve:
     overrideState: 0
     value:
