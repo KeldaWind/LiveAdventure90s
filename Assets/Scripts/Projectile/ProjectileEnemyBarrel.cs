@@ -192,12 +192,25 @@ public class ProjectileEnemyBarrel : ProjectileBase
 
     public void PlayHitFeedback(int delta, int remainingLife, GameObject damageInstigator)
     {
-        StartCoroutine(HitFeedbackCoroutine());
+        if (remainingLife > 0)
+        {
+            StartCoroutine(HitFeedbackCoroutine());
+            PlayDamagedFeedback();
+        }
     }
     public IEnumerator HitFeedbackCoroutine()
     {
         barrelRenderer.material = hitMaterial;
         yield return new WaitForSeconds(hitFeedbackDuration);
         barrelRenderer.material = normalMaterial;
+    }
+
+    [Header("Barrel Feedbacks")]
+    [SerializeField] string damagedFxTag = "PlaceHolder";
+
+    public void PlayDamagedFeedback()
+    {
+        // FEEDBACK : PLAY DAMAGED SOUND 
+        FxManager.Instance.PlayFx(damagedFxTag, transform.position + Vector3.up, Quaternion.identity, Vector3.one * 0.5f);
     }
 }
