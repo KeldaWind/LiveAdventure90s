@@ -39,6 +39,9 @@ public class ThirdPersonController : MonoBehaviour
         SetUpLifeSystem();
 
         characterRenderer.material = normalMaterial;
+
+        walkStepFrequenceSystem = new FrequenceSystem(stepFeedbackPerSecond);
+        walkStepFrequenceSystem.SetUp(PlayFootFeedbackSound);
     }
 
     void Update()
@@ -160,6 +163,9 @@ public class ThirdPersonController : MonoBehaviour
         Vector3 movementBoost = Vector3.zero;
 
         selfBody.velocity = new Vector3(currentHorizontalSpeed, currentVerticalSpeed, 0) + movementBoost;
+
+        if (IsWalking)
+            walkStepFrequenceSystem.UpdateFrequence();
     }
 
     RaycastHit currentGround = new RaycastHit();
@@ -191,6 +197,11 @@ public class ThirdPersonController : MonoBehaviour
         if (startIsOnGround && startIsOnGround != isOnGround)
         {
             StartLateJumpDelay();
+        }
+
+        if (isOnGround && startIsOnGround != isOnGround)
+        {
+            PlayOnLandedFeedback();
         }
 
         if (IsOnGround)
@@ -307,6 +318,8 @@ public class ThirdPersonController : MonoBehaviour
             if (!GetJumpKey)
                 EndJumping();
         }
+
+        PlayJumpFeedback();
     }
 
     public void EndJumping()
@@ -375,6 +388,8 @@ public class ThirdPersonController : MonoBehaviour
     [SerializeField] ProjectileBase projectilePrefab = default;
     [SerializeField] Transform leftShootPosition = default;
     [SerializeField] Transform rightShootPosition = default;
+    [SerializeField] float shootRandomAngle = 8f;
+    [SerializeField] float shootRecoil = 5f;
     ShootDirection currentShootDirection = ShootDirection.Right;
 
     [SerializeField] float bulletsPerSecond = 10f;
@@ -399,10 +414,18 @@ public class ThirdPersonController : MonoBehaviour
 
     public void ShootProjectile()
     {
+        float randomAngle = Random.Range(-shootRandomAngle, shootRandomAngle);
+        Vector3 shootDirection = currentShootDirection == ShootDirection.Right ? Vector3.right : Vector3.left;
+        shootDirection = Quaternion.Euler(0, 0, randomAngle) * shootDirection;
+
         Vector3 shootPosition = (currentShootDirection == ShootDirection.Right ? rightShootPosition : leftShootPosition).position;
         Quaternion shootRotation = (currentShootDirection == ShootDirection.Right ? rightShootPosition : leftShootPosition).rotation;
         ProjectileBase newProjectile = Instantiate(projectilePrefab, shootPosition, shootRotation);
-        newProjectile.ShootProjectile(currentShootDirection == ShootDirection.Right ? Vector3.right : Vector3.left, gameObject);
+        newProjectile.ShootProjectile(shootDirection, gameObject);
+
+        currentHorizontalSpeed += shootRecoil * (currentShootDirection == ShootDirection.Right ? -1 : 1);
+
+        PlayShootFeedback();
     }
 
     public void CheckForShootAgain()
@@ -439,6 +462,51 @@ public class ThirdPersonController : MonoBehaviour
         if (hitEnemy)
         {
             lifeSystem.ReceiveDamage(hitEnemy.GetMeleeDamages, hitEnemy.gameObject);
+        }
+        else
+        {
+            Laser_Behaviour hitLaser = hitCollider.GetComponentInParent<Laser_Behaviour>();
+            if (hitLaser)
+            {
+                bool alreadyRecovering = IsRecovering;
+                lifeSystem.ReceiveDamage(hitLaser.laserDamages, hitLaser.gameObject);
+                //hitLaser.DeactivateForDuration(onDamagedRecoveringDuration);
+
+                #region Handle knockback direction and laser deactivation
+                if (!alreadyRecovering)
+                {
+                    if (collision != null)
+                    {
+                        Vector3 averagePosition = Vector3.zero;
+                        Vector3 averageNormal = Vector3.zero;
+                        float count = collision.contactCount;
+                        foreach (ContactPoint point in collision.contacts)
+                        {
+                            averagePosition += point.point;
+                            averageNormal += point.normal;
+                        }
+                        averagePosition /= count;
+                        averageNormal /= count;
+
+                        float horizontalDot = Vector3.Dot(Vector3.right, averageNormal);
+                        float verticalDot = Vector3.Dot(Vector3.up, averageNormal);
+
+                        currentHorizontalSpeed = onDamagedHorizontalSpeed *  Mathf.Sign(horizontalDot);
+                        currentVerticalSpeed = onDamagedVerticalSpeed * Mathf.Sign(verticalDot);
+
+                        if(verticalDot > 0.5f)
+                        {
+                            hitLaser.DeactivateForDuration(onDamagedRecoveringDuration);
+                        }
+                    }
+                    else
+                    {
+
+                        hitLaser.DeactivateForDuration(onDamagedRecoveringDuration);
+                    }
+                }
+                #endregion
+            }
         }
     }
     #endregion
@@ -514,6 +582,8 @@ public class ThirdPersonController : MonoBehaviour
 
         stunTimer.StartTimer();
         recoveringTimer.StartTimer();
+
+        PlayDamagedFeedback();
     }
 
     public void Die()
@@ -526,9 +596,64 @@ public class ThirdPersonController : MonoBehaviour
     [SerializeField] Renderer characterRenderer = default;
     [SerializeField] Material normalMaterial = default;
     [SerializeField] Material blinkingMaterial = default;
+
+    [Header("Feedbacks")]
+    [SerializeField] string damagedFxTag = "PlaceHolder";
+    [SerializeField] string shootFxTag = "PlaceHolderShoot";
+    [SerializeField] string landingFxTag = "PlaceHolderShoot";
+    [SerializeField] string jumpFxTag = "PlaceHolderShoot";
+    [SerializeField] string walkFxTag = "PlaceHolderShoot";
+    [SerializeField] float stepFeedbackPerSecond = 2.5f;
+
+    public void PlayDamagedFeedback()
+    {
+        // FEEDBACK : PLAY DAMAGED SOUND 
+        FxManager.Instance.PlayFx(damagedFxTag, transform.position + Vector3.up, Quaternion.identity, Vector3.one);
+    }
+
+    public void PlayShootFeedback()
+    {
+        Transform source = currentShootDirection == ShootDirection.Left ? leftShootPosition : rightShootPosition;
+
+        // FEEDBACK : PLAY SHOOT SOUND 
+        AudioManager.PlaySound(AudioManager.Sound.H_GunShoot);
+        FxManager.Instance.PlayFx(shootFxTag, source.position, source.rotation, Vector3.one);
+    }
+
+    public void PlayOnLandedFeedback()
+    {
+        // FEEDBACK : PLAY LANDING SOUND 
+        FxManager.Instance.PlayFx(landingFxTag, transform.position, Quaternion.identity, Vector3.one);
+    }
+
+    public void PlayJumpFeedback()
+    {
+        // FEEDBACK : PLAY JUMP SOUND 
+        FxManager.Instance.PlayFx(jumpFxTag, transform.position, Quaternion.identity, Vector3.one);
+    }
+
+    public void PlayFootFeedbackSound()
+    {
+        WalkingDirection direction = CurrentWalkingDirection;
+
+        // FEEDBACK : PLAY WALK SOUND 
+        FxManager.Instance.PlayFx(walkFxTag, transform.position, Quaternion.Euler(0, 0, direction == WalkingDirection.Right ? 135 : 45), Vector3.one);
+    }
+
+    FrequenceSystem walkStepFrequenceSystem = new FrequenceSystem(1);
+
+    #region Values for animation
+    public WalkingDirection CurrentWalkingDirection => IsWalking ? (currentHorizontalSpeed > 0f ? WalkingDirection.Right : WalkingDirection.Left) : WalkingDirection.Neutral;
+    public bool IsWalking => IsOnGround && Mathf.Abs(currentHorizontalSpeed) > 0f;
+    #endregion
 }
 
 public enum ShootDirection
 {
     Right, Left
+}
+
+public enum WalkingDirection
+{
+    Left, Neutral, Right
 }

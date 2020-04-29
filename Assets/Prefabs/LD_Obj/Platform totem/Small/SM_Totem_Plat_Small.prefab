@@ -11,8 +11,9 @@ GameObject:
   - component: {fileID: 3310388586168397722}
   - component: {fileID: 5812979842754024876}
   - component: {fileID: 258766991116462421}
+  - component: {fileID: 7781768884407760129}
   m_Layer: 0
-  m_Name: SM_Totem_Plat
+  m_Name: SM_Totem_Plat_Small
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -79,3 +80,16 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!65 &7781768884407760129
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1993833742795660681}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 200.10274, y: 55.28875, z: 50.006992}
+  m_Center: {x: -99.97584, y: -27.644375, z: 25.003492}
