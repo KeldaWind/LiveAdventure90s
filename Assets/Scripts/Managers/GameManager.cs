@@ -2,12 +2,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
     public float frameRange;
+    public Vector3 herosDirection;
 
     [SerializeField] int targetFrameRate = 60;
 
@@ -39,9 +41,11 @@ public class GameManager : MonoBehaviour
     public bool IsPlayerOutOfFrame()
     {
         float distance = firstPersonController.gameObject.transform.localPosition.y - thirdPersonController.gameObject.transform.localPosition.y;
+        herosDirection = (firstPersonController.gameObject.transform.localPosition - thirdPersonController.gameObject.transform.localPosition).normalized;
 
-        if(Math.Abs(distance) > frameRange)
+        if (Math.Abs(distance) > frameRange)
         {
+
             return true;
         }
 
@@ -51,6 +55,7 @@ public class GameManager : MonoBehaviour
     public void GameOver()
     {
         Debug.Log("You LOSE");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     #region Important Values
