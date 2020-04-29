@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GameAssets : MonoBehaviour
 {
-    public static GameAssets Static;
+    
 
     private static GameAssets _i;
 
