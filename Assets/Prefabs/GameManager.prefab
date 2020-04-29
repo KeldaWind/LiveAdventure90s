@@ -43,5 +43,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49d814ad565830a43bafa931e3489b9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  firstPersonController: {fileID: 0}
+  frameRange: 17
+  targetFrameRate: 60
   thirdPersonController: {fileID: 0}
+  firstPersonController: {fileID: 0}
+  bottomBound: {fileID: 0}
+  topBound: {fileID: 0}

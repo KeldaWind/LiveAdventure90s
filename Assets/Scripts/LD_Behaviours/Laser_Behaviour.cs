@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Laser_Behaviour : MonoBehaviour
 {
@@ -10,7 +11,7 @@ public class Laser_Behaviour : MonoBehaviour
     public Vector3 startPos;
     public GameObject targetPos;
 
-    public Transform laserCollider;
+    public BoxCollider laserCollider;
 
     private bool isActive = true;
 
@@ -26,44 +27,47 @@ public class Laser_Behaviour : MonoBehaviour
 
     private void Update()
     {
-        FindNextTarget();
+        if (isActive)
+            FindNextTarget();
     }
 
     public void SetLaserState(bool value)
     {
         isActive = value;
         lineRenderer.enabled = value;
+
+        if (value)
+            laserCollider.enabled = true;
+        else
+            laserCollider.enabled = false;
     }
-    
+
     void SetLaserCollider(float magnitude, Vector3 direction)
     {
         Quaternion newRotation = Quaternion.LookRotation(direction, Vector3.up);
-        laserCollider.localScale = new Vector3(0.5f, 0.5f, magnitude);
-        laserCollider.rotation = newRotation;
-        laserCollider.localPosition = startPos + (direction * (magnitude * 0.5f));
+        laserCollider.transform.localScale = new Vector3(0.5f, 0.5f, magnitude);
+        laserCollider.transform.rotation = newRotation;
+        laserCollider.transform.position = startPos + (direction * (magnitude * 0.5f));
     }
 
     void FindNextTarget()
     {
-        if(isActive)
+        float magnitude = (targetPos.transform.position - lineRenderer.GetPosition(0)).magnitude;
+        Vector3 direction = (targetPos.transform.position - lineRenderer.GetPosition(0)).normalized;
+        RaycastHit hit;
+
+        Physics.Raycast(lineRenderer.GetPosition(0), direction, out hit, Mathf.Infinity);
+
+        if (hit.collider != null)
+            impactPos = hit.point;
+        lineRenderer.SetPosition(1, impactPos);
+
+
+        SetLaserCollider(magnitude, direction);
+
+        if (IsCollidingWithPlayer(hit))
         {
-            float magnitude = (targetPos.transform.position - lineRenderer.GetPosition(0)).magnitude;
-            Vector3 direction = (targetPos.transform.position - lineRenderer.GetPosition(0)).normalized;
-            RaycastHit hit;
-
-            Physics.Raycast(lineRenderer.GetPosition(0), direction, out hit, Mathf.Infinity);
-
-            if (hit.collider != null)
-                impactPos = hit.point;
-            lineRenderer.SetPosition(1, impactPos);
-
-
-            SetLaserCollider(magnitude, direction);
-
-            if (IsCollidingWithPlayer(hit))
-            {
-                //Receive Damage ??
-            }
+            //Receive Damage ??
         }
     }
 
