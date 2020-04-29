@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7540dcd5b2fdc384d8e6218b5cb1a331, type: 3}
   m_Name: JetpackParameters_Vince1
   m_EditorClassIdentifier: 
-  jetpackMaxUpSpeed: 10
-  jetpackMaxDownSpeed: -10
-  jetpackUpAcceleration: 20
-  jetpackGravityWhenGoingUp: -10
-  jetpackGravityWhenGoingDown: -10
-  outOfBoundsUpAcceleration: 150
-  outOfBoundsMaxUpSpeed: 10
-  outOfBoundsDownAcceleration: 150
-  outOfBoundsMaxDownSpeed: 10
+  jetpackMaxUpSpeed: 50
+  jetpackMaxDownSpeed: -36
+  jetpackUpAcceleration: 15
+  jetpackGravityWhenGoingUp: -24
+  jetpackGravityWhenGoingDown: -11
+  outOfBoundsUpAcceleration: 180
+  outOfBoundsMaxUpSpeed: 16
+  outOfBoundsDownAcceleration: 128
+  outOfBoundsMaxDownSpeed: 16
