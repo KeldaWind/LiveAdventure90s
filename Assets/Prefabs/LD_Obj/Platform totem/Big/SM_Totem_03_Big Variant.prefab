@@ -10,17 +10,17 @@ PrefabInstance:
     - target: {fileID: 443465072808397455, guid: 7f218db8cc8831346996e9b60bd15bb7,
         type: 3}
       propertyPath: m_Name
-      value: SM_Totem_03 (1)
+      value: SM_Totem_03_Big Variant
       objectReference: {fileID: 0}
     - target: {fileID: 3493905982283544732, guid: 7f218db8cc8831346996e9b60bd15bb7,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 5.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3493905982283544732, guid: 7f218db8cc8831346996e9b60bd15bb7,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3493905982283544732, guid: 7f218db8cc8831346996e9b60bd15bb7,
         type: 3}

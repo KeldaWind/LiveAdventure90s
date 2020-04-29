@@ -106,7 +106,7 @@ public class FirstPersonController : MonoBehaviour
             outOfBoundsUpAcceleration = jetpackParameters.GetOutOfBoundsUpAcceleration;
             outOfBoundsUpMaxSpeed = jetpackParameters.GetOutOfBoundsMaxUpSpeed;
             outOfBoundsDownAcceleration = jetpackParameters.GetOutOfBoundsDownAcceleration;
-            outOfBoundsDownMaxSpeed = jetpackParameters.GetJetpackMaxDownSpeed;
+            outOfBoundsDownMaxSpeed = jetpackParameters.GetOutOfBoundsMaxDownSpeed;
         }
     }
 
