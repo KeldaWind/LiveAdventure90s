@@ -60,6 +60,12 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
+    public void Victory()
+    {
+        Debug.Log("You Win");
+
+    }
+
     #region Important Values
     public Vector3 GetCameraWorldPosition => firstPersonController.GetCameraWorldPosition;
     #endregion
