@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7540dcd5b2fdc384d8e6218b5cb1a331, type: 3}
   m_Name: JetpackParameters_Iteration3
   m_EditorClassIdentifier: 
-  jetpackMaxUpSpeed: 15
+  jetpackMaxUpSpeed: 15.5
   jetpackMaxDownSpeed: -18
   jetpackUpAcceleration: 35
-  jetpackGravityWhenGoingUp: -24
+  jetpackGravityWhenGoingUp: -26
   jetpackGravityWhenGoingDown: -5.2941175
   outOfBoundsUpAcceleration: 180
   outOfBoundsMaxUpSpeed: 16
