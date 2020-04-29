@@ -141,12 +141,15 @@ public class EnemyBase : MonoBehaviour
 
     [Header("Feedbacks")]
     [SerializeField] string shootFxTag = "PlaceHolderShoot";
+    [SerializeField] AudioManager.Sound shootSound = AudioManager.Sound.E_EnnemyThrow;
     [SerializeField] string damagedFxTag = "PlaceHolder";
+    [SerializeField] AudioManager.Sound damagedSound = AudioManager.Sound.H_ImpactShootEnemie;
     [SerializeField] string deathFxTag = "PlaceHolder";
+    [SerializeField] AudioManager.Sound deathSound = AudioManager.Sound.E_EnnemyDeath;
 
     public void PlayDamagedFeedback()
     {
-        // FEEDBACK : PLAY DAMAGED SOUND 
+        AudioManager.PlaySound(damagedSound);
         FxManager.Instance.PlayFx(damagedFxTag, transform.position + Vector3.up, Quaternion.identity, Vector3.one);
     }
 
@@ -154,13 +157,13 @@ public class EnemyBase : MonoBehaviour
     {        
         Transform source = GetShootDirection == ShootDirection.Left ? leftShootPosition : rightShootPosition;
 
-        // FEEDBACK : PLAY SHOOT SOUND 
+        AudioManager.PlaySound(shootSound);
         FxManager.Instance.PlayFx(shootFxTag, source.position, source.rotation, Vector3.one);
     }
 
     public void PlayDeathFeedback()
     {
-        // FEEDBACK : PLAY DEATH SOUND 
+        AudioManager.PlaySound(deathSound);
         FxManager.Instance.PlayFx(deathFxTag, transform.position, Quaternion.identity, Vector3.one);
     }
 }

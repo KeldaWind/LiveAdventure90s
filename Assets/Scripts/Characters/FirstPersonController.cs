@@ -166,6 +166,8 @@ public class FirstPersonController : MonoBehaviour
         currentPitch = Mathf.Lerp(currentPitch, targetPitchValue, pitchChangingCoeff);
         //print(currentPitch);
         transform.rotation = Quaternion.Euler(currentPitch, 0, 0);
+
+        UpdateSound();
     }
     #endregion
 
@@ -178,6 +180,46 @@ public class FirstPersonController : MonoBehaviour
     [SerializeField] AnimationCurve goingDownPitchCurve = AnimationCurve.Linear(0, 0, 1, 1);
     [SerializeField] float pitchChangingCoeff = 0.3f;
     float currentPitch = 0f;
+
+    [Header("Feedbacks")]
+    [SerializeField] AudioSource jetpackOnSoundSource = default;
+    [SerializeField] float maxJetpackOnVolume = 1f;
+    [SerializeField] AudioSource jetpackOffSoundSource = default;
+    [SerializeField] float maxJetpackOffVolume = 1f;
+
+    [SerializeField] float jetpackSoundTransitionDuration = 0.5f;
+    float currentJetpackSoundTransitionCoeff = 0f;
+    float previousSoundDirection = 0f;
+
+    public void UpdateSound()
+    {
+        float currentSoundDirection = -1;
+        JetpackBoundsState boundsState = GetJetpackBoundsState;
+        switch (boundsState)
+        {
+            case JetpackBoundsState.TooLow:
+                currentSoundDirection = 1;
+                break;
+            case JetpackBoundsState.Neutral:
+                currentSoundDirection = GetJetpackUpInput ? 1 : -1;
+                break;
+            case JetpackBoundsState.TooHigh:
+                currentSoundDirection = -1;
+                break;
+        }
+
+        currentJetpackSoundTransitionCoeff = Mathf.Clamp(currentJetpackSoundTransitionCoeff + Time.deltaTime * currentSoundDirection, 0, jetpackSoundTransitionDuration);
+
+        jetpackOnSoundSource.volume = maxJetpackOnVolume * (currentJetpackSoundTransitionCoeff / jetpackSoundTransitionDuration);
+
+        if(currentSoundDirection < 0 && previousSoundDirection > 0)
+        {
+            jetpackOffSoundSource.volume = maxJetpackOffVolume * (currentJetpackSoundTransitionCoeff / jetpackSoundTransitionDuration);
+            jetpackOffSoundSource.Play();
+        }
+
+        previousSoundDirection = currentSoundDirection;
+    }
 
     #region Horizontal Auto Follow
     /*[Header("Horizontal Auto Follow")]

@@ -122,7 +122,7 @@ MonoBehaviour:
   leftShootPosition: {fileID: 6762457592992562201}
   shootFxTag: PlaceHolderShoot
   damagedFxTag: PlaceHolder
-  deathFxTag: PlaceHolder
+  deathFxTag: EnemyDeath
 --- !u!65 &6762457594237305862
 BoxCollider:
   m_ObjectHideFlags: 0
