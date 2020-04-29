@@ -9,18 +9,24 @@ public class Life_UI : MonoBehaviour
     [Header("Get Components")]
     public GameObject lifePointPrefab;
     private List<Image> lifePoints;
-
     public Sprite enableSprite;
     public Sprite unenableSprite;
 
+    [Header("Life Points parameters")]
     public float lifeIconSpace = 10f;
-    private float lifeIconSizeref;
     private int maxLife;
+    public float showDuration;
+    private float currentShowTime;
+    private bool isShown;
 
 
-    private void Awake()
+
+    private void Update()
     {
-        lifeIconSizeref = lifePointPrefab.GetComponent<RectTransform>().sizeDelta.y * 0.5f;
+        if(isShown)
+        {
+            HideIn();
+        }
     }
 
     public void SetLife(int currentLife)
@@ -43,10 +49,14 @@ public class Life_UI : MonoBehaviour
 
             lifePoints.Add(pointImage);
         }
+
+        ShowLifePoints();
     }
 
     public void RefreshLife(int amount, int current)
     {
+        ShowLifePoints();
+
         for (int i = 0; i < current; i++)
         {
             lifePoints[i].sprite = enableSprite;
@@ -62,4 +72,43 @@ public class Life_UI : MonoBehaviour
         SetLife(current);
     }
 
+    void ShowLifePoints()
+    {
+        if (lifePoints == null)
+            return;
+
+        for (int i = 0; i < lifePoints.Count; i++)
+        {
+            lifePoints[i].gameObject.SetActive(true);
+        }
+
+        StartHideTimer();
+    }
+
+    void StartHideTimer()
+    {
+        currentShowTime = showDuration;
+        isShown = true;
+    }
+
+    void HideIn()
+    {
+        if(currentShowTime > 0)
+        {
+            currentShowTime -= Time.deltaTime;
+        }
+        else
+        {
+            isShown = false;
+            Hide();
+        }
+    }
+
+    void Hide()
+    {
+        for (int i = 0; i < lifePoints.Count; i++)
+        {
+            lifePoints[i].gameObject.SetActive(false);
+        }
+    }
 }
