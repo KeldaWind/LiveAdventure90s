@@ -11,8 +11,9 @@ GameObject:
   - component: {fileID: 4466734729310450961}
   - component: {fileID: 4658412157761490727}
   - component: {fileID: 1412591268780307422}
+  - component: {fileID: 3637606393325534996}
   m_Layer: 0
-  m_Name: SM_Totem_Haut
+  m_Name: SM_Totem_Haut_Small
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -79,3 +80,16 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!65 &3637606393325534996
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 839462056261699330}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 55.387043, y: 59.818054, z: 200.00005}
+  m_Center: {x: -25.029732, y: -25.827063, z: 100.00002}
