@@ -39,6 +39,9 @@ public class ThirdPersonController : MonoBehaviour
         SetUpLifeSystem();
 
         characterRenderer.material = normalMaterial;
+
+        walkStepFrequenceSystem = new FrequenceSystem(stepFeedbackPerSecond);
+        walkStepFrequenceSystem.SetUp(PlayFootFeedbackSound);
     }
 
     void Update()
@@ -160,6 +163,9 @@ public class ThirdPersonController : MonoBehaviour
         Vector3 movementBoost = Vector3.zero;
 
         selfBody.velocity = new Vector3(currentHorizontalSpeed, currentVerticalSpeed, 0) + movementBoost;
+
+        if (IsWalking)
+            walkStepFrequenceSystem.UpdateFrequence();
     }
 
     RaycastHit currentGround = new RaycastHit();
@@ -191,6 +197,11 @@ public class ThirdPersonController : MonoBehaviour
         if (startIsOnGround && startIsOnGround != isOnGround)
         {
             StartLateJumpDelay();
+        }
+
+        if (isOnGround && startIsOnGround != isOnGround)
+        {
+            PlayOnLandedFeedback();
         }
 
         if (IsOnGround)
@@ -307,6 +318,8 @@ public class ThirdPersonController : MonoBehaviour
             if (!GetJumpKey)
                 EndJumping();
         }
+
+        PlayJumpFeedback();
     }
 
     public void EndJumping()
@@ -403,6 +416,8 @@ public class ThirdPersonController : MonoBehaviour
         Quaternion shootRotation = (currentShootDirection == ShootDirection.Right ? rightShootPosition : leftShootPosition).rotation;
         ProjectileBase newProjectile = Instantiate(projectilePrefab, shootPosition, shootRotation);
         newProjectile.ShootProjectile(currentShootDirection == ShootDirection.Right ? Vector3.right : Vector3.left, gameObject);
+
+        PlayShootFeedback();
     }
 
     public void CheckForShootAgain()
@@ -514,6 +529,8 @@ public class ThirdPersonController : MonoBehaviour
 
         stunTimer.StartTimer();
         recoveringTimer.StartTimer();
+
+        PlayDamagedFeedback();
     }
 
     public void Die()
@@ -526,9 +543,63 @@ public class ThirdPersonController : MonoBehaviour
     [SerializeField] Renderer characterRenderer = default;
     [SerializeField] Material normalMaterial = default;
     [SerializeField] Material blinkingMaterial = default;
+
+    [Header("Feedbacks")]
+    [SerializeField] string damagedFxTag = "PlaceHolder";
+    [SerializeField] string shootFxTag = "PlaceHolderShoot";
+    [SerializeField] string landingFxTag = "PlaceHolderShoot";
+    [SerializeField] string jumpFxTag = "PlaceHolderShoot";
+    [SerializeField] string walkFxTag = "PlaceHolderShoot";
+    [SerializeField] float stepFeedbackPerSecond = 2.5f;
+
+    public void PlayDamagedFeedback()
+    {
+        // FEEDBACK : PLAY DAMAGED SOUND 
+        FxManager.Instance.PlayFx(damagedFxTag, transform.position + Vector3.up, Quaternion.identity, Vector3.one);
+    }
+
+    public void PlayShootFeedback()
+    {
+        Transform source = currentShootDirection == ShootDirection.Left ? leftShootPosition : rightShootPosition;
+
+        // FEEDBACK : PLAY SHOOT SOUND 
+        FxManager.Instance.PlayFx(shootFxTag, source.position, source.rotation, Vector3.one);
+    }
+
+    public void PlayOnLandedFeedback()
+    {
+        // FEEDBACK : PLAY LANDING SOUND 
+        FxManager.Instance.PlayFx(landingFxTag, transform.position, Quaternion.Euler(0, 0, 90), Vector3.one);
+    }
+
+    public void PlayJumpFeedback()
+    {
+        // FEEDBACK : PLAY JUMP SOUND 
+        FxManager.Instance.PlayFx(jumpFxTag, transform.position, Quaternion.Euler(0, 0, -90), Vector3.one);
+    }
+
+    public void PlayFootFeedbackSound()
+    {
+        WalkingDirection direction = CurrentWalkingDirection;
+
+        // FEEDBACK : PLAY WALK SOUND 
+        FxManager.Instance.PlayFx(walkFxTag, transform.position, Quaternion.Euler(0, 0, direction == WalkingDirection.Right ? 135 : 45), Vector3.one);
+    }
+
+    FrequenceSystem walkStepFrequenceSystem = new FrequenceSystem(1);
+
+    #region Values for animation
+    public WalkingDirection CurrentWalkingDirection => IsWalking ? (currentHorizontalSpeed > 0f ? WalkingDirection.Right : WalkingDirection.Left) : WalkingDirection.Neutral;
+    public bool IsWalking => IsOnGround && Mathf.Abs(currentHorizontalSpeed) > 0f;
+    #endregion
 }
 
 public enum ShootDirection
 {
     Right, Left
+}
+
+public enum WalkingDirection
+{
+    Left, Neutral, Right
 }

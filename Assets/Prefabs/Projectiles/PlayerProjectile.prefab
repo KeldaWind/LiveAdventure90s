@@ -128,6 +128,8 @@ MonoBehaviour:
   selfBody: {fileID: 7487550969232296055}
   projectileDamages: 1
   damageTag: 0
+  destroyFxTag: PlaceHolder
+  destroyFxSize: 0.2
   projectileCollider: {fileID: 187310165543794602}
   projectileSpeed: 20
 --- !u!135 &187310165543794602
