@@ -57,6 +57,7 @@ public class ThirdPersonController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        
         UpdatePhysics();
     }
 
@@ -156,12 +157,24 @@ public class ThirdPersonController : MonoBehaviour
         if (currentVerticalSpeed > 0)
             CheckForCeiling();
 
-        selfBody.velocity = new Vector3(currentHorizontalSpeed, currentVerticalSpeed, 0);
+        Vector3 movementBoost = Vector3.zero;
+
+        selfBody.velocity = new Vector3(currentHorizontalSpeed, currentVerticalSpeed, 0) + movementBoost;
     }
 
     RaycastHit currentGround = new RaycastHit();
+    Following_Plateform currentStepingOnFollowingPlatform = default;
+    float previousPlatformHeight = 0;
     public void CheckForGround()
     {
+        if (currentStepingOnFollowingPlatform)
+        {
+            float newHeight = currentStepingOnFollowingPlatform.transform.position.y;
+            float diff = newHeight - previousPlatformHeight;
+            transform.position += Vector3.up * diff;
+            previousPlatformHeight = newHeight;
+        }
+
         bool startIsOnGround = isOnGround;
 
         Vector3 actualSize = new Vector3(selfCollider.size.x * transform.lossyScale.x, selfCollider.size.y * transform.lossyScale.y, selfCollider.size.z * transform.lossyScale.z) * skinWidthMultiplier;
@@ -186,11 +199,17 @@ public class ThirdPersonController : MonoBehaviour
             {
                 HandleCollision(null, hit.collider);
                 currentGround = hit;
+                currentStepingOnFollowingPlatform = currentGround.collider.GetComponent<Following_Plateform>();
+                if (currentStepingOnFollowingPlatform)
+                {
+                    previousPlatformHeight = currentStepingOnFollowingPlatform.transform.position.y;
+                }
             }
         }
         else
         {
             currentGround = new RaycastHit();
+            currentStepingOnFollowingPlatform = null;
         }
     }
 
@@ -267,6 +286,17 @@ public class ThirdPersonController : MonoBehaviour
     {
         isJumping = true;
         currentVerticalSpeed = jumpForce;
+
+        if (currentStepingOnFollowingPlatform)
+        {
+            float platformSpeed = currentStepingOnFollowingPlatform.GetCurrentVerticalMovementSpeed.y;
+            if (platformSpeed > 0)
+            {
+                currentVerticalSpeed += platformSpeed;
+                print(platformSpeed);
+            }
+        }
+
         jumpDurationSystem.StartTimer();
 
         if (CanLateJump)
