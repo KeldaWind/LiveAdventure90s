@@ -14,6 +14,7 @@ public class UIManager : MonoBehaviour
     [Header("Get Components")]
     public Life_UI lifeUI;
     public OutOfFrame_UI outOfFrameUI;
+    public JetPackUI jetpackUI;
     public DamageableEntity herosLife;
 
     [Header("Lose Sight Condition")]
