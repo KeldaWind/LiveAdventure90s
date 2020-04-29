@@ -20,7 +20,6 @@ public class ThirdPersonController : MonoBehaviour
     [Header("Collisions")]
     [SerializeField] Rigidbody selfBody = default;
     [SerializeField] BoxCollider selfCollider = default;
-    //[SerializeField] BoxRaycaster boxRaycaster = default;
     [SerializeField] LayerMask movementsCheckMask = default;
     [SerializeField] float movementThreshold = 0.01f;
     [SerializeField] float skinWidthMultiplier = 0.99f;
@@ -42,6 +41,8 @@ public class ThirdPersonController : MonoBehaviour
 
         walkStepFrequenceSystem = new FrequenceSystem(stepFeedbackPerSecond);
         walkStepFrequenceSystem.SetUp(PlayFootFeedbackSound);
+
+        //AudioManager.PlayAmbianceMusic();
     }
 
     void Update()
@@ -51,11 +52,22 @@ public class ThirdPersonController : MonoBehaviour
         UpdateHorizontalMovementValues(currentHorizontalInput);
         UpdateVerticalMovementValues();
         UpdateRecovering();
+        UpdateAnimatorValues();
 
-        //Vector3 movement = new Vector3(currentHorizontalSpeed, currentVerticalSpeed, 0) * Time.deltaTime;
+        /*if (Input.GetKeyDown(KeyCode.D))
+        {
+            characterAnimator.SetBool("IsDead", true);
+        }*/
 
-        //Move(movement);
-        //UpdatePhysics();
+        /*if (Input.GetKeyDown(KeyCode.W))
+        {
+            AudioManager.PlayWinMusic();
+        }
+
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            AudioManager.PlayLoseMusic();
+        }*/
     }
 
     private void FixedUpdate()
@@ -197,11 +209,13 @@ public class ThirdPersonController : MonoBehaviour
         if (startIsOnGround && startIsOnGround != isOnGround)
         {
             StartLateJumpDelay();
+            characterAnimator.SetBool("IsGrounded", isOnGround);
         }
 
         if (isOnGround && startIsOnGround != isOnGround)
         {
             PlayOnLandedFeedback();
+            characterAnimator.SetBool("IsGrounded", isOnGround);
         }
 
         if (IsOnGround)
@@ -596,6 +610,14 @@ public class ThirdPersonController : MonoBehaviour
     [SerializeField] Renderer characterRenderer = default;
     [SerializeField] Material normalMaterial = default;
     [SerializeField] Material blinkingMaterial = default;
+    [SerializeField] Animator characterAnimator = default;
+
+    public void UpdateAnimatorValues()
+    {
+        characterAnimator.SetBool("IsMoving", Mathf.Abs(currentHorizontalSpeed) > 0.2f);
+        characterAnimator.SetFloat("VerticalSpeed",  isOnGround ? 0 : currentVerticalSpeed);
+        characterAnimator.transform.localRotation = Quaternion.Euler(0, currentShootDirection == ShootDirection.Left ? -90 : 90, 0);
+    }
 
     [Header("Feedbacks")]
     [SerializeField] string damagedFxTag = "PlaceHolder";
@@ -633,6 +655,7 @@ public class ThirdPersonController : MonoBehaviour
     {
         AudioManager.PlaySound(jumpSound);
         FxManager.Instance.PlayFx(jumpFxTag, transform.position, Quaternion.identity, Vector3.one);
+        characterAnimator.SetTrigger("StartJump");
     }
 
     public void PlayFootFeedbackSound()

@@ -54,4 +54,74 @@ public class GameAssets : MonoBehaviour
         else
             return null;
     }
+
+    [Header("Music")]
+    [SerializeField] AudioSource ambianceMusicSource = default;
+    [SerializeField] float ambianceMusicVolume = 1f;
+    [SerializeField] AudioSource winMusicSource = default;
+    [SerializeField] float winMusicVolume = 1f;
+    [SerializeField] float winCrossFadeDuration = 0.5f;
+    [SerializeField] AudioSource loseMusicSource = default;
+    [SerializeField] float loseMusicVolume = 1f;
+    [SerializeField] float loseCrossFadeDuration = 0.5f;
+
+    TimerSystem crossFadeTimer = new TimerSystem();
+    AudioSource crossFadingToSource = default;
+    float crossFadingToSourceVolume = 1f;
+
+    public void PlayAmbianceMusic()
+    {
+        if (ambianceMusicSource)
+        {
+            ambianceMusicSource.volume = ambianceMusicVolume;
+            ambianceMusicSource.Play();
+        }
+    }
+
+    public void PlayWinMusic()
+    {
+        print("WIN");
+        crossFadingToSource = winMusicSource;
+        crossFadingToSource.volume = 0;
+        crossFadingToSourceVolume = winMusicVolume;
+        crossFadingToSource.Play();
+
+        crossFadeTimer = new TimerSystem();
+        crossFadeTimer.ChangeTimerValue(winCrossFadeDuration);
+        crossFadeTimer.StartTimer();
+    }
+
+    public void PlayLoseMusic()
+    {
+        crossFadingToSource = loseMusicSource;
+        crossFadingToSource.volume = 0;
+        crossFadingToSourceVolume = loseMusicVolume;
+        crossFadingToSource.Play();
+
+        crossFadeTimer = new TimerSystem();
+        crossFadeTimer.ChangeTimerValue(loseCrossFadeDuration);
+        crossFadeTimer.StartTimer();
+    }
+
+    private void Update()
+    {
+        if (!crossFadeTimer.TimerOver)
+        {
+            crossFadeTimer.UpdateTimer();
+            if (ambianceMusicSource)
+            {
+                ambianceMusicSource.volume = Mathf.Lerp(ambianceMusicVolume, 0, crossFadeTimer.GetTimerCoefficient);
+            }
+
+            if (crossFadingToSource)
+            {
+                crossFadingToSource.volume = Mathf.Lerp(0, crossFadingToSourceVolume, crossFadeTimer.GetTimerCoefficient);
+            }
+
+            if (crossFadeTimer.TimerOver)
+            {
+                ambianceMusicSource.Stop();
+            }
+        }
+    }
 }

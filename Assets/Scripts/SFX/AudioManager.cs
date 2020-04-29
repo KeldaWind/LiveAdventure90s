@@ -6,12 +6,12 @@ public static class AudioManager
 {
     public enum Sound
     {
-        C_CameraBallKeep,/**/
-        C_HeroSreenExit_loop,
+        C_CameraBallKeep,/*CANCEL*/
+        C_HeroSreenExit_loop,/*NEED*/
         C_JetpackShutdown,//
         C_JetpackUp_loop,//
-        C_CameraBallDrop,/**/
-        C_CameraBallLock,/**/
+        C_CameraBallDrop,/*CANCEL*/
+        C_CameraBallLock,/*CANCEL*/
         E_EnnemyDeath,//
         E_EnnemyThrow,//
         E_EnnemyProjectileDestroy,//
@@ -20,27 +20,27 @@ public static class AudioManager
         H_GunShoot,//
         H_HeroJump,//
         H_HeroJumpLanding,//
-        H_HeroHeal,/**/
+        H_HeroHeal,/*CANCEL*/
         H_ImpactShootWall,//
         H_ImpactShootEnemie,//
         H_ImpactShootEnemieProjectile,//
-        H_HeroTakeBall,/**/
-        H_HeroPoseBall,/**/
+        H_HeroTakeBall,/*CANCEL*/
+        H_HeroPoseBall,/*CANCEL*/
         H_HeroRecupCollectible,//
-        LD_evelvatorActive,
-        LD_RailActive,
-        LD_elevatorDisable,
-        LD_RailDisable,
-        LD_LaserActive,
-        LD_LaserDisable,
-        LD_DoorOpen,
-        LD_DoorClose,
-        Other_CameraOn,
-        Other_CameraShutdown,
-        THEME_AmbianceLevel_loop,
-        THEME_TitleScreen_loop,
-        THEME_GameOver,
-        THEME_YouWin,
+        LD_evelvatorActive,//
+        LD_RailActive,/*CANCEL*/
+        LD_elevatorDisable,//
+        LD_RailDisable,/*CANCEL*/
+        LD_LaserActive,//
+        LD_LaserDisable,//
+        LD_DoorOpen,/*CANCEL*/
+        LD_DoorClose,/*CANCEL*/
+        Other_CameraOn,/*??*/
+        Other_CameraShutdown,/*??*/
+        THEME_AmbianceLevel_loop,//
+        THEME_TitleScreen_loop,/*NEED*/
+        THEME_GameOver,//
+        THEME_YouWin,//
         None
     }
 
@@ -95,25 +95,36 @@ public static class AudioManager
         soundObj.SetAudioSource(audioSource);
     }
 
-    /*public static void PlaySound2(AudioClip AudioClipTest)
+    public static void PlayAmbianceMusic()
     {
-        GameObject soundGameObject = new GameObject("Sound");
-        AudioSource audioSource = soundGameObject.AddComponent<AudioSource>();
-        audioSource.PlayOneShot(AudioClipTest);
-
-    }*/
-
-
-    /*private static AudioClip GetAudioClip(Sound sound)
-    {
-        foreach (GameAssets.SoundAudioClip soundAudioClip in GameAssets.i.soundAudioClipArray)
+        if (!GameAssets.i)
         {
-            if(soundAudioClip.sound == sound)
-            {
-                return soundAudioClip.AudioClip;
-            }
+            Debug.LogWarning("NO AUDIO MANAGER ON SCENE");
+            return;
         }
-        Debug.LogError("Sound" + sound + "not found!");
-        return null;
-    }*/
+
+        GameAssets.i.PlayAmbianceMusic();
+    }
+
+    public static void PlayWinMusic()
+    {
+        if (!GameAssets.i)
+        {
+            Debug.LogWarning("NO AUDIO MANAGER ON SCENE");
+            return;
+        }
+
+        GameAssets.i.PlayWinMusic();
+    }
+
+    public static void PlayLoseMusic()
+    {
+        if (!GameAssets.i)
+        {
+            Debug.LogWarning("NO AUDIO MANAGER ON SCENE");
+            return;
+        }
+
+        GameAssets.i.PlayLoseMusic();
+    }
 }
