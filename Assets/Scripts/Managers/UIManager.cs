@@ -20,7 +20,20 @@ public class UIManager : MonoBehaviour
     [Header("Lose Sight Condition")]
     public float maxOutOfFrameTime;
 
+    public Animator winAnim;
+    public Animator loseAnim;
 
+
+
+    public void PlayWinAnim()
+    {
+        winAnim.Play("Win");
+    }
+
+    public void PlayLoseAnim()
+    {
+        loseAnim.Play("Lose");
+    }
 
     private void Awake()
     {
