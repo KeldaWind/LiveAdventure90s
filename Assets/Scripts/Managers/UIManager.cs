@@ -25,6 +25,20 @@ public class UIManager : MonoBehaviour
 
 
 
+    private void Awake()
+    {
+        Instance = this;
+
+        herosLife.OnDamageableEntitySetUp += lifeUI.SetLife;
+        herosLife.OnLifeAmountChanged += lifeUI.RefreshLife;
+    }
+
+
+    public float GetLoseAnimationDuration()
+    {
+        return loseAnim.runtimeAnimatorController.animationClips[0].length;
+    }
+
     public void PlayWinAnim()
     {
         winAnim.Play("Win");
@@ -33,13 +47,5 @@ public class UIManager : MonoBehaviour
     public void PlayLoseAnim()
     {
         loseAnim.Play("Lose");
-    }
-
-    private void Awake()
-    {
-        Instance = this;
-
-        herosLife.OnDamageableEntitySetUp += lifeUI.SetLife;
-        herosLife.OnLifeAmountChanged += lifeUI.RefreshLife;
     }
 }
