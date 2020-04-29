@@ -11,7 +11,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.7892709, y: 2.903883, z: 4.9762406}
+  m_Size: {x: 0.7892709, y: 2.5, z: 4.9762406}
   m_Center: {x: 0.0053646564, y: 0.00000011920929, z: -2.4881203}
 --- !u!64 &8897182173638411045
 MeshCollider:
@@ -92,7 +92,7 @@ PrefabInstance:
     - target: {fileID: -927199367670048503, guid: 081df6ed3cf906047b8fab23f42ffc52,
         type: 3}
       propertyPath: m_Name
-      value: Racine_debut
+      value: Racine_debut Variant
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 081df6ed3cf906047b8fab23f42ffc52, type: 3}

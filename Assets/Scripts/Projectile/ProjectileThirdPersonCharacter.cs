@@ -9,6 +9,9 @@ public class ProjectileThirdPersonCharacter : ProjectileBase
     [SerializeField] float projectileSpeed = 20f;
     Vector3 beforeMovementPosition = Vector3.zero;
 
+    [Header("Feedbacks")]
+    [SerializeField] AudioManager.Sound defaultDestroySound = AudioManager.Sound.H_ImpactShootWall;
+
     public override void ShootProjectile(Vector3 direction, GameObject instigator)
     {
         base.ShootProjectile(direction, instigator);
@@ -32,6 +35,10 @@ public class ProjectileThirdPersonCharacter : ProjectileBase
         {
             if (hitDamageableEntity.GetDamageTag != damageTag && damageTag != DamageTag.Environment)
                 hitDamageableEntity.ReceiveDamage(projectileDamages, gameObject);
+        }
+        else
+        {
+            AudioManager.PlaySound(defaultDestroySound);
         }
 
         DestroyProjectile();

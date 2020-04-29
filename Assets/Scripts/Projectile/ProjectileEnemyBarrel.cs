@@ -187,6 +187,7 @@ public class ProjectileEnemyBarrel : ProjectileBase
         if (!startOnGround && isOnGround != startOnGround)
         {
             HandleCollision(hit.collider, null);
+            PlayLandingFeedback();
         }
     }
 
@@ -207,10 +208,17 @@ public class ProjectileEnemyBarrel : ProjectileBase
 
     [Header("Barrel Feedbacks")]
     [SerializeField] string damagedFxTag = "PlaceHolder";
+    [SerializeField] AudioManager.Sound damagedSound = AudioManager.Sound.H_ImpactShootEnemieProjectile;
+    [SerializeField] AudioManager.Sound landingSound = AudioManager.Sound.E_EnnemyProjectileLanding;
 
     public void PlayDamagedFeedback()
     {
-        // FEEDBACK : PLAY DAMAGED SOUND 
+        AudioManager.PlaySound(damagedSound);
         FxManager.Instance.PlayFx(damagedFxTag, transform.position + Vector3.up, Quaternion.identity, Vector3.one * 0.5f);
+    }
+
+    public void PlayLandingFeedback()
+    {
+        AudioManager.PlaySound(landingSound);
     }
 }

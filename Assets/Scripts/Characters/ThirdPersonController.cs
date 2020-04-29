@@ -599,15 +599,19 @@ public class ThirdPersonController : MonoBehaviour
 
     [Header("Feedbacks")]
     [SerializeField] string damagedFxTag = "PlaceHolder";
+    [SerializeField] AudioManager.Sound damagedSound = AudioManager.Sound.H_HeroTakeDamage;
     [SerializeField] string shootFxTag = "PlaceHolderShoot";
+    [SerializeField] AudioManager.Sound shootSound = AudioManager.Sound.H_GunShoot;
     [SerializeField] string landingFxTag = "PlaceHolderShoot";
+    [SerializeField] AudioManager.Sound landingSound = AudioManager.Sound.H_HeroJumpLanding;
     [SerializeField] string jumpFxTag = "PlaceHolderShoot";
+    [SerializeField] AudioManager.Sound jumpSound = AudioManager.Sound.H_HeroJump;
     [SerializeField] string walkFxTag = "PlaceHolderShoot";
     [SerializeField] float stepFeedbackPerSecond = 2.5f;
 
     public void PlayDamagedFeedback()
     {
-        // FEEDBACK : PLAY DAMAGED SOUND 
+        AudioManager.PlaySound(damagedSound);
         FxManager.Instance.PlayFx(damagedFxTag, transform.position + Vector3.up, Quaternion.identity, Vector3.one);
     }
 
@@ -615,20 +619,19 @@ public class ThirdPersonController : MonoBehaviour
     {
         Transform source = currentShootDirection == ShootDirection.Left ? leftShootPosition : rightShootPosition;
 
-        // FEEDBACK : PLAY SHOOT SOUND 
-        AudioManager.PlaySound(AudioManager.Sound.H_GunShoot);
+        AudioManager.PlaySound(shootSound);
         FxManager.Instance.PlayFx(shootFxTag, source.position, source.rotation, Vector3.one);
     }
 
     public void PlayOnLandedFeedback()
     {
-        // FEEDBACK : PLAY LANDING SOUND 
+        AudioManager.PlaySound(landingSound);
         FxManager.Instance.PlayFx(landingFxTag, transform.position, Quaternion.identity, Vector3.one);
     }
 
     public void PlayJumpFeedback()
     {
-        // FEEDBACK : PLAY JUMP SOUND 
+        AudioManager.PlaySound(jumpSound);
         FxManager.Instance.PlayFx(jumpFxTag, transform.position, Quaternion.identity, Vector3.one);
     }
 
