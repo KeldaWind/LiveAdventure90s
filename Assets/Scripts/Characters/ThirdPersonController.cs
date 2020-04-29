@@ -20,7 +20,6 @@ public class ThirdPersonController : MonoBehaviour
     [Header("Collisions")]
     [SerializeField] Rigidbody selfBody = default;
     [SerializeField] BoxCollider selfCollider = default;
-    //[SerializeField] BoxRaycaster boxRaycaster = default;
     [SerializeField] LayerMask movementsCheckMask = default;
     [SerializeField] float movementThreshold = 0.01f;
     [SerializeField] float skinWidthMultiplier = 0.99f;
@@ -42,6 +41,8 @@ public class ThirdPersonController : MonoBehaviour
 
         walkStepFrequenceSystem = new FrequenceSystem(stepFeedbackPerSecond);
         walkStepFrequenceSystem.SetUp(PlayFootFeedbackSound);
+
+        //AudioManager.PlayAmbianceMusic();
     }
 
     void Update()
@@ -52,10 +53,15 @@ public class ThirdPersonController : MonoBehaviour
         UpdateVerticalMovementValues();
         UpdateRecovering();
 
-        //Vector3 movement = new Vector3(currentHorizontalSpeed, currentVerticalSpeed, 0) * Time.deltaTime;
+        /*if (Input.GetKeyDown(KeyCode.W))
+        {
+            AudioManager.PlayWinMusic();
+        }
 
-        //Move(movement);
-        //UpdatePhysics();
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            AudioManager.PlayLoseMusic();
+        }*/
     }
 
     private void FixedUpdate()

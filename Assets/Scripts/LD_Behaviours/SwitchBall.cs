@@ -27,19 +27,35 @@ public class SwitchBall : MonoBehaviour
     private float lowestTrailPos;
     private float highestTrailPos;
 
-
+    bool avoidSound = false;
+    public IEnumerator AvoidSoundOnStartCoroutine()
+    {
+        avoidSound = true;
+        yield return new WaitForSeconds(0.2f);
+        avoidSound = false;
+    }
 
     private void Awake()
     {
         objectPos = this.GetComponent<Transform>();
 
         SetNewTrailReferencePositions();
+
+        StartCoroutine(AvoidSoundOnStartCoroutine());
     }
 
+    float lastDirection = 0;
     private void Update()
     {
         float diff = GameManager.Instance.GetCameraWorldPosition.y - objectPos.localPosition.y;
-
+        if (lastDirection != Mathf.Sign(diff))
+        {
+            lastDirection = Mathf.Sign(diff);
+            if (diff > 0)
+                PlayGoingUpSound();
+            else
+                PlayGoingDownSound();
+        }
 
         if (Mathf.Abs(diff) > followingMinRange)
         {
@@ -110,5 +126,25 @@ public class SwitchBall : MonoBehaviour
     {
         lowestTrailPos = GetLowestTrailPos(trailPositions);
         highestTrailPos = GetHighestTrailPos(trailPositions);
+    }
+
+    [Header("Feedbacks")]
+    [SerializeField] AudioManager.Sound onStartGoingUpSound = AudioManager.Sound.LD_evelvatorActive;
+    [SerializeField] AudioManager.Sound onStartGoingDownSound = AudioManager.Sound.LD_elevatorDisable;
+
+    public void PlayGoingUpSound()
+    {
+        if (avoidSound)
+            return;
+
+        AudioManager.PlaySound(onStartGoingUpSound);
+    }
+
+    public void PlayGoingDownSound()
+    {
+        if (avoidSound)
+            return;
+
+        AudioManager.PlaySound(onStartGoingDownSound);
     }
 }

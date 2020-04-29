@@ -180,6 +180,8 @@ MonoBehaviour:
   canObjectMove: 0
   isBoostingJump: 0
   plateformVelocity: 0
+  onStartGoingUpSound: 21
+  onStartGoingDownSound: 23
 --- !u!54 &1584484560
 Rigidbody:
   m_ObjectHideFlags: 0

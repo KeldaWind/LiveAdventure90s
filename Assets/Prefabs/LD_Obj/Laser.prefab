@@ -231,6 +231,9 @@ MonoBehaviour:
   startPos: {fileID: 1475393295562522126}
   targetPos: {fileID: 2686940374408681935}
   laserCollider: {fileID: 4912353026277356970}
+  laserDamages: 1
+  onLaserEnabled: 25
+  onLaserDisabled: 26
 --- !u!1 &4411129941433592668
 GameObject:
   m_ObjectHideFlags: 0
