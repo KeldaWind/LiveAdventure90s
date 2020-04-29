@@ -17,3 +17,7 @@ MonoBehaviour:
   jetpackUpAcceleration: 15
   jetpackGravityWhenGoingUp: -24
   jetpackGravityWhenGoingDown: -11
+  outOfBoundsUpAcceleration: 180
+  outOfBoundsMaxUpSpeed: 16
+  outOfBoundsDownAcceleration: 128
+  outOfBoundsMaxDownSpeed: 16

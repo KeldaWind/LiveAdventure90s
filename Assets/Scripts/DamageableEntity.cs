@@ -21,6 +21,8 @@ public class DamageableEntity : MonoBehaviour
         canReceiveDamages = true;
     }
 
+    public Action<int> OnDamageableEntitySetUp;
+
     public Action<int, int> OnLifeAmountChanged;
 
     public Action<int, int, GameObject> OnReceivedDamages;
@@ -35,6 +37,7 @@ public class DamageableEntity : MonoBehaviour
     public void Initialize()
     {
         currentLife = maxLife;
+        OnDamageableEntitySetUp?.Invoke(currentLife);
     }
 
     void LoseLife(int amount)
