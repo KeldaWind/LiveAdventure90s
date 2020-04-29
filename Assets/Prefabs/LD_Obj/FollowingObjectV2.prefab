@@ -138,7 +138,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a32a01fe0a71c4458a7eb14b9411a65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  plateformSpeed: 20
+  plateformSpeed: 12
   selfCollider: {fileID: 8194074723323393156}
   selfBody: {fileID: 1584484560}
   skinWidthMultiplier: 0.99

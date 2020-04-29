@@ -293,7 +293,6 @@ public class ThirdPersonController : MonoBehaviour
             if (platformSpeed > 0)
             {
                 currentVerticalSpeed += platformSpeed;
-                print(platformSpeed);
             }
         }
 
