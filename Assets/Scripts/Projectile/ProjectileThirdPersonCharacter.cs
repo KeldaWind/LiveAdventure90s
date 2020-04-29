@@ -7,37 +7,33 @@ public class ProjectileThirdPersonCharacter : ProjectileBase
     [Header("Player Projectile")]
     [SerializeField] SphereCollider projectileCollider = default;
     [SerializeField] float projectileSpeed = 20f;
+    Vector3 beforeMovementPosition = Vector3.zero;
+
+    public override void ShootProjectile(Vector3 direction, GameObject instigator)
+    {
+        base.ShootProjectile(direction, instigator);
+        selfBody.velocity = shootDirection * projectileSpeed;
+    }
 
     public override void UpdateTrajectory()
     {
-        Vector3 nextMovement = shootDirection * projectileSpeed * Time.deltaTime;
-
-        RaycastHit hitOnWay = CheckForObjectOnTrajectory(nextMovement);
-
-        if (hitOnWay.collider != null)
-        {
-            HandleCollision(hitOnWay);
-        }
-        else
-        {
-            transform.position += nextMovement;
-        }
+        
     }
 
-    public RaycastHit CheckForObjectOnTrajectory(Vector3 nextMovement)
+    public override void HandleCollision(Collider collider, Collision collision)
     {
-        RaycastHit hitOnWay = new RaycastHit();
+        if (shootInstigator == collider.gameObject)
+            return;
 
-        if (Physics.SphereCast(transform.position + projectileCollider.center, projectileCollider.radius, nextMovement, out hitOnWay, nextMovement.magnitude, checkMask))
+        GameObject hitObject = collider.gameObject;
+
+        DamageableEntity hitDamageableEntity = hitObject.GetComponent<DamageableEntity>();
+        if (hitDamageableEntity)
         {
-
+            if (hitDamageableEntity.GetDamageTag != damageTag && damageTag != DamageTag.Environment)
+                hitDamageableEntity.ReceiveDamage(projectileDamages, gameObject);
         }
-        return hitOnWay;
-    }
 
-    public override void HandleCollision(RaycastHit hit)
-    {
-        Destroy(gameObject);
-        Debug.DrawRay(hit.point, hit.normal, Color.red, 0.2f);
+        DestroyProjectile();
     }
 }

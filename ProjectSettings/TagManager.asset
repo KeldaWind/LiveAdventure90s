@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - KeyBall
   layers:
   - Default
   - TransparentFX
@@ -14,11 +15,11 @@ TagManager:
   - 
   - 
   - BlockingElement
-  - FirstPersonCharacter
-  - 
-  - 
-  - 
-  - 
+  - ThirdPersonCharacter
+  - Enemies
+  - EnemiesDetectionZone
+  - PlayerProjectiles
+  - EnemiesProjectiles
   - 
   - 
   - 

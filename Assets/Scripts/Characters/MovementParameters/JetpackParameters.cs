@@ -22,5 +22,21 @@ public class JetpackParameters : ScriptableObject
 
 
     [SerializeField] float jetpackGravityWhenGoingDown = -10f;
-    public float GetJetpackGravityWhenGoingDown => jetpackGravityWhenGoingDown;
+    public float GetJetpackGravityWhenGoingDown => jetpackGravityWhenGoingDown; 
+
+
+    [SerializeField] float outOfBoundsUpAcceleration = 150f;
+    public float GetOutOfBoundsUpAcceleration => outOfBoundsUpAcceleration;
+
+
+    [SerializeField] float outOfBoundsMaxUpSpeed = 10f;
+    public float GetOutOfBoundsMaxUpSpeed => outOfBoundsMaxUpSpeed;
+
+
+    [SerializeField] float outOfBoundsDownAcceleration = 150f;
+    public float GetOutOfBoundsDownAcceleration => outOfBoundsDownAcceleration;
+
+
+    [SerializeField] float outOfBoundsMaxDownSpeed = 10f;
+    public float GetOutOfBoundsMaxDownSpeed => outOfBoundsMaxDownSpeed;
 }

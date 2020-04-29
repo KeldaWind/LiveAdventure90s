@@ -5,40 +5,45 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-public class Following_Object : MonoBehaviour
+public class Following_Plateform : MonoBehaviour
 {
-    [Header("Plateform Movement")]
+    [Header("Object Movement")]
+    public float plateformSpeed = 10f;
     private Transform objectPos;
 
-    private float diff;
-    private float plateformSpeed = 10f;
     public float followingMinRange = 0.35f;
     public float followingMaxRange = 2f;
-    [SerializeField] private float accelerationModifier;
-
-    public bool isObjectFallingOutOfRange;
-    public bool canObjectMove = true;
-    private bool isGoingUp;
-    [SerializeField] private bool isMoving;
-    [SerializeField] private bool isAccelerating;
-
 
     public AnimationCurve accelerationCurve;
+    private float accelerationModifier = 0f;
+    public float accelerationCurveSpeed = 1f;
+
+    public float maxBoostTime = 0.1f;
+    private float currentBoostTimer = 0f;
 
     public LayerMask blockingElementsLayerMask;
 
-    [SerializeField] private bool inCameraRange;
+    [Header("Object Behaviour")]
+    public bool isObjectFallingOutOfRange;
+    private bool isGoingUp;
+    [HideInInspector] public bool isMoving;
+    [HideInInspector] public bool canObjectMove;
+    private bool isAccelerating;
+    [HideInInspector] public bool isBoostingJump;
+    public float plateformVelocity;
 
 
 
     private void Awake()
     {
         objectPos = this.GetComponent<Transform>();
+        canObjectMove = true;
     }
 
     private void FixedUpdate()
     {
-        CompareObjectAndCameraPositions();
+        if (canObjectMove)
+            CompareObjectAndCameraPositions();
     }
 
     /// <summary>
@@ -47,7 +52,7 @@ public class Following_Object : MonoBehaviour
     void CompareObjectAndCameraPositions()
     {
         //Get magnitude
-        diff = GameManager.Instance.GetCameraWorldPosition.y - objectPos.localPosition.y;
+        float diff = GameManager.Instance.GetCameraWorldPosition.y - objectPos.localPosition.y;
 
         if (Mathf.Abs(diff) > followingMaxRange)
         {
@@ -72,47 +77,69 @@ public class Following_Object : MonoBehaviour
             }
             else
             {
+                CelesteBoostJumpTiming();
+
                 isGoingUp = false;
+
                 isAccelerating = false;
                 isMoving = false;
             }
         }
     }
 
+    void CelesteBoostJumpTiming()
+    {
+        if (isGoingUp && !isBoostingJump)
+        {
+            //plateformVelocity = 
+            currentBoostTimer = 0;
+            isBoostingJump = true;
+        }
+        else if (currentBoostTimer < maxBoostTime)
+        {
+            currentBoostTimer += Time.deltaTime;
+        }
+        else
+        {
+            isBoostingJump = false;
+        }
+    }
+
     void MoveObject(float direction)
     {
-        if (canObjectMove)
+        if (!IsThereAnObstacleInThisDirection(Vector3.up * direction))
         {
-            if (!IsThereAnObstacleInThisDirection(Vector3.up * direction))
+            isBoostingJump = false;
+
+            if (direction > 0)
+                isGoingUp = true;
+            else
+                isGoingUp = false;
+
+
+            if (!isAccelerating && !isMoving)
             {
-                if (Math.Sign(diff) > 0)
-                    isGoingUp = true;
-                else
-                    isGoingUp = false;
-
-
-                if (!isAccelerating && !isMoving)
-                {
-                    accelerationModifier = 0;
-                    isAccelerating = true;
-                }
-                else if (accelerationModifier < 1)
-                {
-                    accelerationModifier += Time.deltaTime * 1f;
-                }
-                else
-                {
-                    accelerationModifier = 1f;
-                }
-
-                MoveToThisDirection(Math.Sign(diff));
+                accelerationModifier = 0;
+                isAccelerating = true;
+            }
+            else if (accelerationModifier < 1)
+            {
+                accelerationModifier += Time.deltaTime * accelerationCurveSpeed;
             }
             else
             {
-                isGoingUp = false;
-                isAccelerating = false;
-                isMoving = false;
+                accelerationModifier = 1f;
             }
+
+            MoveToThisDirection(Math.Sign(direction));
+        }
+        else
+        {
+            CelesteBoostJumpTiming();
+
+            isGoingUp = false;
+            isAccelerating = false;
+            isMoving = false;
         }
     }
 
@@ -139,8 +166,12 @@ public class Following_Object : MonoBehaviour
             blockingElementsLayerMask);
 
         if (result.collider != null)
+        {
             return true;
+        }
         else
+        {
             return false;
+        }
     }
 }

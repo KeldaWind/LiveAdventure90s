@@ -18,8 +18,13 @@ public class ThirdPersonController : MonoBehaviour
     bool isShootingInputDown = false;
 
     [Header("Collisions")]
-    [SerializeField] BoxRaycaster boxRaycaster = default;
+    [SerializeField] Rigidbody selfBody = default;
+    [SerializeField] BoxCollider selfCollider = default;
+    //[SerializeField] BoxRaycaster boxRaycaster = default;
+    [SerializeField] LayerMask movementsCheckMask = default;
     [SerializeField] float movementThreshold = 0.01f;
+    [SerializeField] float skinWidthMultiplier = 0.99f;
+    bool isOnGround = false;
 
     private void Start()
     {
@@ -31,7 +36,9 @@ public class ThirdPersonController : MonoBehaviour
         shootingFrequenceSystem.SetUp(CheckForShootAgain);
         shootingFrequenceSystem.Stop();
 
-        boxRaycaster.OnLanded = CheckForExtentJump;
+        SetUpLifeSystem();
+
+        characterRenderer.material = normalMaterial;
     }
 
     void Update()
@@ -40,13 +47,27 @@ public class ThirdPersonController : MonoBehaviour
         HandleInputs();
         UpdateHorizontalMovementValues(currentHorizontalInput);
         UpdateVerticalMovementValues();
+        UpdateRecovering();
 
-        Vector3 movement = new Vector3(currentHorizontalSpeed, currentVerticalSpeed, 0) * Time.deltaTime;
-        Move(movement);
+        //Vector3 movement = new Vector3(currentHorizontalSpeed, currentVerticalSpeed, 0) * Time.deltaTime;
+
+        //Move(movement);
+        //UpdatePhysics();
+    }
+
+    private void FixedUpdate()
+    {
+        UpdatePhysics();
     }
 
     public void HandleInputs()
     {
+        if (IsStunned)
+        {
+            currentHorizontalInput = 0;
+            return;
+        }
+
         currentHorizontalInput = Input.GetAxis(horizontalAxis);
         currentHorizontalInput = (Mathf.Abs(currentHorizontalInput) > minimumAxisValueToConsiderHorizontalMovement) ? Mathf.Sign(currentHorizontalInput) : 0;
 
@@ -67,11 +88,6 @@ public class ThirdPersonController : MonoBehaviour
             EndJumping();
         }
 
-        /*if(CanExtentJump && (GetJumpKeyUp))
-        {
-            InterruptExtentJumpDelay();
-        }*/
-
         if ((Input.GetKeyDown(shootingGamepadInput) || Input.GetKeyDown(shootingKeyboardInput)))
         {
             isShootingInputDown = true;
@@ -83,51 +99,107 @@ public class ThirdPersonController : MonoBehaviour
         }
     }
 
+    #region Global Movement - OLD
+    /* void Move(Vector3 movement)
+     {
+         Vector3 initialMovement = movement;
+
+         if (movement.x != 0)
+             movement.x = boxRaycaster.RaycastHorizontal(movement.x);
+         else
+             boxRaycaster.ResetLastHorizontalHitResult();
+         if (Mathf.Abs(movement.x) < movementThreshold)
+             movement.x = 0;
+
+         if (movement.y != 0)
+             movement.y = boxRaycaster.RaycastVertical(movement.y);
+         else
+             boxRaycaster.ResetLastVerticalHitResult();
+         if (Mathf.Abs(movement.y) < movementThreshold)
+             movement.y = 0;
+
+         if (movement.x > 0) boxRaycaster.flags.left = false;
+         if (movement.x < 0) boxRaycaster.flags.right = false;
+         if (movement.y > 0) boxRaycaster.flags.below = false;
+         if (movement.y < 0) boxRaycaster.flags.above = false;
+
+         if (initialMovement != movement)
+         {
+             if (boxRaycaster.flags.right && initialMovement.x > 0)
+             {
+                 currentHorizontalSpeed = 0;
+             }
+             else if (boxRaycaster.flags.left && initialMovement.x < 0)
+             {
+                 currentHorizontalSpeed = 0;
+             }
+
+             if (initialMovement.y < 0 && IsOnGround && currentVerticalSpeed < 0)
+             {
+                 currentVerticalSpeed = 0;
+             }
+
+             if (initialMovement.y > 0 && boxRaycaster.flags.above)
+             {
+                 currentVerticalSpeed = 0;
+             }
+         }
+
+         transform.Translate(movement);
+     }*/
+    #endregion
+
     #region Global Movement
-    void Move(Vector3 movement)
+    public void UpdatePhysics()
     {
-        Vector3 initialMovement = movement;
+        CheckForGround();
+        if (currentVerticalSpeed > 0)
+            CheckForCeiling();
 
-        if (movement.x != 0)
-            movement.x = boxRaycaster.RaycastHorizontal(movement.x);
-        if (Mathf.Abs(movement.x) < movementThreshold)
-            movement.x = 0;
+        selfBody.velocity = new Vector3(currentHorizontalSpeed, currentVerticalSpeed, 0);
+    }
 
-        if (movement.y != 0)
-            movement.y = boxRaycaster.RaycastVertical(movement.y);
-        if (Mathf.Abs(movement.y) < movementThreshold)
-            movement.y = 0;
+    RaycastHit currentGround = new RaycastHit();
+    public void CheckForGround()
+    {
+        bool startIsOnGround = isOnGround;
 
-        if (movement.x > 0) boxRaycaster.flags.left = false;
-        if (movement.x < 0) boxRaycaster.flags.right = false;
-        if (movement.y > 0) boxRaycaster.flags.below = false;
-        if (movement.y < 0) boxRaycaster.flags.above = false;
+        Vector3 actualSize = new Vector3(selfCollider.size.x * transform.lossyScale.x, selfCollider.size.y * transform.lossyScale.y, selfCollider.size.z * transform.lossyScale.z) * skinWidthMultiplier;
 
-        if (initialMovement != movement)
+        Collider previousCollider = currentGround.collider;
+        RaycastHit hit = new RaycastHit();
+        isOnGround = Physics.BoxCast(transform.position + selfCollider.center, actualSize * 0.5f, Vector3.down, out hit, transform.rotation, onGroundCheckDistance, movementsCheckMask);
+        if (isOnGround && currentVerticalSpeed < 0)
         {
-            if (boxRaycaster.flags.right && initialMovement.x > 0)
-            {
-                currentHorizontalSpeed = 0;
-            }
-            else if (boxRaycaster.flags.left && initialMovement.x < 0)
-            {
-                currentHorizontalSpeed = 0;
-            }
-
-            if (initialMovement.y < 0 && IsOnGround && currentVerticalSpeed < 0)
-            {
-                currentVerticalSpeed = 0;
-            }
-
-            if (initialMovement.y > 0 && boxRaycaster.flags.above)
-            {
-                currentVerticalSpeed = 0;
-            }
+            currentVerticalSpeed = 0;
+            CheckForExtentJump();
         }
 
+        if (startIsOnGround && startIsOnGround != isOnGround)
+        {
+            StartLateJumpDelay();
+        }
 
+        if (IsOnGround)
+        {
+            if(previousCollider != hit.collider)
+            {
+                HandleCollision(null, hit.collider);
+                currentGround = hit;
+            }
+        }
+        else
+        {
+            currentGround = new RaycastHit();
+        }
+    }
 
-        transform.Translate(movement);
+    public void CheckForCeiling()
+    {
+        Vector3 actualSize = new Vector3(selfCollider.size.x * transform.lossyScale.x, selfCollider.size.y * transform.lossyScale.y, selfCollider.size.z * transform.lossyScale.z) * skinWidthMultiplier;
+        bool hitCeiling = Physics.BoxCast(transform.position + selfCollider.center, actualSize * 0.5f, Vector3.up, transform.rotation, ceilingCheckDistance, movementsCheckMask);
+        if (hitCeiling)
+            currentVerticalSpeed = 0;
     }
     #endregion
 
@@ -145,6 +217,9 @@ public class ThirdPersonController : MonoBehaviour
     {
         if (input == 0)
         {
+            if (IsStunned)
+                return;
+
             currentHorizontalSpeed = Mathf.Clamp(
                 currentHorizontalSpeed - Mathf.Sign(currentHorizontalSpeed) * horizontalDeceleration * Time.deltaTime * (IsOnGround ? 1 : airDrag),
                 currentHorizontalSpeed > 0 ? 0 : currentHorizontalSpeed,
@@ -166,25 +241,21 @@ public class ThirdPersonController : MonoBehaviour
     [SerializeField] float verticalGravity = -9.81f;
     [SerializeField] float maxVerticalDownVelocity = -20.0f;
     [SerializeField] float onGroundCheckDistance = 0.1f;
+    [SerializeField] float ceilingCheckDistance = 0.05f;
 
     float currentVerticalSpeed = 0f;
     TimerSystem jumpDurationSystem = new TimerSystem();
     bool isJumping = false;
-    public bool IsOnGround => boxRaycaster.flags.below == true;
+    //public bool IsOnGround => boxRaycaster.flags.below == true;
+    public bool IsOnGround => isOnGround;
 
     public void UpdateVerticalMovementValues()
     {
         UpdateJumpAssists();
         if (!isJumping)
         {
-            if (IsOnGround)
-            {
-                boxRaycaster.CheckForGroundBelow(onGroundCheckDistance);
-                if (!IsOnGround)
-                    StartLateJumpDelay();
-            }
-            else
-                currentVerticalSpeed = Mathf.Clamp(currentVerticalSpeed + verticalGravity * Time.deltaTime, maxVerticalDownVelocity, currentVerticalSpeed);
+
+            currentVerticalSpeed = Mathf.Clamp(currentVerticalSpeed + verticalGravity * Time.deltaTime, maxVerticalDownVelocity, currentVerticalSpeed);
         }
         else
         {
@@ -302,7 +373,7 @@ public class ThirdPersonController : MonoBehaviour
         Vector3 shootPosition = (currentShootDirection == ShootDirection.Right ? rightShootPosition : leftShootPosition).position;
         Quaternion shootRotation = (currentShootDirection == ShootDirection.Right ? rightShootPosition : leftShootPosition).rotation;
         ProjectileBase newProjectile = Instantiate(projectilePrefab, shootPosition, shootRotation);
-        newProjectile.ShootProjectile(currentShootDirection == ShootDirection.Right ? Vector3.right : Vector3.left);
+        newProjectile.ShootProjectile(currentShootDirection == ShootDirection.Right ? Vector3.right : Vector3.left, gameObject);
     }
 
     public void CheckForShootAgain()
@@ -316,6 +387,116 @@ public class ThirdPersonController : MonoBehaviour
         }
     }
     #endregion
+
+    #region Collisions
+    private void OnCollisionEnter(Collision collision)
+    {
+        HandleCollision(collision, collision.collider);
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        if (checkCollisionAgain)
+        {
+            HandleCollision(collision, collision.collider);
+
+            checkCollisionAgain = false;
+        }
+    }
+
+    public void HandleCollision(Collision collision, Collider hitCollider)
+    {
+        EnemyBase hitEnemy = hitCollider.GetComponent<EnemyBase>();
+        if (hitEnemy)
+        {
+            lifeSystem.ReceiveDamage(hitEnemy.GetMeleeDamages, hitEnemy.gameObject);
+        }
+    }
+    #endregion
+
+    #region Life Management and Debug
+    [Header("Life System")]
+    [SerializeField] DamageableEntity lifeSystem = default;
+    [SerializeField] float onDamagedHorizontalSpeed = 6f;
+    [SerializeField] float onDamagedVerticalSpeed = 12f;
+    [SerializeField] float onDamagedStunDuration = 0.1f;
+    [SerializeField] float onDamagedRecoveringDuration = 0.5f;
+    [SerializeField] float recoveringBlinkingFrequence = 10f;
+
+    public DamageableEntity GetLifeSystem => lifeSystem;
+    TimerSystem stunTimer = new TimerSystem();
+    TimerSystem recoveringTimer = new TimerSystem();
+
+    bool IsStunned => !stunTimer.TimerOver;
+    bool IsRecovering => !recoveringTimer.TimerOver;
+
+    public void SetUpLifeSystem()
+    {
+        lifeSystem.OnReceivedDamages = OnReceivedDamages;
+        lifeSystem.OnLifeReachedZero = Die;
+
+        stunTimer = new TimerSystem(onDamagedStunDuration, null);
+        recoveringTimer = new TimerSystem(onDamagedRecoveringDuration, EndRecover);
+    }
+
+    public void UpdateRecovering()
+    {
+        if (IsStunned)
+            stunTimer.UpdateTimer();
+
+        if (IsRecovering)
+        {
+            recoveringTimer.UpdateTimer();
+            if (IsRecovering)
+            {
+                float blinkingCoeff = Mathf.Cos(recoveringTimer.GetTimerCounter * Mathf.PI * 2 * recoveringBlinkingFrequence);
+                characterRenderer.material = blinkingCoeff > 0 ? blinkingMaterial : normalMaterial;
+            }
+            else
+                characterRenderer.material = normalMaterial;
+        }
+    }
+
+    bool checkCollisionAgain = false;
+    public void EndRecover()
+    {
+        lifeSystem.ResetCanReceiveDamages();
+        checkCollisionAgain = true;
+
+        if (currentGround.collider)
+            HandleCollision(null, currentGround.collider);
+    }
+
+    public void OnReceivedDamages(int delta, int remainingLife, GameObject damageInstigator)
+    {
+        print("Remaining life : " + remainingLife);
+        if (isJumping)
+        {
+            EndJumping();
+            if (!jumpDurationSystem.TimerOver)
+                jumpDurationSystem.EndTimer();
+        }
+
+        float xOffset = transform.position.x - damageInstigator.transform.position.x;
+        currentHorizontalSpeed = onDamagedHorizontalSpeed * Mathf.Sign(xOffset);
+        currentVerticalSpeed = onDamagedVerticalSpeed;
+
+        lifeSystem.SetImmuneToDamages();
+
+        stunTimer.StartTimer();
+        recoveringTimer.StartTimer();
+    }
+
+    public void Die()
+    {
+        print("I'm die");
+    }
+    #endregion
+
+    [Header("Rendering")]
+    [SerializeField] Renderer characterRenderer = default;
+    [SerializeField] Material normalMaterial = default;
+    [SerializeField] Material blinkingMaterial = default;
 }
 
 public enum ShootDirection
