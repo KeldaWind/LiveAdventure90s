@@ -1,10 +1,13 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
+
+    public float frameRange;
 
     [SerializeField] int targetFrameRate = 60;
 
@@ -31,6 +34,23 @@ public class GameManager : MonoBehaviour
 
         firstPersonController.SetThirdPersonRef(thirdPersonController);
         firstPersonController.SetUpBounds(bottomBound, topBound);
+    }
+
+    public bool IsPlayerOutOfFrame()
+    {
+        float distance = firstPersonController.gameObject.transform.localPosition.y - thirdPersonController.gameObject.transform.localPosition.y;
+
+        if(Math.Abs(distance) > frameRange)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    public void GameOver()
+    {
+        Debug.Log("You LOSE");
     }
 
     #region Important Values
