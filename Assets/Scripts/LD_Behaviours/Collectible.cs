@@ -73,6 +73,7 @@ public class Collectible : MonoBehaviour
     [Header("Feedbacks")]
     [SerializeField] string startLootFxTag = "PlaceHolder";
     [SerializeField] string lootFxTag = "PlaceHolder";
+    [SerializeField] AudioManager.Sound lootSound = AudioManager.Sound.H_HeroRecupCollectible;
 
     public void PlayStartLootFeedback()
     {
@@ -82,7 +83,7 @@ public class Collectible : MonoBehaviour
 
     public void PlayLootFeedback()
     {
-        // FEEDBACK : Play sound
+        AudioManager.PlaySound(lootSound);
         FxManager.Instance.PlayFx(lootFxTag, transform.position, Quaternion.identity, Vector3.one * 0.5f);
     }
 
