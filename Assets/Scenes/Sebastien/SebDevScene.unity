@@ -29047,7 +29047,7 @@ PrefabInstance:
     - target: {fileID: 1157172678052549752, guid: 987b1e2d3570dca4ab0d20397d5b30cd,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.8
+      value: 16.5
       objectReference: {fileID: 0}
     - target: {fileID: 1157172678052549752, guid: 987b1e2d3570dca4ab0d20397d5b30cd,
         type: 3}
@@ -29139,6 +29139,16 @@ PrefabInstance:
       propertyPath: goingDownPitchCurve.m_Curve.Array.data[1].tangentMode
       value: 34
       objectReference: {fileID: 0}
+    - target: {fileID: 1157172678052549753, guid: 987b1e2d3570dca4ab0d20397d5b30cd,
+        type: 3}
+      propertyPath: jetpackMaxUpSpeed
+      value: 0.001
+      objectReference: {fileID: 0}
+    - target: {fileID: 1157172678052549753, guid: 987b1e2d3570dca4ab0d20397d5b30cd,
+        type: 3}
+      propertyPath: jetpackMaxDownSpeed
+      value: -0.001
+      objectReference: {fileID: 0}
     - target: {fileID: 3349801664879935139, guid: 987b1e2d3570dca4ab0d20397d5b30cd,
         type: 3}
       propertyPath: m_Name
@@ -29199,6 +29209,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5726860521474988276, guid: 987b1e2d3570dca4ab0d20397d5b30cd,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8692746777355801797, guid: 987b1e2d3570dca4ab0d20397d5b30cd,
         type: 3}
       propertyPath: m_Size.y
@@ -29208,6 +29223,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalPosition.y
       value: -6.79
+      objectReference: {fileID: 0}
+    - target: {fileID: 9075967927618681437, guid: 987b1e2d3570dca4ab0d20397d5b30cd,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 987b1e2d3570dca4ab0d20397d5b30cd, type: 3}
