@@ -20089,6 +20089,7 @@ GameObject:
   - component: {fileID: 398372111}
   - component: {fileID: 398372110}
   - component: {fileID: 398372109}
+  - component: {fileID: 398372113}
   m_Layer: 14
   m_Name: Camera
   m_TagString: Untagged
@@ -20242,6 +20243,27 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!114 &398372113
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 398372107}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 058bd2ce66fada74eb81ccbc8a8e4654, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  move: 1
+  strength: {x: 0.25, y: 0.1, z: 0.15}
+  vibrato: 1
+  randomness: 1
+  fadeOut: 0
+  roll: 0
+  rollStrength: {x: 2, y: 0, z: 14}
+  rollVibrato: 1
+  rollRandomness: 1
 --- !u!1 &400843059
 GameObject:
   m_ObjectHideFlags: 0
@@ -75865,7 +75887,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1551478963
 Transform:
   m_ObjectHideFlags: 0
@@ -93131,7 +93153,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1886123675
 Transform:
   m_ObjectHideFlags: 0
@@ -105829,7 +105851,7 @@ PrefabInstance:
         type: 3}
       propertyPath: jetpackParameters
       value: 
-      objectReference: {fileID: 11400000, guid: d9224ac570abc0447be66421803d0088,
+      objectReference: {fileID: 11400000, guid: 4e5cfa76e41f0584f9bed1f2e009774f,
         type: 2}
     - target: {fileID: 1157172678052549753, guid: 987b1e2d3570dca4ab0d20397d5b30cd,
         type: 3}
