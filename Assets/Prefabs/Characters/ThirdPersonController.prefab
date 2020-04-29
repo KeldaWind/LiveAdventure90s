@@ -183,8 +183,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 50, y: 10, z: 1}
-  m_Center: {x: 0, y: 5, z: 0}
+  m_Size: {x: 100, y: 20, z: 1}
+  m_Center: {x: 0, y: 8, z: 0}
 --- !u!114 &2902133850889271560
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -230,7 +230,7 @@ GameObject:
   - component: {fileID: 4698746383479318269}
   m_Layer: 9
   m_Name: ThirdPersonController
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -306,6 +306,12 @@ MonoBehaviour:
   characterRenderer: {fileID: 1398840853937944863}
   normalMaterial: {fileID: 2100000, guid: 62869b7d9926bef47a8baa877eaf8b3e, type: 2}
   blinkingMaterial: {fileID: 2100000, guid: dfecd4286f948bd41b3df5a3a6ece127, type: 2}
+  damagedFxTag: PlaceHolder
+  shootFxTag: HeroShoot
+  landingFxTag: JumpLand
+  jumpFxTag: JumpLand
+  walkFxTag: HeroStep
+  stepFeedbackPerSecond: 2.5
 --- !u!114 &8933795941873096121
 MonoBehaviour:
   m_ObjectHideFlags: 0
