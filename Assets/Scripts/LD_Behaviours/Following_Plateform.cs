@@ -10,6 +10,14 @@ public class Following_Plateform : MonoBehaviour
     [Header("Object Movement")]
     public float plateformSpeed = 10f;
     private Transform objectPos;
+    [SerializeField] BoxCollider selfCollider = default;
+    [SerializeField] Rigidbody selfBody = default;
+    [SerializeField] float skinWidthMultiplier = 0.99f;
+    [SerializeField] float ceilingAndGroundCheckDistance = 0.1f;
+    [SerializeField] float maxSpeedBoostDuration = 0.1f;
+
+    TimerSystem boostTimerSystem = default;
+    float currentBoostSpeed = default;
 
     public float followingMinRange = 0.35f;
     public float followingMaxRange = 2f;
@@ -33,17 +41,263 @@ public class Following_Plateform : MonoBehaviour
     public float plateformVelocity;
 
 
+    float currentVerticalSpeed = 0f;
+    public Vector3 GetCurrentVerticalMovementSpeed => Vector3.up * currentBoostSpeed;
+    ThirdPersonController onPlatformThirdPersonCharacter = default;
 
     private void Awake()
     {
         objectPos = this.GetComponent<Transform>();
         canObjectMove = true;
+        boostTimerSystem = new TimerSystem();
+        boostTimerSystem.ChangeTimerValue(maxSpeedBoostDuration);
+    }
+
+    private void Update()
+    {
+        UpdateTargetSpeed();
+        UpdatePhysics();
     }
 
     private void FixedUpdate()
     {
-        if (canObjectMove)
-            CompareObjectAndCameraPositions();
+        //UpdatePhysics();
+
+
+        /*if (canObjectMove)
+            CompareObjectAndCameraPositions();*/
+    }
+
+    public void UpdateTargetSpeed()
+    {
+        float diff = GameManager.Instance.GetCameraWorldPosition.y - objectPos.localPosition.y;
+        if(Mathf.Abs(diff) > followingMinRange)
+        {
+            if (Mathf.Sign(accelerationModifier) != Mathf.Sign(diff))
+            {
+                accelerationModifier = 0;
+            }
+
+            if (Mathf.Abs(accelerationModifier) < 1f)
+            {
+                accelerationModifier += Time.deltaTime * accelerationCurveSpeed * Mathf.Sign(diff);
+                if (Mathf.Abs(accelerationModifier) > 1f)
+                    accelerationModifier = Mathf.Sign(diff);
+            }
+        }
+        else
+        {
+            accelerationModifier = 0;
+        }
+
+        currentVerticalSpeed = plateformSpeed * Mathf.Sign(accelerationModifier) * accelerationCurve.Evaluate(Mathf.Abs(accelerationModifier));
+
+        if(currentVerticalSpeed > currentBoostSpeed)
+        {
+            boostTimerSystem.StartTimer();
+            currentBoostSpeed = currentVerticalSpeed;
+        }
+        else if(currentVerticalSpeed < currentBoostSpeed)
+        {
+            boostTimerSystem.UpdateTimer();
+            if (boostTimerSystem.TimerOver)
+            {
+                boostTimerSystem.StartTimer();
+                currentBoostSpeed = currentVerticalSpeed;
+            }
+        }
+    }
+
+    public void UpdatePhysics()
+    {
+        CheckForGround();
+        CheckForCeiling();
+
+        selfBody.velocity = Vector3.up * currentVerticalSpeed;
+
+        return;
+
+        #region OLD - Custom Physic
+        float movementDistance = currentVerticalSpeed * Time.deltaTime;
+        float initialMovementDistance = movementDistance;
+        Vector3 movement = Vector3.up * movementDistance;
+
+        Vector3 actualSize = 
+            new Vector3(selfCollider.size.x * objectPos.lossyScale.x, 
+            selfCollider.size.y * objectPos.lossyScale.y, 
+            selfCollider.size.z * objectPos.lossyScale.z) * skinWidthMultiplier;
+
+        #region V1 - Multi Hit
+        /*RaycastHit[] hits = Physics.BoxCastAll(objectPos.position + selfCollider.center,
+            actualSize * 0.5f,
+            movement,
+            objectPos.rotation,
+            Mathf.Abs(movementDistance),
+            blockingElementsLayerMask, 
+            QueryTriggerInteraction.Ignore);        
+
+        float startPoint = objectPos.position.y + selfCollider.center.y + selfCollider.size.y * 0.5f * Mathf.Sign(movementDistance);
+        
+        foreach (RaycastHit hit in hits)
+        {
+            Collider hitCollider = hit.collider;
+
+            if (hitCollider == selfCollider)
+                continue;
+
+            Rigidbody hitBody = hitCollider.GetComponent<Rigidbody>();
+
+            if (hitBody)
+            {
+                float initialDifference = Mathf.Sign(movementDistance) * Mathf.Abs(hit.point.y - startPoint);
+                float remainingDistance = movementDistance - initialDifference;
+
+                //Vector3 startPos = new Vector3(hit.point.x + 0.1f, startPoint + initialDifference);
+                //Debug.DrawRay(startPos, Vector3.up * movementDistance, Color.red, Time.deltaTime);
+                //Debug.DrawRay(hit.point, hit.normal * initialDifference, Color.green, 0.5f);
+                //Debug.DrawRay(hit.point, -hit.normal * remainingDistance, Color.magenta, 0.5f);
+
+                print(remainingDistance);
+                // Après, il faut essayer de faire bouger l'objet de la distance restante 
+                float reallyTravelledDistance = TryToMoveHitObjectWithDistance(hitBody, hitCollider, remainingDistance);
+                float newDistance = initialDifference + reallyTravelledDistance;
+
+                if (Mathf.Abs(newDistance) < Mathf.Abs(movementDistance))
+                {
+                    movementDistance = newDistance;
+                }
+            }
+            else
+            {
+                float newDistance = Mathf.Sign(movementDistance) * Mathf.Abs(hit.point.y - startPoint);
+
+                if (Mathf.Abs(newDistance) < Mathf.Abs(movementDistance))
+                {
+                    movementDistance = newDistance;
+                } 
+            }
+        }*/
+        #endregion
+
+        #region V2 - Single Hit
+        /*RaycastHit hit = new RaycastHit();
+        Physics.BoxCast(objectPos.position + selfCollider.center,
+            actualSize * 0.5f,
+            movement,
+            out hit,
+            objectPos.rotation,
+            Mathf.Abs(movementDistance),
+            blockingElementsLayerMask,
+            QueryTriggerInteraction.Ignore);
+
+        Collider hitCollider = hit.collider;
+        if (hitCollider)
+        {
+            float startPoint = objectPos.position.y + selfCollider.center.y + selfCollider.size.y * 0.5f * Mathf.Sign(movementDistance);
+
+            Rigidbody hitBody = hitCollider.GetComponent<Rigidbody>();
+
+            if (hitBody)
+            {
+                float initialDifference = Mathf.Sign(movementDistance) * Mathf.Abs(hit.point.y - startPoint);
+                float remainingDistance = movementDistance - initialDifference;
+
+                //Vector3 startPos = new Vector3(hit.point.x + 0.1f, startPoint + initialDifference);
+                //Debug.DrawRay(startPos, Vector3.up * movementDistance, Color.red, Time.deltaTime);
+                //Debug.DrawRay(hit.point, hit.normal * initialDifference, Color.green, 0.5f);
+                //Debug.DrawRay(hit.point, -hit.normal * remainingDistance, Color.magenta, 0.5f);
+
+                print(remainingDistance);
+                // Après, il faut essayer de faire bouger l'objet de la distance restante 
+                float reallyTravelledDistance = TryToMoveHitObjectWithDistance(hitBody, hitCollider, remainingDistance);
+                float newDistance = initialDifference + reallyTravelledDistance;
+
+                if (Mathf.Abs(newDistance) < Mathf.Abs(movementDistance))
+                {
+                    movementDistance = newDistance;
+                }
+            }
+            else
+            {
+                float newDistance = Mathf.Sign(movementDistance) * Mathf.Abs(hit.point.y - startPoint);
+
+                if (Mathf.Abs(newDistance) < Mathf.Abs(movementDistance))
+                {
+                    movementDistance = newDistance;
+                }
+            }
+        }*/
+        #endregion
+
+        movement = Vector3.up * movementDistance;
+
+        objectPos.Translate(movement);
+        #endregion
+    }
+
+    public void CheckForGround()
+    {
+        if (CheckForDirection(Vector3.down) && currentVerticalSpeed < 0)
+        {
+            currentVerticalSpeed = 0;
+            accelerationModifier = 0;
+        }
+    }
+
+    public void CheckForCeiling()
+    {
+        if (CheckForDirection(Vector3.up) && currentVerticalSpeed > 0)
+        {
+            currentVerticalSpeed = 0;
+            accelerationModifier = 0;
+        }
+    }
+
+    public bool CheckForDirection(Vector3 direction)
+    {
+        Vector3 actualSize = new Vector3(selfCollider.size.x * transform.lossyScale.x, selfCollider.size.y * transform.lossyScale.y, selfCollider.size.z * transform.lossyScale.z) * skinWidthMultiplier;
+        bool hitSomething = Physics.BoxCast(transform.position + selfCollider.center, actualSize * 0.5f, direction, transform.rotation, ceilingAndGroundCheckDistance, blockingElementsLayerMask);
+
+        return hitSomething;
+    }
+
+    public float TryToMoveHitObjectWithDistance(Rigidbody objectBody, Collider objectCollider, float startDistance)
+    {
+        /// Returns the distance travelled by the object in order to know how much can the object move
+        float finalMoveDistance = startDistance;
+        Vector3 movement = Vector3.up * finalMoveDistance;
+        print(startDistance);
+
+        Transform objectTr = objectBody.transform;
+        BoxCollider objectBoxCollider = objectCollider as BoxCollider;
+
+        if (!objectBoxCollider)
+            return finalMoveDistance;
+
+        Vector3 actualSize =
+            new Vector3(objectBoxCollider.size.x * objectTr.lossyScale.x,
+            objectBoxCollider.size.y * objectTr.lossyScale.y,
+            objectBoxCollider.size.z * objectTr.lossyScale.z) * skinWidthMultiplier;
+
+        RaycastHit hit = new RaycastHit();
+            Physics.BoxCast(objectPos.position + selfCollider.center,
+            actualSize * 0.5f,
+            movement,
+            objectPos.rotation,
+            Mathf.Abs(finalMoveDistance),
+            blockingElementsLayerMask,
+            QueryTriggerInteraction.Ignore);
+
+        if(hit.collider != null)
+        {
+
+        }
+        else
+        {
+            objectTr.Translate(movement);
+        }
+
+        return finalMoveDistance;
     }
 
     /// <summary>
@@ -107,7 +361,7 @@ public class Following_Plateform : MonoBehaviour
 
     void MoveObject(float direction)
     {
-        if (!IsThereAnObstacleInThisDirection(Vector3.up * direction))
+        if (!IsThereAnObstacleInThisDirection(Vector3.up * direction).collider)
         {
             isBoostingJump = false;
 
@@ -152,9 +406,9 @@ public class Following_Plateform : MonoBehaviour
         isMoving = true;
     }
 
-    bool IsThereAnObstacleInThisDirection(Vector3 direction)
+    RaycastHit IsThereAnObstacleInThisDirection(Vector3 direction)
     {
-        RaycastHit result;
+        RaycastHit result = new RaycastHit();
         float maxDistance = 0.2f;
 
         Physics.BoxCast(objectPos.position,
@@ -165,13 +419,15 @@ public class Following_Plateform : MonoBehaviour
             maxDistance,
             blockingElementsLayerMask);
 
-        if (result.collider != null)
+        return result;
+
+        /*if (result.collider != null)
         {
             return true;
         }
         else
         {
             return false;
-        }
+        }*/
     }
 }
