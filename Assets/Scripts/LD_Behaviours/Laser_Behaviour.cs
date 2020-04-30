@@ -42,7 +42,7 @@ public class Laser_Behaviour : MonoBehaviour
 
     private void Awake()
     {
-        lineRenderer.SetPosition(0, startPos.transform.position);
+        lineRenderer.SetPosition(0, startPos.transform.localPosition);
     }
 
     private void Update()
@@ -84,17 +84,17 @@ public class Laser_Behaviour : MonoBehaviour
 
     void FindNextTarget()
     {
-        this.transform.position = Vector3.zero;
-
-        float magnitude = (targetPos.transform.position - startPos.transform.position).magnitude;
-        Vector3 direction = (targetPos.transform.position - startPos.transform.position).normalized;
+        float magnitude = (targetPos.transform.localPosition - startPos.transform.localPosition).magnitude;
+        Vector3 direction = (targetPos.transform.localPosition - startPos.transform.localPosition).normalized;
         RaycastHit hit;
 
         Physics.Raycast(startPos.transform.position, direction, out hit, Mathf.Infinity);
 
         if (hit.collider != null)
             impactPos = hit.point;
-        lineRenderer.SetPosition(1, impactPos);
+
+        Vector3 newDestination = new Vector3(impactPos.x - this.transform.localPosition.x, impactPos.y - this.transform.localPosition.y, impactPos.z - this.transform.localPosition.z);
+        lineRenderer.SetPosition(1, newDestination);
 
 
         SetLaserCollider(magnitude, direction);
