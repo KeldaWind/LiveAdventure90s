@@ -59,6 +59,8 @@ public class Laser_Behaviour : MonoBehaviour
         if (laserIsActive == value)
             return;
 
+        Debug.Log(value);
+
         laserIsActive = value;
         lineRenderer.enabled = value;
 

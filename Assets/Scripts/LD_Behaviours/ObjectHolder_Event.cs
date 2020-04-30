@@ -13,7 +13,7 @@ public class ObjectHolder_Event : MonoBehaviour
     {
         if (other.gameObject.tag == "KeyBall")
         {
-            OnBallArrival.Invoke();
+            OnBallArrival?.Invoke();
         }
     }
 }
