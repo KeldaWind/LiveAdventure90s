@@ -115,6 +115,7 @@ public class GameManager : MonoBehaviour
         firstPersonController.Respawn(GetCurrentCheckpoint.GetRespawnTransform);
     
         AudioManager.PlayAmbianceMusic();
+        UIManager.Instance.ShowAllUI();
     }
     #endregion
 

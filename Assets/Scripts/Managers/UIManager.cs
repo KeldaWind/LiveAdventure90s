@@ -9,7 +9,19 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager Instance;
 
+    public void ShowAllUI()
+    {
+        lifeUI.Show();
+        outOfFrameUI.Show();
+        jetpackUI.Show();
+    }
 
+    public void HideAllUI()
+    {
+        lifeUI.Hide();
+        outOfFrameUI.Hide();
+        jetpackUI.Hide();
+    }
 
     [Header("Get Components")]
     public Life_UI lifeUI;
@@ -46,11 +58,13 @@ public class UIManager : MonoBehaviour
     public void PlayWinAnim()
     {
         winAnim.Play("Win");
+        HideAllUI();
     }
 
     public void PlayLoseAnim()
     {
         loseAnim.Play("Lose");
+        HideAllUI();
     }
 
     public void OnPointerInteraction()
