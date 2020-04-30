@@ -390,7 +390,7 @@ MonoBehaviour:
   leftShootPosition: {fileID: 5275521740204262344}
   rightShootPosition: {fileID: 2582463428784489348}
   shootRandomAngle: 8
-  shootRecoil: 5
+  shootRecoil: 3
   bulletsPerSecond: 8
   charaFlower: {fileID: 960237903975248384}
   lifeSystem: {fileID: 3541430697146294809}
