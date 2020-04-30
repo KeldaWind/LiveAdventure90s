@@ -20,6 +20,9 @@ public class UIManager : MonoBehaviour
     [Header("Lose Sight Condition")]
     public float maxOutOfFrameTime;
 
+    public Animator winAnim;
+    public Animator loseAnim;
+
 
 
     private void Awake()
@@ -28,5 +31,21 @@ public class UIManager : MonoBehaviour
 
         herosLife.OnDamageableEntitySetUp += lifeUI.SetLife;
         herosLife.OnLifeAmountChanged += lifeUI.RefreshLife;
+    }
+
+
+    public float GetLoseAnimationDuration()
+    {
+        return loseAnim.runtimeAnimatorController.animationClips[0].length;
+    }
+
+    public void PlayWinAnim()
+    {
+        winAnim.Play("Win");
+    }
+
+    public void PlayLoseAnim()
+    {
+        loseAnim.Play("Lose");
     }
 }

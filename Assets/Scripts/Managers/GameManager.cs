@@ -16,11 +16,14 @@ public class GameManager : MonoBehaviour
 
     [Header("Main Characters")]
     [SerializeField] ThirdPersonController thirdPersonController = default;
-    [SerializeField] FirstPersonController firstPersonController = default;
+    public FirstPersonController firstPersonController = default;
 
     [Header("Level Bounds")]
     [SerializeField] Transform bottomBound = default;
     [SerializeField] Transform topBound = default;
+
+    public Action OnEndOfGameEvent;
+
 
     private void Awake()
     {
@@ -56,8 +59,21 @@ public class GameManager : MonoBehaviour
 
     public void GameOver()
     {
-        Debug.Log("You LOSE");
+        OnEndOfGameEvent?.Invoke();
+        UIManager.Instance.PlayLoseAnim();
+        StartCoroutine(TimeBeforeRestart(UIManager.Instance.GetLoseAnimationDuration()));
+    }
+
+    IEnumerator TimeBeforeRestart(float duration)
+    {
+        yield return new WaitForSeconds(duration);
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void Victory()
+    {
+        OnEndOfGameEvent?.Invoke();
+        UIManager.Instance.PlayWinAnim();
     }
 
     #region Important Values

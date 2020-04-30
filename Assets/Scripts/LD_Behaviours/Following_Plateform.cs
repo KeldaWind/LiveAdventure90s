@@ -45,12 +45,21 @@ public class Following_Plateform : MonoBehaviour
     public Vector3 GetCurrentVerticalMovementSpeed => Vector3.up * currentBoostSpeed;
     ThirdPersonController onPlatformThirdPersonCharacter = default;
 
+    bool avoidSound = false;
+    public IEnumerator AvoidSoundOnStartCoroutine()
+    {
+        avoidSound = true;
+        yield return new WaitForSeconds(0.2f);
+        avoidSound = false;
+    }
+
     private void Awake()
     {
         objectPos = this.GetComponent<Transform>();
         canObjectMove = true;
         boostTimerSystem = new TimerSystem();
         boostTimerSystem.ChangeTimerValue(maxSpeedBoostDuration);
+        StartCoroutine(AvoidSoundOnStartCoroutine());
     }
 
     private void Update()
@@ -68,10 +77,23 @@ public class Following_Plateform : MonoBehaviour
             CompareObjectAndCameraPositions();*/
     }
 
+    float lastDirection = 0;
     public void UpdateTargetSpeed()
-    {
+    {        
+
         float diff = GameManager.Instance.GetCameraWorldPosition.y - objectPos.localPosition.y;
-        if(Mathf.Abs(diff) > followingMinRange)
+
+        if (lastDirection != Mathf.Sign(diff))
+        {
+            lastDirection = Mathf.Sign(diff);
+            if (diff > 0)
+                PlayGoingUpSound();
+            else
+                PlayGoingDownSound();
+        }
+
+
+        if (Mathf.Abs(diff) > followingMinRange)
         {
             if (Mathf.Sign(accelerationModifier) != Mathf.Sign(diff))
             {
@@ -90,7 +112,10 @@ public class Following_Plateform : MonoBehaviour
             accelerationModifier = 0;
         }
 
+
         currentVerticalSpeed = plateformSpeed * Mathf.Sign(accelerationModifier) * accelerationCurve.Evaluate(Mathf.Abs(accelerationModifier));
+
+
 
         if(currentVerticalSpeed > currentBoostSpeed)
         {
@@ -261,6 +286,28 @@ public class Following_Plateform : MonoBehaviour
         return hitSomething;
     }
 
+    [Header("Feedbacks")]
+    [SerializeField] AudioManager.Sound onStartGoingUpSound = AudioManager.Sound.LD_evelvatorActive; 
+    [SerializeField] AudioManager.Sound onStartGoingDownSound = AudioManager.Sound.LD_elevatorDisable; 
+
+    public void PlayGoingUpSound()
+    {
+        if (avoidSound)
+            return;
+
+        AudioManager.PlaySound(onStartGoingUpSound);
+    }
+
+    public void PlayGoingDownSound()
+    {
+        if (avoidSound)
+            return;
+
+        AudioManager.PlaySound(onStartGoingDownSound);
+    }
+
+    // OLD
+    /*
     public float TryToMoveHitObjectWithDistance(Rigidbody objectBody, Collider objectCollider, float startDistance)
     {
         /// Returns the distance travelled by the object in order to know how much can the object move
@@ -421,13 +468,13 @@ public class Following_Plateform : MonoBehaviour
 
         return result;
 
-        /*if (result.collider != null)
+        if (result.collider != null)
         {
             return true;
         }
         else
         {
             return false;
-        }*/
-    }
+        }
+    }*/
 }

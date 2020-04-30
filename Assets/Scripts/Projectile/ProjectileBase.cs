@@ -52,11 +52,12 @@ public abstract class ProjectileBase : MonoBehaviour
 
     [Header("Feedbacks")]
     [SerializeField] string destroyFxTag = "PlaceHolder";
+    [SerializeField] AudioManager.Sound destroySound = AudioManager.Sound.None;
     [SerializeField] float destroyFxSize = 1f;
 
     public virtual void PlayDestroyFeedback()
     {
-        // FEEDBACK : PLAY DEATH SOUND 
+        AudioManager.PlaySound(destroySound);
         FxManager.Instance.PlayFx(destroyFxTag, transform.position, Quaternion.identity, Vector3.one * destroyFxSize);
     }
 }

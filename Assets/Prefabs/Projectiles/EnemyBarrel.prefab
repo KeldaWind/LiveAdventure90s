@@ -63,6 +63,9 @@ MonoBehaviour:
   selfBody: {fileID: 5700027043688227679}
   projectileDamages: 1
   damageTag: 1
+  destroyFxTag: PlaceHolder
+  destroySound: 8
+  destroyFxSize: 1
   barrelCollider: {fileID: 2451139120977189097}
   movementsCheckMask:
     serializedVersion: 2
@@ -77,6 +80,7 @@ MonoBehaviour:
   normalMaterial: {fileID: 2100000, guid: 09c114d049a9eb945bcc097a0694fb2c, type: 2}
   hitMaterial: {fileID: 2100000, guid: 62869b7d9926bef47a8baa877eaf8b3e, type: 2}
   hitFeedbackDuration: 0.05
+  damagedFxTag: PlaceHolder
 --- !u!54 &5700027043688227679
 Rigidbody:
   m_ObjectHideFlags: 0

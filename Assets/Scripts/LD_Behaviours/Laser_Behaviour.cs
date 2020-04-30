@@ -12,11 +12,31 @@ public class Laser_Behaviour : MonoBehaviour
     public GameObject targetPos;
 
     public BoxCollider laserCollider;
+    public int laserDamages = 1;
 
-    private bool isActive = true;
+    private bool laserIsActive = true;
 
     private Vector3 impactPos;
 
+    public void DeactivateForDuration(float duration)
+    {
+        deactivationTimer = new TimerSystem(duration, EndDeactivation);
+        deactivationTimer.StartTimer();
+
+        laserCollider.enabled = false;
+    }
+    TimerSystem deactivationTimer = new TimerSystem();
+
+    public void UpdateDeactivation()
+    {
+        deactivationTimer.UpdateTimer();
+    }
+
+    public void EndDeactivation()
+    {
+        if (laserIsActive)
+            laserCollider.enabled = true;
+    }
 
 
 
@@ -27,19 +47,31 @@ public class Laser_Behaviour : MonoBehaviour
 
     private void Update()
     {
-        if (isActive)
+        if (laserIsActive)
             FindNextTarget();
+
+        if (!deactivationTimer.TimerOver)
+            UpdateDeactivation();
     }
 
     public void SetLaserState(bool value)
     {
-        isActive = value;
+        if (laserIsActive == value)
+            return;
+
+        laserIsActive = value;
         lineRenderer.enabled = value;
 
         if (value)
+        {
             laserCollider.enabled = true;
+            PlayLaserEnabling();
+        }
         else
+        {
             laserCollider.enabled = false;
+            PlayLaserDisabling();
+        }
     }
 
     void SetLaserCollider(float magnitude, Vector3 direction)
@@ -80,5 +112,19 @@ public class Laser_Behaviour : MonoBehaviour
             return true;
         else
             return false;
+    }
+
+    [Header("Feedbacks")]
+    [SerializeField] AudioManager.Sound onLaserEnabled = AudioManager.Sound.LD_LaserActive;
+    [SerializeField] AudioManager.Sound onLaserDisabled = AudioManager.Sound.LD_LaserDisable;
+
+    public void PlayLaserEnabling()
+    {
+        AudioManager.PlaySound(onLaserEnabled);
+    }
+
+    public void PlayLaserDisabling()
+    {
+        AudioManager.PlaySound(onLaserDisabled);
     }
 }

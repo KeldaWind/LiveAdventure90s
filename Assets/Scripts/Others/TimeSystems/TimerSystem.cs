@@ -18,6 +18,11 @@ public class TimerSystem
     [SerializeField] int numberOfIterations = 1;
     int remainingIterations;
 
+    public void SetTime(float coeff)
+    {
+        counter = (1 - Mathf.Clamp(coeff, 0, 1)) * duration;
+    }
+
     #region Initialization
     public TimerSystem()
     {

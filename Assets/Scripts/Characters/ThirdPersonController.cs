@@ -20,7 +20,6 @@ public class ThirdPersonController : MonoBehaviour
     [Header("Collisions")]
     [SerializeField] Rigidbody selfBody = default;
     [SerializeField] BoxCollider selfCollider = default;
-    //[SerializeField] BoxRaycaster boxRaycaster = default;
     [SerializeField] LayerMask movementsCheckMask = default;
     [SerializeField] float movementThreshold = 0.01f;
     [SerializeField] float skinWidthMultiplier = 0.99f;
@@ -42,6 +41,8 @@ public class ThirdPersonController : MonoBehaviour
 
         walkStepFrequenceSystem = new FrequenceSystem(stepFeedbackPerSecond);
         walkStepFrequenceSystem.SetUp(PlayFootFeedbackSound);
+
+        //AudioManager.PlayAmbianceMusic();
     }
 
     void Update()
@@ -51,11 +52,22 @@ public class ThirdPersonController : MonoBehaviour
         UpdateHorizontalMovementValues(currentHorizontalInput);
         UpdateVerticalMovementValues();
         UpdateRecovering();
+        UpdateAnimatorValues();
 
-        //Vector3 movement = new Vector3(currentHorizontalSpeed, currentVerticalSpeed, 0) * Time.deltaTime;
+        /*if (Input.GetKeyDown(KeyCode.D))
+        {
+            characterAnimator.SetBool("IsDead", true);
+        }*/
 
-        //Move(movement);
-        //UpdatePhysics();
+        /*if (Input.GetKeyDown(KeyCode.W))
+        {
+            AudioManager.PlayWinMusic();
+        }
+
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            AudioManager.PlayLoseMusic();
+        }*/
     }
 
     private void FixedUpdate()
@@ -197,11 +209,13 @@ public class ThirdPersonController : MonoBehaviour
         if (startIsOnGround && startIsOnGround != isOnGround)
         {
             StartLateJumpDelay();
+            characterAnimator.SetBool("IsGrounded", isOnGround);
         }
 
         if (isOnGround && startIsOnGround != isOnGround)
         {
             PlayOnLandedFeedback();
+            characterAnimator.SetBool("IsGrounded", isOnGround);
         }
 
         if (IsOnGround)
@@ -388,6 +402,8 @@ public class ThirdPersonController : MonoBehaviour
     [SerializeField] ProjectileBase projectilePrefab = default;
     [SerializeField] Transform leftShootPosition = default;
     [SerializeField] Transform rightShootPosition = default;
+    [SerializeField] float shootRandomAngle = 8f;
+    [SerializeField] float shootRecoil = 5f;
     ShootDirection currentShootDirection = ShootDirection.Right;
 
     [SerializeField] float bulletsPerSecond = 10f;
@@ -412,10 +428,16 @@ public class ThirdPersonController : MonoBehaviour
 
     public void ShootProjectile()
     {
+        float randomAngle = Random.Range(-shootRandomAngle, shootRandomAngle);
+        Vector3 shootDirection = currentShootDirection == ShootDirection.Right ? Vector3.right : Vector3.left;
+        shootDirection = Quaternion.Euler(0, 0, randomAngle) * shootDirection;
+
         Vector3 shootPosition = (currentShootDirection == ShootDirection.Right ? rightShootPosition : leftShootPosition).position;
         Quaternion shootRotation = (currentShootDirection == ShootDirection.Right ? rightShootPosition : leftShootPosition).rotation;
         ProjectileBase newProjectile = Instantiate(projectilePrefab, shootPosition, shootRotation);
-        newProjectile.ShootProjectile(currentShootDirection == ShootDirection.Right ? Vector3.right : Vector3.left, gameObject);
+        newProjectile.ShootProjectile(shootDirection, gameObject);
+
+        currentHorizontalSpeed += shootRecoil * (currentShootDirection == ShootDirection.Right ? -1 : 1);
 
         PlayShootFeedback();
     }
@@ -454,6 +476,51 @@ public class ThirdPersonController : MonoBehaviour
         if (hitEnemy)
         {
             lifeSystem.ReceiveDamage(hitEnemy.GetMeleeDamages, hitEnemy.gameObject);
+        }
+        else
+        {
+            Laser_Behaviour hitLaser = hitCollider.GetComponentInParent<Laser_Behaviour>();
+            if (hitLaser)
+            {
+                bool alreadyRecovering = IsRecovering;
+                lifeSystem.ReceiveDamage(hitLaser.laserDamages, hitLaser.gameObject);
+                //hitLaser.DeactivateForDuration(onDamagedRecoveringDuration);
+
+                #region Handle knockback direction and laser deactivation
+                if (!alreadyRecovering)
+                {
+                    if (collision != null)
+                    {
+                        Vector3 averagePosition = Vector3.zero;
+                        Vector3 averageNormal = Vector3.zero;
+                        float count = collision.contactCount;
+                        foreach (ContactPoint point in collision.contacts)
+                        {
+                            averagePosition += point.point;
+                            averageNormal += point.normal;
+                        }
+                        averagePosition /= count;
+                        averageNormal /= count;
+
+                        float horizontalDot = Vector3.Dot(Vector3.right, averageNormal);
+                        float verticalDot = Vector3.Dot(Vector3.up, averageNormal);
+
+                        currentHorizontalSpeed = onDamagedHorizontalSpeed *  Mathf.Sign(horizontalDot);
+                        currentVerticalSpeed = onDamagedVerticalSpeed * Mathf.Sign(verticalDot);
+
+                        if(verticalDot > 0.5f)
+                        {
+                            hitLaser.DeactivateForDuration(onDamagedRecoveringDuration);
+                        }
+                    }
+                    else
+                    {
+
+                        hitLaser.DeactivateForDuration(onDamagedRecoveringDuration);
+                    }
+                }
+                #endregion
+            }
         }
     }
     #endregion
@@ -543,18 +610,30 @@ public class ThirdPersonController : MonoBehaviour
     [SerializeField] Renderer characterRenderer = default;
     [SerializeField] Material normalMaterial = default;
     [SerializeField] Material blinkingMaterial = default;
+    [SerializeField] Animator characterAnimator = default;
+
+    public void UpdateAnimatorValues()
+    {
+        characterAnimator.SetBool("IsMoving", Mathf.Abs(currentHorizontalSpeed) > 0.2f);
+        characterAnimator.SetFloat("VerticalSpeed",  isOnGround ? 0 : currentVerticalSpeed);
+        characterAnimator.transform.localRotation = Quaternion.Euler(0, currentShootDirection == ShootDirection.Left ? -90 : 90, 0);
+    }
 
     [Header("Feedbacks")]
     [SerializeField] string damagedFxTag = "PlaceHolder";
+    [SerializeField] AudioManager.Sound damagedSound = AudioManager.Sound.H_HeroTakeDamage;
     [SerializeField] string shootFxTag = "PlaceHolderShoot";
+    [SerializeField] AudioManager.Sound shootSound = AudioManager.Sound.H_GunShoot;
     [SerializeField] string landingFxTag = "PlaceHolderShoot";
+    [SerializeField] AudioManager.Sound landingSound = AudioManager.Sound.H_HeroJumpLanding;
     [SerializeField] string jumpFxTag = "PlaceHolderShoot";
+    [SerializeField] AudioManager.Sound jumpSound = AudioManager.Sound.H_HeroJump;
     [SerializeField] string walkFxTag = "PlaceHolderShoot";
     [SerializeField] float stepFeedbackPerSecond = 2.5f;
 
     public void PlayDamagedFeedback()
     {
-        // FEEDBACK : PLAY DAMAGED SOUND 
+        AudioManager.PlaySound(damagedSound);
         FxManager.Instance.PlayFx(damagedFxTag, transform.position + Vector3.up, Quaternion.identity, Vector3.one);
     }
 
@@ -562,20 +641,21 @@ public class ThirdPersonController : MonoBehaviour
     {
         Transform source = currentShootDirection == ShootDirection.Left ? leftShootPosition : rightShootPosition;
 
-        // FEEDBACK : PLAY SHOOT SOUND 
+        AudioManager.PlaySound(shootSound);
         FxManager.Instance.PlayFx(shootFxTag, source.position, source.rotation, Vector3.one);
     }
 
     public void PlayOnLandedFeedback()
     {
-        // FEEDBACK : PLAY LANDING SOUND 
+        AudioManager.PlaySound(landingSound);
         FxManager.Instance.PlayFx(landingFxTag, transform.position, Quaternion.identity, Vector3.one);
     }
 
     public void PlayJumpFeedback()
     {
-        // FEEDBACK : PLAY JUMP SOUND 
+        AudioManager.PlaySound(jumpSound);
         FxManager.Instance.PlayFx(jumpFxTag, transform.position, Quaternion.identity, Vector3.one);
+        characterAnimator.SetTrigger("StartJump");
     }
 
     public void PlayFootFeedbackSound()
