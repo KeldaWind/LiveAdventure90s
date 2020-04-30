@@ -73,8 +73,10 @@ public class GameManager : MonoBehaviour
     IEnumerator TimeBeforeRestart(float duration)
     {
         yield return new WaitForSeconds(duration);
-        RespawnOnLastCheckpoint();
-        //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        if (GetCurrentCheckpoint)
+            RespawnOnLastCheckpoint();
+        else
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     public void Victory()
