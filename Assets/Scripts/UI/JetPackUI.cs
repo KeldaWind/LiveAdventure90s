@@ -7,6 +7,15 @@ public class JetPackUI : MonoBehaviour
 {
     public Image jetpackGauge;
 
+    public void Show()
+    {
+        gameObject.SetActive(true);
+    }
+
+    public void Hide()
+    {
+        gameObject.SetActive(false);
+    }
 
     private void Update()
     {
