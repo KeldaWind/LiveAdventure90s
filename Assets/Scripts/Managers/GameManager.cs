@@ -43,7 +43,10 @@ public class GameManager : MonoBehaviour
 
         OnEndOfGameEvent += firstPersonController.SetGameOver;
         thirdPersonController.GetLifeSystem.OnLifeReachedZero += GameOver;
+    }
 
+    public void Start()
+    {
         AudioManager.PlayAmbianceMusic();
     }
 
