@@ -104739,6 +104739,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Pallier
       objectReference: {fileID: 0}
+    - target: {fileID: 602079293868662958, guid: 03e6c8fa9d2bcd546b0bb25ad6933aee,
+        type: 3}
+      propertyPath: m_Icon
+      value: 
+      objectReference: {fileID: 7422848464349959988, guid: 0000000000000000d000000000000000,
+        type: 0}
     - target: {fileID: 602079293868662993, guid: 03e6c8fa9d2bcd546b0bb25ad6933aee,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -104793,6 +104799,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5557924778076240798, guid: 03e6c8fa9d2bcd546b0bb25ad6933aee,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5557924778076240798, guid: 03e6c8fa9d2bcd546b0bb25ad6933aee,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 03e6c8fa9d2bcd546b0bb25ad6933aee, type: 3}
@@ -104925,7 +104941,7 @@ PrefabInstance:
     - target: {fileID: 2618513214183494906, guid: 9ad3e152bbbed2a46ba6d593963948d7,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2618513214183494906, guid: 9ad3e152bbbed2a46ba6d593963948d7,
         type: 3}
@@ -104972,6 +104988,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rail
       objectReference: {fileID: 0}
+    - target: {fileID: 2618513214183494907, guid: 9ad3e152bbbed2a46ba6d593963948d7,
+        type: 3}
+      propertyPath: m_Icon
+      value: 
+      objectReference: {fileID: 3306451490063965843, guid: 0000000000000000d000000000000000,
+        type: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9ad3e152bbbed2a46ba6d593963948d7, type: 3}
 --- !u!1001 &2823381969264392137
