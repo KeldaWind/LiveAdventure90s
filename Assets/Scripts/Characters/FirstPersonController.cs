@@ -326,6 +326,13 @@ public class FirstPersonController : MonoBehaviour
     {
         gameOver = true;
     }
+
+    public void Respawn(Transform respawnPos)
+    {
+        gameOver = false;
+        transform.position = new Vector3(transform.position.x, respawnPos.position.y, transform.position.z);
+        currentJetpackVerticalSpeed = jetpackMaxUpSpeed;
+    }
 }
 
 public enum JetpackBoundsState { TooLow, Neutral, TooHigh }
