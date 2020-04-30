@@ -37,7 +37,8 @@ public class ThirdPersonController : MonoBehaviour
 
         SetUpLifeSystem();
 
-        characterRenderer.material = normalMaterial;
+        // characterRenderer.material = normalMaterial;
+        SetUpRenderer();
 
         walkStepFrequenceSystem = new FrequenceSystem(stepFeedbackPerSecond);
         walkStepFrequenceSystem.SetUp(PlayFootFeedbackSound);
@@ -567,11 +568,20 @@ public class ThirdPersonController : MonoBehaviour
             if (IsRecovering)
             {
                 float blinkingCoeff = Mathf.Cos(recoveringTimer.GetTimerCounter * Mathf.PI * 2 * recoveringBlinkingFrequence);
-                characterRenderer.material = blinkingCoeff > 0 ? blinkingMaterial : normalMaterial;
+                /*characterRenderer.material = blinkingCoeff > 0 ? blinkingMaterial : normalMaterial;*/
+                foreach (RendererWithBaseMaterial parameters in rendererWithMaterials)
+                {
+                    parameters.renderer.material = blinkingCoeff > 0 ? blinkingMaterial : parameters.normalMtl;
+                }
             }
             else
-                characterRenderer.material = normalMaterial;
-        }
+            {
+                foreach (RendererWithBaseMaterial parameters in rendererWithMaterials)
+                {
+                    parameters.renderer.material = parameters.normalMtl;
+                }
+            }
+            }
     }
 
     bool checkCollisionAgain = false;
@@ -627,10 +637,23 @@ public class ThirdPersonController : MonoBehaviour
     #endregion
 
     [Header("Rendering")]
-    [SerializeField] Renderer characterRenderer = default;
+    [SerializeField] Renderer[] characterRenderers = new Renderer[0];
     [SerializeField] Material normalMaterial = default;
     [SerializeField] Material blinkingMaterial = default;
     [SerializeField] Animator characterAnimator = default;
+
+    struct RendererWithBaseMaterial { public Renderer renderer; public Material normalMtl; }
+    RendererWithBaseMaterial[] rendererWithMaterials = new RendererWithBaseMaterial[0];
+    public void SetUpRenderer()
+    {
+        rendererWithMaterials = new RendererWithBaseMaterial[characterRenderers.Length];
+        foreach (Renderer render in characterRenderers)
+        {
+            RendererWithBaseMaterial parameters = new RendererWithBaseMaterial();
+            parameters.renderer = render;
+            parameters.normalMtl = render.material;
+        }
+    }
 
     public void UpdateAnimatorValues()
     {
