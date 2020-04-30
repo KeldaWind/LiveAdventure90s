@@ -23,8 +23,8 @@ TagManager:
   - PostProcess
   - Obstacles
   - IntangibleObjects
-  - 
-  - 
+  - Laser
+  - FollowingPlatform
   - 
   - 
   - 

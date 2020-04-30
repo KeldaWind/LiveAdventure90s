@@ -247,7 +247,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   pitchChangingCoeff: 0.1
   jetpackOnSoundSource: {fileID: 8020860427220986285}
-  maxJetpackOnVolume: 0.5
+  maxJetpackOnVolume: 0.3
   jetpackOffSoundSource: {fileID: 6467287028850672953}
   maxJetpackOffVolume: 0.1
   jetpackSoundTransitionDuration: 0.5
@@ -317,7 +317,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 425239
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0

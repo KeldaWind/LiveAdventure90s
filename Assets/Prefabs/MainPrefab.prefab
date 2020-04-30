@@ -3630,11 +3630,6 @@ PrefabInstance:
       propertyPath: m_ClearFlags
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 7992000932964528633, guid: 7f41b66d1ad7e584f81301e7bb779ad8,
-        type: 3}
-      propertyPath: m_CullingMask.m_Bits
-      value: 32023
-      objectReference: {fileID: 0}
     - target: {fileID: 7992000932964528635, guid: 7f41b66d1ad7e584f81301e7bb779ad8,
         type: 3}
       propertyPath: m_Layer
