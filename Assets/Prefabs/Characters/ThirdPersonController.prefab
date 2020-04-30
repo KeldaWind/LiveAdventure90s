@@ -307,8 +307,8 @@ MonoBehaviour:
   onDamagedRecoveringDuration: 1
   recoveringBlinkingFrequence: 10
   characterRenderer: {fileID: 7646966892528743110}
-  normalMaterial: {fileID: 2100000, guid: 62869b7d9926bef47a8baa877eaf8b3e, type: 2}
-  blinkingMaterial: {fileID: 2100000, guid: dfecd4286f948bd41b3df5a3a6ece127, type: 2}
+  normalMaterial: {fileID: 2100000, guid: 5b7565f2227e3ca48b9ed74378dd6e52, type: 2}
+  blinkingMaterial: {fileID: 2100000, guid: 3d1e7fe1de30412418e4a1faab74d4e2, type: 2}
   characterAnimator: {fileID: 590237623859873868}
   damagedFxTag: PlaceHolder
   damagedSound: 10
