@@ -1623,7 +1623,7 @@ PrefabInstance:
     - target: {fileID: 5051358517388338309, guid: 6843271bfd8b4464886944904b4ffeb5,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 10
+      value: 16.65
       objectReference: {fileID: 0}
     - target: {fileID: 5051358517388338309, guid: 6843271bfd8b4464886944904b4ffeb5,
         type: 3}
@@ -2149,12 +2149,12 @@ PrefabInstance:
     - target: {fileID: 6673697110840443834, guid: 802058209a4bff0479ff5f56c02a3841,
         type: 3}
       propertyPath: OnBallArrival.m_PersistentCalls.m_Calls.Array.size
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6673697110840443834, guid: 802058209a4bff0479ff5f56c02a3841,
         type: 3}
       propertyPath: OnBallArrival.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 1
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6673697110840443834, guid: 802058209a4bff0479ff5f56c02a3841,
         type: 3}
@@ -2169,12 +2169,17 @@ PrefabInstance:
     - target: {fileID: 6673697110840443834, guid: 802058209a4bff0479ff5f56c02a3841,
         type: 3}
       propertyPath: OnBallArrival.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: 
+      value: SetLaserState
       objectReference: {fileID: 0}
     - target: {fileID: 6673697110840443834, guid: 802058209a4bff0479ff5f56c02a3841,
         type: 3}
       propertyPath: OnBallArrival.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 6673697110840443834, guid: 802058209a4bff0479ff5f56c02a3841,
+        type: 3}
+      propertyPath: OnBallArrival.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_BoolArgument
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6673697110840443837, guid: 802058209a4bff0479ff5f56c02a3841,
         type: 3}
@@ -3020,7 +3025,7 @@ PrefabInstance:
     - target: {fileID: 6673697110840443834, guid: 802058209a4bff0479ff5f56c02a3841,
         type: 3}
       propertyPath: OnBallArrival.m_PersistentCalls.m_Calls.Array.size
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6673697110840443834, guid: 802058209a4bff0479ff5f56c02a3841,
         type: 3}
@@ -3036,7 +3041,7 @@ PrefabInstance:
         type: 3}
       propertyPath: OnBallArrival.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 4439925563830945515}
+      objectReference: {fileID: 4439925562590219824}
     - target: {fileID: 6673697110840443834, guid: 802058209a4bff0479ff5f56c02a3841,
         type: 3}
       propertyPath: OnBallArrival.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
@@ -3071,6 +3076,11 @@ PrefabInstance:
         type: 3}
       propertyPath: OnBallArrival.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 6673697110840443834, guid: 802058209a4bff0479ff5f56c02a3841,
+        type: 3}
+      propertyPath: OnBallArrival.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_BoolArgument
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6673697110840443837, guid: 802058209a4bff0479ff5f56c02a3841,
         type: 3}
