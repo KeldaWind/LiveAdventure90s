@@ -468,7 +468,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damageTag: 0
-  maxLife: 10
+  maxLife: 5
 --- !u!54 &4698746383479318269
 Rigidbody:
   m_ObjectHideFlags: 0
