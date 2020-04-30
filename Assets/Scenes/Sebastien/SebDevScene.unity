@@ -2455,6 +2455,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -1345447540487064758, guid: 564e03c233b64e74189e799a86ec8f32,
         type: 3}
+      propertyPath: trailPositions.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -1345447540487064758, guid: 564e03c233b64e74189e799a86ec8f32,
+        type: 3}
       propertyPath: trailPositions.Array.data[0]
       value: 
       objectReference: {fileID: 1722438765}
@@ -2471,7 +2476,7 @@ PrefabInstance:
     - target: {fileID: 333045281083292467, guid: 564e03c233b64e74189e799a86ec8f32,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 333045281083292471, guid: 564e03c233b64e74189e799a86ec8f32,
         type: 3}
@@ -29376,7 +29381,7 @@ PrefabInstance:
     - target: {fileID: 6986223273157795615, guid: 987b1e2d3570dca4ab0d20397d5b30cd,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -44.998535
+      value: -44.998596
       objectReference: {fileID: 0}
     - target: {fileID: 8621790731889777277, guid: 987b1e2d3570dca4ab0d20397d5b30cd,
         type: 3}

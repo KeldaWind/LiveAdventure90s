@@ -51,7 +51,7 @@ public class SwitchBall : MonoBehaviour
     float lastDirection = 0;
     private void Update()
     {
-        float diff = GameManager.Instance.GetCameraWorldPosition.y - objectPos.localPosition.y;
+        float diff = GameManager.Instance.GetCameraWorldPosition.y - objectPos.position.y;
         if (lastDirection != Mathf.Sign(diff))
         {
             lastDirection = Mathf.Sign(diff);
@@ -73,6 +73,7 @@ public class SwitchBall : MonoBehaviour
 
         if(GameManager.Instance.GetCameraWorldPosition.y > lowestTrailPos && GameManager.Instance.GetCameraWorldPosition.y < highestTrailPos)
         {
+            Debug.Log("Inside");
             UIManager.Instance.OnPointerInteraction();
         }
         else
@@ -120,12 +121,12 @@ public class SwitchBall : MonoBehaviour
 
     float GetLowestTrailPos(ObjectHolder_Event[] trail)
     {
-        float currentMin = trail[0].transform.localPosition.y;
+        float currentMin = trail[0].transform.position.y;
 
         for (int i = 1; i < trail.Length; i++)
         {
-            if (currentMin > trail[i].transform.localPosition.y)
-                currentMin = trail[i].transform.localPosition.y;
+            if (currentMin > trail[i].transform.position.y)
+                currentMin = trail[i].transform.position.y;
         }
 
         return currentMin;
@@ -133,12 +134,12 @@ public class SwitchBall : MonoBehaviour
 
     float GetHighestTrailPos(ObjectHolder_Event[] trail)
     {
-        float currentMax = trail[0].transform.localPosition.y;
+        float currentMax = trail[0].transform.position.y;
 
         for (int i = 1; i < trail.Length; i++)
         {
-            if (currentMax < trail[i].transform.localPosition.y)
-                currentMax = trail[i].transform.localPosition.y;
+            if (currentMax < trail[i].transform.position.y)
+                currentMax = trail[i].transform.position.y;
         }
 
         return currentMax;
