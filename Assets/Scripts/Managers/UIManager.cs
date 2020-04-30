@@ -68,7 +68,6 @@ public class UIManager : MonoBehaviour
         if (!OnInteraction)
             return;
 
-        Debug.Log("Go");
         pointerImage.enabled = true;
         pointerAnim.Play("None");
         OnInteraction = false;
