@@ -198,6 +198,10 @@ public class ThirdPersonController : MonoBehaviour
             float diff = newHeight - previousPlatformHeight;
             transform.position += Vector3.up * diff;
             previousPlatformHeight = newHeight;
+
+            // Patch for repeat landing bug
+            if (currentVerticalSpeed < 2f)
+                currentVerticalSpeed = 0;
         }
 
         bool startIsOnGround = isOnGround;
@@ -206,7 +210,15 @@ public class ThirdPersonController : MonoBehaviour
 
         Collider previousCollider = currentGround.collider;
         RaycastHit hit = new RaycastHit();
-        isOnGround = Physics.BoxCast(transform.position + selfCollider.center, actualSize * 0.5f, Vector3.down, out hit, transform.rotation, onGroundCheckDistance, movementsCheckMask);
+        isOnGround = Physics.BoxCast(
+            transform.position + selfCollider.center, 
+            actualSize * 0.5f, 
+            Vector3.down, 
+            out hit, 
+            transform.rotation, 
+            onGroundCheckDistance, 
+            movementsCheckMask);
+
         if (isOnGround && currentVerticalSpeed < 0)
         {
             currentVerticalSpeed = 0;
@@ -227,7 +239,8 @@ public class ThirdPersonController : MonoBehaviour
 
         if (IsOnGround)
         {
-            if(previousCollider != hit.collider)
+            //print("YES");
+            if (previousCollider != hit.collider)
             {
                 Following_Plateform previousFollowingPlatform = currentStepingOnFollowingPlatform;
 
@@ -243,15 +256,20 @@ public class ThirdPersonController : MonoBehaviour
                 {
                     if (previousFollowingPlatform)
                     {
-                        currentStepingOnFollowingPlatform.SetCharacterOn(null);
+                        previousFollowingPlatform.SetCharacterOn(null);
                     }
                 }
             }
         }
         else
         {
+            //print("NO");
             currentGround = new RaycastHit();
-            currentStepingOnFollowingPlatform = null;
+            if (currentStepingOnFollowingPlatform)
+            {
+                currentStepingOnFollowingPlatform.SetCharacterOn(null);
+                currentStepingOnFollowingPlatform = null;
+            }
         }
     }
 
@@ -619,6 +637,7 @@ public class ThirdPersonController : MonoBehaviour
         }
     }
 
+    public System.Action OnCharacterReceivedDamage = default;
     public void OnReceivedDamages(int delta, int remainingLife, GameObject damageInstigator)
     {
         print("Remaining life : " + remainingLife);
@@ -639,6 +658,7 @@ public class ThirdPersonController : MonoBehaviour
         recoveringTimer.StartTimer();
 
         PlayDamagedFeedback();
+        OnCharacterReceivedDamage?.Invoke();
     }
 
     bool dead = false;
