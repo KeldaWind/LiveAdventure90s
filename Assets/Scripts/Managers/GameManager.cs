@@ -40,6 +40,10 @@ public class GameManager : MonoBehaviour
 
         firstPersonController.SetThirdPersonRef(thirdPersonController);
         firstPersonController.SetUpBounds(bottomBound, topBound);
+
+        OnEndOfGameEvent += firstPersonController.SetGameOver;
+
+        AudioManager.PlayAmbianceMusic();
     }
 
     public bool IsPlayerOutOfFrame()
@@ -61,7 +65,8 @@ public class GameManager : MonoBehaviour
     {
         OnEndOfGameEvent?.Invoke();
         UIManager.Instance.PlayLoseAnim();
-        StartCoroutine(TimeBeforeRestart(UIManager.Instance.GetLoseAnimationDuration()));
+        AudioManager.PlayLoseMusic();
+        StartCoroutine(TimeBeforeRestart(/*UIManager.Instance.GetLoseAnimationDuration()*/5));
     }
 
     IEnumerator TimeBeforeRestart(float duration)
@@ -73,6 +78,7 @@ public class GameManager : MonoBehaviour
     public void Victory()
     {
         OnEndOfGameEvent?.Invoke();
+        AudioManager.PlayWinMusic();
         UIManager.Instance.PlayWinAnim();
     }
 

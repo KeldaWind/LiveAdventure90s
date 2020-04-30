@@ -78,6 +78,22 @@ public class ThirdPersonController : MonoBehaviour
 
     public void HandleInputs()
     {
+        if(dead)
+        {
+            return;
+        }
+
+        if ((Input.GetKeyDown(shootingGamepadInput) || Input.GetKeyDown(shootingKeyboardInput)))
+        {
+            isShootingInputDown = true;
+            if (!IsStunned)
+                StartShooting();
+        }
+        else if ((Input.GetKeyUp(shootingGamepadInput) || Input.GetKeyUp(shootingKeyboardInput)))
+        {
+            isShootingInputDown = false;
+        }
+
         if (IsStunned)
         {
             currentHorizontalInput = 0;
@@ -102,17 +118,7 @@ public class ThirdPersonController : MonoBehaviour
         else if (GetJumpKeyUp && isJumping)
         {
             EndJumping();
-        }
-
-        if ((Input.GetKeyDown(shootingGamepadInput) || Input.GetKeyDown(shootingKeyboardInput)))
-        {
-            isShootingInputDown = true;
-            StartShooting();
-        }
-        else if ((Input.GetKeyUp(shootingGamepadInput) || Input.GetKeyUp(shootingKeyboardInput)))
-        {
-            isShootingInputDown = false;
-        }
+        }        
     }
 
     #region Global Movement - OLD
@@ -411,7 +417,7 @@ public class ThirdPersonController : MonoBehaviour
 
     public void StartShooting()
     {
-        if (shootingFrequenceSystem.IsStopped)
+        if (shootingFrequenceSystem.IsStopped && !dead)
         {
             ShootProjectile();
             shootingFrequenceSystem.Resume();
@@ -444,7 +450,7 @@ public class ThirdPersonController : MonoBehaviour
 
     public void CheckForShootAgain()
     {
-        if (isShootingInputDown)
+        if (isShootingInputDown && !IsStunned && !dead)
             ShootProjectile();
         else
         {
@@ -576,6 +582,11 @@ public class ThirdPersonController : MonoBehaviour
 
         if (currentGround.collider)
             HandleCollision(null, currentGround.collider);
+
+        if (isShootingInputDown)
+        {
+            StartShooting();
+        }
     }
 
     public void OnReceivedDamages(int delta, int remainingLife, GameObject damageInstigator)
@@ -600,9 +611,18 @@ public class ThirdPersonController : MonoBehaviour
         PlayDamagedFeedback();
     }
 
+    bool dead = false;
     public void Die()
     {
-        print("I'm die");
+        if (dead)
+            return;
+        dead = true;
+        isShootingInputDown = false;
+        currentHorizontalInput = 0;
+
+        characterAnimator.SetBool("IsDead", true);
+        GameManager.Instance.GameOver();
+        //print("I'm die");
     }
     #endregion
 

@@ -20,6 +20,7 @@ public class UIManager : MonoBehaviour
     [Header("Lose Sight Condition")]
     public float maxOutOfFrameTime;
 
+    [Header("End Animations")]
     public Animator winAnim;
     public Animator loseAnim;
 
