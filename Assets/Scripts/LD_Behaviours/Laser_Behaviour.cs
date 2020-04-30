@@ -79,7 +79,7 @@ public class Laser_Behaviour : MonoBehaviour
         Quaternion newRotation = Quaternion.LookRotation(direction, Vector3.up);
         laserCollider.transform.localScale = new Vector3(0.5f, 0.5f, magnitude);
         laserCollider.transform.rotation = newRotation;
-        laserCollider.transform.position = startPos.transform.position + (direction * (magnitude * 0.5f));
+        laserCollider.transform.position = startPos.transform.localPosition + (direction * (magnitude * 0.5f));
     }
 
     void FindNextTarget()
@@ -88,13 +88,18 @@ public class Laser_Behaviour : MonoBehaviour
         Vector3 direction = (targetPos.transform.localPosition - startPos.transform.localPosition).normalized;
         RaycastHit hit;
 
-        Physics.Raycast(startPos.transform.position, direction, out hit, Mathf.Infinity);
+        Physics.Raycast(startPos.transform.localPosition, direction, out hit, Mathf.Infinity);
+        Debug.DrawRay(startPos.transform.localPosition, direction, Color.blue, 0.1f);
 
         if (hit.collider != null)
+        {
             impactPos = hit.point;
+            Debug.Log("Impact at : " + impactPos + " with gameobject : " + hit.collider.gameObject.name);
+            lineRenderer.SetPosition(1, impactPos);
+        }
 
-        Vector3 newDestination = new Vector3(impactPos.x - this.transform.localPosition.x, impactPos.y - this.transform.localPosition.y, impactPos.z - this.transform.localPosition.z);
-        lineRenderer.SetPosition(1, newDestination);
+
+        
 
 
         SetLaserCollider(magnitude, direction);
