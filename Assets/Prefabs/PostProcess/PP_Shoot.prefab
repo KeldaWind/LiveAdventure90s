@@ -73,26 +73,35 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 2
-      outSlope: 2
+      inSlope: 4.3983407
+      outSlope: 4.3983407
       tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
-      outWeight: 0.33333334
+      outWeight: 0.037406486
+    - serializedVersion: 3
+      time: 0.7
+      value: 1
+      inSlope: -0.08406093
+      outSlope: -0.08406093
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.22277632
     - serializedVersion: 3
       time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
+      value: 0
+      inSlope: -5.757178
+      outSlope: -5.757178
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.33333334
+      inWeight: 0.07481296
       outWeight: 0.33333334
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
   minBloomIntensity: 0
-  maxBloomIntensity: 10
+  maxBloomIntensity: 6
   chromaticAberration: {fileID: 0}
   chromaticAnimation:
     serializedVersion: 2
@@ -157,3 +166,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   postProcessAnimator: {fileID: 5816260447420005534}
+  thirdPersonController: {fileID: 0}
