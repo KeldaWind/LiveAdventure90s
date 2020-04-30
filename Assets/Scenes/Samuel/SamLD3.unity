@@ -13004,14 +13004,19 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -1345447540487064758, guid: 564e03c233b64e74189e799a86ec8f32,
         type: 3}
+      propertyPath: trailPositions.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -1345447540487064758, guid: 564e03c233b64e74189e799a86ec8f32,
+        type: 3}
       propertyPath: trailPositions.Array.data[0]
       value: 
-      objectReference: {fileID: 2072525231}
+      objectReference: {fileID: 1461522340}
     - target: {fileID: -1345447540487064758, guid: 564e03c233b64e74189e799a86ec8f32,
         type: 3}
       propertyPath: trailPositions.Array.data[1]
       value: 
-      objectReference: {fileID: 1461522340}
+      objectReference: {fileID: 2072525231}
     - target: {fileID: 333045281083292467, guid: 564e03c233b64e74189e799a86ec8f32,
         type: 3}
       propertyPath: m_Name
@@ -20592,6 +20597,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -1345447540487064758, guid: 564e03c233b64e74189e799a86ec8f32,
         type: 3}
+      propertyPath: trailPositions.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -1345447540487064758, guid: 564e03c233b64e74189e799a86ec8f32,
+        type: 3}
       propertyPath: trailPositions.Array.data[0]
       value: 
       objectReference: {fileID: 625924893}
@@ -25992,7 +26002,7 @@ PrefabInstance:
     - target: {fileID: 6673697110840443834, guid: 802058209a4bff0479ff5f56c02a3841,
         type: 3}
       propertyPath: OnBallArrival.m_PersistentCalls.m_Calls.Array.size
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6673697110840443834, guid: 802058209a4bff0479ff5f56c02a3841,
         type: 3}
@@ -29325,6 +29335,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -1345447540487064758, guid: 564e03c233b64e74189e799a86ec8f32,
+        type: 3}
+      propertyPath: trailPositions.Array.size
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: -1345447540487064758, guid: 564e03c233b64e74189e799a86ec8f32,
         type: 3}
       propertyPath: trailPositions.Array.data[0]
