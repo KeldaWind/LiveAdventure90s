@@ -80,7 +80,7 @@ PrefabInstance:
     - target: {fileID: 3886824282216318063, guid: a55327414d2436242bac3c429c1ad47c,
         type: 3}
       propertyPath: m_Name
-      value: SM_Totem_Haut
+      value: SM_Totem_Haut_Big Variant
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a55327414d2436242bac3c429c1ad47c, type: 3}

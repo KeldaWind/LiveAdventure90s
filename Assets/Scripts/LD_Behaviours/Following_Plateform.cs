@@ -87,7 +87,7 @@ public class Following_Plateform : MonoBehaviour
     public void UpdateTargetSpeed()
     {        
 
-        float diff = GameManager.Instance.GetCameraWorldPosition.y - objectPos.localPosition.y;
+        float diff = GameManager.Instance.GetCameraWorldPosition.y - objectPos.position.y;
 
         if (lastDirection != Mathf.Sign(diff))
         {
