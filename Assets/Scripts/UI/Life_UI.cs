@@ -65,8 +65,8 @@ public class Life_UI : MonoBehaviour
         {
             for (int i = current; i < maxLife; i++)
             {
-                lifePoints[i].sprite = unenableSprite;
-                lifePoints[i].color = new Color32(170, 170, 170, 255);
+                //lifePoints[i].sprite = unenableSprite;
+                lifePoints[i].color = new Color32(170, 170, 170, 0);
             }
         }
     }
