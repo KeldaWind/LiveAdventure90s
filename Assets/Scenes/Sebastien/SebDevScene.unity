@@ -29037,7 +29037,7 @@ PrefabInstance:
     - target: {fileID: 1157172677245292075, guid: 987b1e2d3570dca4ab0d20397d5b30cd,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 14.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1157172677245292075, guid: 987b1e2d3570dca4ab0d20397d5b30cd,
         type: 3}
@@ -29139,11 +29139,6 @@ PrefabInstance:
       propertyPath: goingDownPitchCurve.m_Curve.Array.data[1].tangentMode
       value: 34
       objectReference: {fileID: 0}
-    - target: {fileID: 1157172678069516478, guid: 987b1e2d3570dca4ab0d20397d5b30cd,
-        type: 3}
-      propertyPath: m_ClearFlags
-      value: 4
-      objectReference: {fileID: 0}
     - target: {fileID: 3349801664879935139, guid: 987b1e2d3570dca4ab0d20397d5b30cd,
         type: 3}
       propertyPath: m_Name
@@ -29208,6 +29203,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6986223273157795615, guid: 987b1e2d3570dca4ab0d20397d5b30cd,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -44.998596
       objectReference: {fileID: 0}
     - target: {fileID: 8621790731889777277, guid: 987b1e2d3570dca4ab0d20397d5b30cd,
         type: 3}

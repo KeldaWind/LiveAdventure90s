@@ -42,6 +42,7 @@ public class GameManager : MonoBehaviour
         firstPersonController.SetUpBounds(bottomBound, topBound);
 
         OnEndOfGameEvent += firstPersonController.SetGameOver;
+        thirdPersonController.GetLifeSystem.OnLifeReachedZero += GameOver;
 
         AudioManager.PlayAmbianceMusic();
     }
