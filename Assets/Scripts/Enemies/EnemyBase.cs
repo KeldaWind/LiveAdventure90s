@@ -12,11 +12,23 @@ public class EnemyBase : MonoBehaviour
 
         lifeSystem.OnReceivedDamages += PlayHitFeedback;
         lifeSystem.OnLifeReachedZero += Die;
-        enemyRenderer.material = normalMaterial;
+        //enemyRenderer.material = normalMaterial;
+
+        SetUpRenderer();
+        //rendererParent.rotation = Quaternion.Euler(0, currentShootDirection == ShootDirection.Right ? 0 : 180, 0);
     }
 
+    ShootDirection currentShootDirection = ShootDirection.Right;
     private void Update()
     {
+        ShootDirection previous = currentShootDirection;
+        currentShootDirection = GetShootDirection;
+        if (currentShootDirection != previous)
+        {
+            print("Change");
+            rendererParent.rotation = Quaternion.Euler(0, currentShootDirection  == ShootDirection.Right ? rightRotation : leftRotation, 0);
+        }
+        
         UpdateBehavior();
     }
 
@@ -26,10 +38,11 @@ public class EnemyBase : MonoBehaviour
     {
         detectedPlayer = true;
         _thirdPersonCharacter = thirdPersonCharacter;
+        rendererParent.rotation = Quaternion.Euler(0, currentShootDirection == ShootDirection.Right ? rightRotation : leftRotation, 0);
 
         if (shootFrequenceSystem.IsStopped)
         {
-            ShootProjectile();
+            StartShooting();
             shootFrequenceSystem.Resume();
         }
     }
@@ -57,15 +70,26 @@ public class EnemyBase : MonoBehaviour
     }
     public IEnumerator HitFeedbackCoroutine()
     {
-        enemyRenderer.material = hitMaterial;
+        /*enemyRenderer.material = hitMaterial;*/
+        foreach (RendererWithBaseMaterial parameters in rendererWithMaterials)
+        {
+            parameters.renderer.material = hitMaterial;
+        }
         yield return new WaitForSeconds(hitFeedbackDuration);
-        enemyRenderer.material = normalMaterial;
+        //enemyRenderer.material = normalMaterial;
+        foreach (RendererWithBaseMaterial parameters in rendererWithMaterials)
+        {
+            parameters.renderer.material = parameters.normalMtl;
+        }
     }
 
     [Header("Rendering")]
-    [SerializeField] Renderer enemyRenderer = default;
+    [SerializeField] Transform rendererParent = default;
+    [SerializeField] Renderer[] enemyRenderers = default;
     [SerializeField] Material normalMaterial = default;
     [SerializeField] Material hitMaterial = default;
+    [SerializeField] float rightRotation = 60;
+    [SerializeField] float leftRotation = 120;
 
     bool pendingKill = false;
     public virtual void Die()
@@ -87,6 +111,7 @@ public class EnemyBase : MonoBehaviour
     #region Shoot
     [Header("Shooting")]
     [SerializeField] ProjectileBase enemyProjectilePrefab = default;
+    [SerializeField] Animator enemyAnimator = default;
     [SerializeField] float projectilesPerSecond = 0.5f;
     [SerializeField] float shootAngle = 45f;
     [SerializeField] Transform rightShootPosition = default;
@@ -100,9 +125,14 @@ public class EnemyBase : MonoBehaviour
             shootFrequenceSystem.UpdateFrequence();
     }
 
+    public void StartShooting()
+    {
+        enemyAnimator.SetTrigger("Shoot");
+    }
+
     public void ShootProjectile()
     {
-        ShootDirection shootDirectionEnum = GetShootDirection;
+        ShootDirection shootDirectionEnum = currentShootDirection;
         Vector3 shootPosition = shootDirectionEnum == ShootDirection.Right ? rightShootPosition.position : leftShootPosition.position;
         Vector3 shootDirection = shootDirectionEnum == ShootDirection.Right ? Vector3.right : Vector3.left;
 
@@ -119,7 +149,7 @@ public class EnemyBase : MonoBehaviour
     public void CheckIfShoot()
     {
         if (detectedPlayer)
-            ShootProjectile();
+            StartShooting();
         else
             shootFrequenceSystem.Stop();
     }
@@ -131,12 +161,11 @@ public class EnemyBase : MonoBehaviour
         {
             if (_thirdPersonCharacter != null)
             {
-                lastShootDirection = (_thirdPersonCharacter.transform.position.x - transform.position.x > 0 ? ShootDirection.Right : ShootDirection.Left);
+                return (_thirdPersonCharacter.transform.position.x - transform.position.x > 0 ? ShootDirection.Right : ShootDirection.Left);
             }
-            return lastShootDirection;
+            return currentShootDirection;
         }
     }
-    ShootDirection lastShootDirection = ShootDirection.Left;
     #endregion
 
     [Header("Feedbacks")]
@@ -165,5 +194,20 @@ public class EnemyBase : MonoBehaviour
     {
         AudioManager.PlaySound(deathSound);
         FxManager.Instance.PlayFx(deathFxTag, transform.position, Quaternion.identity, Vector3.one);
+    }
+
+    struct RendererWithBaseMaterial { public Renderer renderer; public Material normalMtl; }
+    RendererWithBaseMaterial[] rendererWithMaterials = new RendererWithBaseMaterial[0];
+    public void SetUpRenderer()
+    {
+        rendererWithMaterials = new RendererWithBaseMaterial[enemyRenderers.Length];
+        for (int i = 0; i < enemyRenderers.Length; i++)
+        {
+            Renderer render = enemyRenderers[i];
+            RendererWithBaseMaterial parameters = new RendererWithBaseMaterial();
+            parameters.renderer = render;
+            parameters.normalMtl = render.material;
+            rendererWithMaterials[i] = parameters;
+        }
     }
 }

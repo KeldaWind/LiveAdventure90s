@@ -22,6 +22,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] Transform bottomBound = default;
     [SerializeField] Transform topBound = default;
 
+    [Header("Pause")]
+    [SerializeField] KeyCode pauseJoystickInput = KeyCode.JoystickButton7;
+    [SerializeField] KeyCode pauseKeyboardInput = KeyCode.KeypadEnter;
+
+    bool GetPauseInputDown => Input.GetKeyDown(pauseJoystickInput) || Input.GetKeyDown(pauseKeyboardInput);
+
     public Action OnEndOfGameEvent;
 
 
@@ -50,6 +56,36 @@ public class GameManager : MonoBehaviour
         AudioManager.PlayAmbianceMusic();
     }
 
+    private void Update()
+    {
+        if (GetPauseInputDown)
+        {
+            print("Hey");
+            if (paused)
+                UnPauseGame();
+            else
+                PauseGame();
+        }
+    }
+
+    bool paused = false;
+    public void PauseGame()
+    {
+        if (!gameOver)
+        {
+            Time.timeScale = 0.0f;
+            UIManager.Instance.ShowPausePanel();
+            paused = true;
+        }
+    }
+
+    public void UnPauseGame()
+    {
+        Time.timeScale = 1.0f;
+        UIManager.Instance.HidePausePanel();
+        paused = false;
+    }
+
     public bool IsPlayerOutOfFrame()
     {
         float distance = firstPersonController.gameObject.transform.localPosition.y - thirdPersonController.gameObject.transform.localPosition.y;
@@ -65,6 +101,7 @@ public class GameManager : MonoBehaviour
         return false;
     }
 
+    bool gameOver = false;
     public void GameOver()
     {
         OnEndOfGameEvent?.Invoke();
@@ -75,11 +112,13 @@ public class GameManager : MonoBehaviour
 
     IEnumerator TimeBeforeRestart(float duration)
     {
+        gameOver = true;
         yield return new WaitForSeconds(duration);
         if (GetCurrentCheckpoint)
             RespawnOnLastCheckpoint();
         else
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        gameOver = false;
     }
 
     public void Victory()
