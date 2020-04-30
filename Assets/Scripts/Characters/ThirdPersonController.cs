@@ -37,7 +37,8 @@ public class ThirdPersonController : MonoBehaviour
 
         SetUpLifeSystem();
 
-        characterRenderer.material = normalMaterial;
+        // characterRenderer.material = normalMaterial;
+        SetUpRenderer();
 
         walkStepFrequenceSystem = new FrequenceSystem(stepFeedbackPerSecond);
         walkStepFrequenceSystem.SetUp(PlayFootFeedbackSound);
@@ -567,11 +568,20 @@ public class ThirdPersonController : MonoBehaviour
             if (IsRecovering)
             {
                 float blinkingCoeff = Mathf.Cos(recoveringTimer.GetTimerCounter * Mathf.PI * 2 * recoveringBlinkingFrequence);
-                characterRenderer.material = blinkingCoeff > 0 ? blinkingMaterial : normalMaterial;
+                /*characterRenderer.material = blinkingCoeff > 0 ? blinkingMaterial : normalMaterial;*/
+                foreach (RendererWithBaseMaterial parameters in rendererWithMaterials)
+                {
+                    parameters.renderer.material = blinkingCoeff > 0 ? blinkingMaterial : parameters.normalMtl;
+                }
             }
             else
-                characterRenderer.material = normalMaterial;
-        }
+            {
+                foreach (RendererWithBaseMaterial parameters in rendererWithMaterials)
+                {
+                    parameters.renderer.material = parameters.normalMtl;
+                }
+            }
+            }
     }
 
     bool checkCollisionAgain = false;
@@ -627,14 +637,30 @@ public class ThirdPersonController : MonoBehaviour
     #endregion
 
     [Header("Rendering")]
-    [SerializeField] Renderer characterRenderer = default;
+    [SerializeField] Renderer[] characterRenderers = new Renderer[0];
     [SerializeField] Material normalMaterial = default;
     [SerializeField] Material blinkingMaterial = default;
     [SerializeField] Animator characterAnimator = default;
 
+    struct RendererWithBaseMaterial { public Renderer renderer; public Material normalMtl; }
+    RendererWithBaseMaterial[] rendererWithMaterials = new RendererWithBaseMaterial[0];
+    public void SetUpRenderer()
+    {
+        rendererWithMaterials = new RendererWithBaseMaterial[characterRenderers.Length];
+        for (int i =0; i < characterRenderers.Length; i++)
+        {
+            Renderer render = characterRenderers[i];
+            RendererWithBaseMaterial parameters = new RendererWithBaseMaterial();
+            parameters.renderer = render;
+            parameters.normalMtl = render.material;
+            rendererWithMaterials[i] = parameters;
+        }
+    }
+
+    float minSpeedToAnimateMovement = 5f;
     public void UpdateAnimatorValues()
     {
-        characterAnimator.SetBool("IsMoving", Mathf.Abs(currentHorizontalSpeed) > 0.2f);
+        characterAnimator.SetBool("IsMoving", Mathf.Abs(currentHorizontalSpeed) > minSpeedToAnimateMovement);
         characterAnimator.SetFloat("VerticalSpeed",  isOnGround ? 0 : currentVerticalSpeed);
         characterAnimator.transform.localRotation = Quaternion.Euler(0, currentShootDirection == ShootDirection.Left ? -90 : 90, 0);
     }

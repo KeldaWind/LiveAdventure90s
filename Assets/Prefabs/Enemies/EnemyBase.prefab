@@ -113,7 +113,7 @@ MonoBehaviour:
   enemyRenderer: {fileID: 6762457594735239115}
   normalMaterial: {fileID: 2100000, guid: 09c114d049a9eb945bcc097a0694fb2c, type: 2}
   hitMaterial: {fileID: 2100000, guid: 62869b7d9926bef47a8baa877eaf8b3e, type: 2}
-  meleeDamages: 2
+  meleeDamages: 1
   enemyProjectilePrefab: {fileID: 2451139120977189099, guid: 718ddec6156d68e429b69acaf5834a02,
     type: 3}
   projectilesPerSecond: 0.5
@@ -121,8 +121,11 @@ MonoBehaviour:
   rightShootPosition: {fileID: 6762457594133044538}
   leftShootPosition: {fileID: 6762457592992562201}
   shootFxTag: PlaceHolderShoot
+  shootSound: 7
   damagedFxTag: PlaceHolder
+  damagedSound: 16
   deathFxTag: EnemyDeath
+  deathSound: 6
 --- !u!65 &6762457594237305862
 BoxCollider:
   m_ObjectHideFlags: 0
