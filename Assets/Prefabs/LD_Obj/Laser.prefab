@@ -224,6 +224,9 @@ MonoBehaviour:
   targetPos: {fileID: 2686940374408681935}
   laserCollider: {fileID: 4912353026277356970}
   laserDamages: 1
+  checkMask:
+    serializedVersion: 2
+    m_Bits: 427777
   onLaserEnabled: 25
   onLaserDisabled: 26
 --- !u!114 &2142672558689449573
