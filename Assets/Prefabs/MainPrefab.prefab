@@ -842,6 +842,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -162.59773
       objectReference: {fileID: 0}
+    - target: {fileID: 570505546347235741, guid: bb9703e0af1a6da47aaf7c0b184c4f5c,
+        type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 660625898733910600, guid: bb9703e0af1a6da47aaf7c0b184c4f5c,
+        type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 1718915042816457379, guid: bb9703e0af1a6da47aaf7c0b184c4f5c,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -856,6 +866,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 172.52531
+      objectReference: {fileID: 0}
+    - target: {fileID: 1816956007927527793, guid: bb9703e0af1a6da47aaf7c0b184c4f5c,
+        type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 1981626167816963654, guid: bb9703e0af1a6da47aaf7c0b184c4f5c,
         type: 3}
@@ -901,6 +916,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: -0.79154116
+      objectReference: {fileID: 0}
+    - target: {fileID: 2303368837357876738, guid: bb9703e0af1a6da47aaf7c0b184c4f5c,
+        type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 2416710305532590420, guid: bb9703e0af1a6da47aaf7c0b184c4f5c,
         type: 3}
@@ -1076,6 +1096,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalPosition.y
       value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6271145446281033666, guid: bb9703e0af1a6da47aaf7c0b184c4f5c,
+        type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 6701055419578764852, guid: bb9703e0af1a6da47aaf7c0b184c4f5c,
         type: 3}
@@ -1301,6 +1326,11 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1037200008484477309, guid: 7f41b66d1ad7e584f81301e7bb779ad8,
+        type: 3}
+      propertyPath: postProcessLayer
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 3291918320898213475, guid: 7f41b66d1ad7e584f81301e7bb779ad8,
         type: 3}
       propertyPath: m_Enabled
@@ -1370,7 +1400,7 @@ PrefabInstance:
     - target: {fileID: 7992000932964528633, guid: 7f41b66d1ad7e584f81301e7bb779ad8,
         type: 3}
       propertyPath: m_ClearFlags
-      value: 4
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7992000932964528633, guid: 7f41b66d1ad7e584f81301e7bb779ad8,
         type: 3}
@@ -1382,7 +1412,9 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3291918320898213475, guid: 7f41b66d1ad7e584f81301e7bb779ad8, type: 3}
+    - {fileID: 1037200008484477309, guid: 7f41b66d1ad7e584f81301e7bb779ad8, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 7f41b66d1ad7e584f81301e7bb779ad8, type: 3}
 --- !u!20 &1157172678069516478 stripped
 Camera:
