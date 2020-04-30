@@ -84,6 +84,8 @@ public class Laser_Behaviour : MonoBehaviour
 
     void FindNextTarget()
     {
+        this.transform.position = Vector3.zero;
+
         float magnitude = (targetPos.transform.localPosition - startPos.transform.localPosition).magnitude;
         Vector3 direction = (targetPos.transform.localPosition - startPos.transform.localPosition).normalized;
         RaycastHit hit;
