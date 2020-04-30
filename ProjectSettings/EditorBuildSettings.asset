@@ -11,7 +11,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/_Niveau final/Menu_Start.unity
     guid: dd309e47b15e81d4da34355a3da1c22a
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Sebastien/SebDevScene.unity
     guid: a2212652648f215458838954d8c2ab7b
+  - enabled: 1
+    path: Assets/Scenes/_Niveau final/LD01_Niveau final.unity
+    guid: c4658f733b389884a8ce708ee01de6e9
   m_configObjects: {}
