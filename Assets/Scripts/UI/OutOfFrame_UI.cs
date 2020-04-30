@@ -116,11 +116,11 @@ public class OutOfFrame_UI : MonoBehaviour
 
         if (GameManager.Instance.herosDirection.y < 0)
         {
-            currentIndicator.anchoredPosition3D = new Vector3(viewPos.x, -145, 0);
+            currentIndicator.anchoredPosition3D = new Vector3(viewPos.x, -120, 0);
         }
         else
         {
-            currentIndicator.anchoredPosition3D = new Vector3(viewPos.x, -45, 0);
+            currentIndicator.anchoredPosition3D = new Vector3(viewPos.x, -25, 0);
         }
     }
 
