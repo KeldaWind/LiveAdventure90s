@@ -7392,6 +7392,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 411181868256718954, guid: 987b1e2d3570dca4ab0d20397d5b30cd,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 233d85aee8c45a34580878a6ece46ff5,
+        type: 3}
+    - target: {fileID: 735638229010442229, guid: 987b1e2d3570dca4ab0d20397d5b30cd,
+        type: 3}
+      propertyPath: m_Name
+      value: HeroPortrait
+      objectReference: {fileID: 0}
     - target: {fileID: 1157172677245292075, guid: 987b1e2d3570dca4ab0d20397d5b30cd,
         type: 3}
       propertyPath: m_LocalPosition.y
