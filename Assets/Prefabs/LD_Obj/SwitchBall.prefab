@@ -14,8 +14,8 @@ GameObject:
   - component: {fileID: 2013586747025649818}
   - component: {fileID: -1345447540487064758}
   - component: {fileID: 6908340555594672374}
-  m_Layer: 0
-  m_Name: FollowingBall
+  m_Layer: 16
+  m_Name: SwitchBall
   m_TagString: KeyBall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -140,6 +140,8 @@ MonoBehaviour:
   accelerationCurveSpeed: 1
   isObjectFallingOutOfRange: 0
   isBallMoving: 0
+  onStartGoingUpSound: 21
+  onStartGoingDownSound: 23
 --- !u!54 &6908340555594672374
 Rigidbody:
   m_ObjectHideFlags: 0
