@@ -988,6 +988,60 @@ MonoBehaviour:
   outOfFrameTimer: {fileID: 8141126478534592905}
   herosUpIndicator: {fileID: 8141126479273829595}
   herosDownIndicator: {fileID: 8141126478346903723}
+  warningSound: 1
+  loseSightSoundCountPerSerie: 3
+  minTimeBetweenWarningSounds: 0.25
+  maxTimeBetweenWarningSounds: 0.05
+  betweenWarningSoundsCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 1
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 1
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  minTimeBetweenWarningSeries: 0.5
+  maxTimeBetweenWarningSeries: 0.2
+  betweenWarningSeriesCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 1
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 1
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &8141126479416761275
 GameObject:
   m_ObjectHideFlags: 0
@@ -1188,7 +1242,7 @@ MonoBehaviour:
   outOfFrameUI: {fileID: 8141126479355185540}
   jetpackUI: {fileID: 8141126479878701629}
   herosLife: {fileID: 0}
-  maxOutOfFrameTime: 5
+  maxOutOfFrameTime: 8
   winAnim: {fileID: 8141126480322441996}
   loseAnim: {fileID: 8141126478653841320}
 --- !u!1 &8141126479572584429
