@@ -58,15 +58,29 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (GetPauseInputDown)
+        if (!won && !gameOver)
         {
-            print("Hey");
-            if (paused)
-                UnPauseGame();
-            else
-                PauseGame();
+            if (GetPauseInputDown)
+            {
+                if (paused)
+                    UnPauseGame();
+                else
+                    PauseGame();
+            }
+        }
+        else
+        {
+            if (GetPauseInputDown)
+            {
+                if (restarting)
+                    return;
+
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                restarting = true;
+            }
         }
     }
+    bool restarting = false;
 
     bool paused = false;
     public void PauseGame()
@@ -121,11 +135,14 @@ public class GameManager : MonoBehaviour
         gameOver = false;
     }
 
+    bool won = false;
     public void Victory()
     {
         OnEndOfGameEvent?.Invoke();
         AudioManager.PlayWinMusic();
         UIManager.Instance.PlayWinAnim();
+        thirdPersonController.Win();
+        won = true;
     }
 
     #region Checkpoints
