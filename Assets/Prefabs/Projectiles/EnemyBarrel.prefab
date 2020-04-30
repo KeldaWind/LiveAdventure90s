@@ -85,6 +85,7 @@ MonoBehaviour:
   damagedSound: 17
   landingSound: 9
   destroyFxTag: PlaceHolder
+  barrelParticles: {fileID: 5412944176989863296}
 --- !u!54 &5700027043688227679
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -221,6 +222,11 @@ PrefabInstance:
       propertyPath: scalingMode
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6387552796474675849, guid: 6966b68b6c8dcd743a21ecf1447589c0,
+        type: 3}
+      propertyPath: RotationModule.separateAxes
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6387552796474675850, guid: 6966b68b6c8dcd743a21ecf1447589c0,
         type: 3}
       propertyPath: m_Name
@@ -301,6 +307,12 @@ PrefabInstance:
 --- !u!4 &5412944176989863298 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6387552796474675851, guid: 6966b68b6c8dcd743a21ecf1447589c0,
+    type: 3}
+  m_PrefabInstance: {fileID: 1421872357547634441}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &5412944176989863296 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 6387552796474675849, guid: 6966b68b6c8dcd743a21ecf1447589c0,
     type: 3}
   m_PrefabInstance: {fileID: 1421872357547634441}
   m_PrefabAsset: {fileID: 0}
