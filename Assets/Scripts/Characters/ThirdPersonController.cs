@@ -44,6 +44,7 @@ public class ThirdPersonController : MonoBehaviour
         walkStepFrequenceSystem.SetUp(PlayFootFeedbackSound);*/
 
         //AudioManager.PlayAmbianceMusic();
+        charaFlower.SetCurrentGlobalTarget(currentShootDirection == ShootDirection.Left ? leftShootPosition : rightShootPosition, currentShootDirection);
     }
 
     void Update()
@@ -106,7 +107,12 @@ public class ThirdPersonController : MonoBehaviour
 
         if (currentHorizontalInput != 0)
         {
+            ShootDirection previous = currentShootDirection;
             currentShootDirection = currentHorizontalInput > 0 ? ShootDirection.Right : ShootDirection.Left;
+            if(previous != currentShootDirection)
+            {
+                charaFlower.SetCurrentGlobalTarget(currentShootDirection == ShootDirection.Left ? leftShootPosition : rightShootPosition, currentShootDirection);
+            }
         }
 
         if (GetJumpKeyDown)
@@ -452,6 +458,8 @@ public class ThirdPersonController : MonoBehaviour
 
     public System.Action OnPlayerShotProjectile = default;
 
+    [SerializeField] ThirdPersonCharacterFlower charaFlower = default;
+
     public void StartShooting()
     {
         if (shootingFrequenceSystem.IsStopped && !dead)
@@ -475,8 +483,11 @@ public class ThirdPersonController : MonoBehaviour
         Vector3 shootDirection = currentShootDirection == ShootDirection.Right ? Vector3.right : Vector3.left;
         shootDirection = Quaternion.Euler(0, 0, randomAngle) * shootDirection;
 
-        Vector3 shootPosition = (currentShootDirection == ShootDirection.Right ? rightShootPosition : leftShootPosition).position;
-        Quaternion shootRotation = (currentShootDirection == ShootDirection.Right ? rightShootPosition : leftShootPosition).rotation;
+        //Vector3 shootPosition = (currentShootDirection == ShootDirection.Right ? rightShootPosition : leftShootPosition).position;
+        Vector3 shootPosition = charaFlower.GetCurrentShootPosition;        
+        
+        //Quaternion shootRotation = (currentShootDirection == ShootDirection.Right ? rightShootPosition : leftShootPosition).rotation;
+        Quaternion shootRotation = Quaternion.Euler(0, 0, currentShootDirection == ShootDirection.Right ? 0 : 180);
         ProjectileBase newProjectile = Instantiate(projectilePrefab, shootPosition, shootRotation);
         newProjectile.ShootProjectile(shootDirection, gameObject);
 
@@ -484,6 +495,7 @@ public class ThirdPersonController : MonoBehaviour
 
         PlayShootFeedback();
 
+        charaFlower.SetShooting();
         OnPlayerShotProjectile?.Invoke();
     }
 
@@ -495,6 +507,7 @@ public class ThirdPersonController : MonoBehaviour
         {
             shootingFrequenceSystem.Stop();
             shootingFrequenceSystem.ResetFrequence();
+            charaFlower.ResetShooting();
         }
     }
     #endregion
@@ -640,7 +653,7 @@ public class ThirdPersonController : MonoBehaviour
     public System.Action OnCharacterReceivedDamage = default;
     public void OnReceivedDamages(int delta, int remainingLife, GameObject damageInstigator)
     {
-        print("Remaining life : " + remainingLife);
+        //print("Remaining life : " + remainingLife);
         if (isJumping)
         {
             EndJumping();
