@@ -19,6 +19,8 @@ public class Laser_Behaviour : MonoBehaviour
     private Vector3 impactPos;
     public LayerMask checkMask = default;
 
+    public Transform rendererParent = default;
+
     public void DeactivateForDuration(float duration)
     {
         deactivationTimer = new TimerSystem(duration, EndDeactivation);
@@ -44,6 +46,12 @@ public class Laser_Behaviour : MonoBehaviour
     private void Awake()
     {
         lineRenderer.SetPosition(0, startPos.transform.localPosition);
+
+        Vector3 dir = (targetPos.transform.position - startPos.transform.position).normalized;
+
+        float rotZ = Mathf.Atan2(dir.x, dir.y) * Mathf.Rad2Deg;
+
+        rendererParent.rotation = Quaternion.Euler(0, 0, -rotZ);
     }
 
     private void Update()
