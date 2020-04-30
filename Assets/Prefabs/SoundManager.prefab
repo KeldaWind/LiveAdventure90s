@@ -338,7 +338,7 @@ MonoBehaviour:
       m_ConstantMin: 0
       m_ConstantMax: 0
   - sound: 1
-    AudioClip: {fileID: 8300000, guid: c8384dc24d9ed2041ac294428315b398, type: 3}
+    AudioClip: {fileID: 8300000, guid: 6371811bdb00a0840bec4e0fd4eea4c8, type: 3}
     volumeMultiplier:
       m_Mode: 0
       m_CurveMultiplier: 0
@@ -1634,12 +1634,12 @@ MonoBehaviour:
       m_ConstantMin: 0
       m_ConstantMax: 0
   ambianceMusicSource: {fileID: 2186124140053149629}
-  ambianceMusicVolume: 0.2
+  ambianceMusicVolume: 0.1
   winMusicSource: {fileID: 8049795300982068744}
-  winMusicVolume: 0.4
+  winMusicVolume: 0.2
   winCrossFadeDuration: 1
   loseMusicSource: {fileID: 2946480473192345762}
-  loseMusicVolume: 0.3
+  loseMusicVolume: 0.15
   loseCrossFadeDuration: 0.1
 --- !u!1 &8500667404153942780
 GameObject:

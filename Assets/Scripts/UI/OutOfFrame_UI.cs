@@ -17,6 +17,15 @@ public class OutOfFrame_UI : MonoBehaviour
     private bool isHeroOutOfFrame;
     private float currentOutOfFrameTime;
 
+    TimerSystem outOfRangeTimerSystem = new TimerSystem();
+
+
+    private void Start()
+    {
+        outOfRangeTimerSystem = new TimerSystem(UIManager.Instance.maxOutOfFrameTime, null);
+
+        SetUpWarning();
+    }
 
     void Update()
     {
@@ -47,6 +56,7 @@ public class OutOfFrame_UI : MonoBehaviour
 
             if (GameManager.Instance.IsPlayerOutOfFrame())
             {
+                //print("HELP");
                 RefreshOutOfFrameWarning();
             }
         }
@@ -56,24 +66,40 @@ public class OutOfFrame_UI : MonoBehaviour
     void RefreshOutOfFrameWarning()
     {
         outOfFrameWarning.gameObject.SetActive(true);
-        currentOutOfFrameTime = UIManager.Instance.maxOutOfFrameTime + 1;
+        //currentOutOfFrameTime = UIManager.Instance.maxOutOfFrameTime + 1;
         outOfFrameTimer.gameObject.SetActive(true);
         isHeroOutOfFrame = true;
+
+        outOfRangeTimerSystem.StartTimer();
+        StartWarningFeedback();
     }
 
     void RefreshOutOfFrameTimer()
     {
-        currentOutOfFrameTime = currentOutOfFrameTime - Time.deltaTime;
+        if (outOfRangeTimerSystem.TimerOver)
+            return;
+
+        //currentOutOfFrameTime = currentOutOfFrameTime - Time.deltaTime;
+        outOfRangeTimerSystem.UpdateTimer();
+        UpdateWarningFeedback();
+
+        if (outOfRangeTimerSystem.TimerOver)
+        {
+            GameManager.Instance.GameOver();
+            outOfFrameTimer.text = "OUT";
+            return;
+        }
+
         ShowHeroDirection();
 
-        int current = (int)currentOutOfFrameTime;
+        int current = ((int)outOfRangeTimerSystem.GetTimerCounter) + 1;
         string timerText = current.ToString();
         outOfFrameTimer.text = timerText;
 
-        if (currentOutOfFrameTime < 0)
+        /*if (outOfRangeTimer.TimerOver)
         {
             GameManager.Instance.GameOver();
-        }
+        }*/
     }
 
     void InFrame()
@@ -81,7 +107,7 @@ public class OutOfFrame_UI : MonoBehaviour
         outOfFrameWarning.gameObject.SetActive(false);
         outOfFrameTimer.gameObject.SetActive(false);
         isHeroOutOfFrame = false;
-        currentOutOfFrameTime = UIManager.Instance.maxOutOfFrameTime + 1;
+        //currentOutOfFrameTime = UIManager.Instance.maxOutOfFrameTime + 1;
     }
 
     void ShowHeroDirection()
@@ -110,4 +136,70 @@ public class OutOfFrame_UI : MonoBehaviour
 
         return temp;
     }
+
+    #region Feedbacks
+    [Header("Lose Sight Feedbacks")]
+    [SerializeField] AudioManager.Sound warningSound = AudioManager.Sound.C_HeroSreenExit_loop;
+    [SerializeField] int loseSightSoundCountPerSerie = 3;
+    [SerializeField] float minTimeBetweenWarningSounds = 0.15f;
+    [SerializeField] float maxTimeBetweenWarningSounds = 0.05f;
+    [SerializeField] AnimationCurve betweenWarningSoundsCurve = AnimationCurve.Linear(0, 0, 1, 1);
+
+    TimerSystem warningSerieTimer = new TimerSystem();
+
+    [SerializeField] float minTimeBetweenWarningSeries = 0.3f;
+    [SerializeField] float maxTimeBetweenWarningSeries = 0.15f;
+    [SerializeField] AnimationCurve betweenWarningSeriesCurve = AnimationCurve.Linear(0, 0, 1, 1);
+
+    TimerSystem betweenWarningSerieTimer = new TimerSystem();
+
+    public void SetUpWarning()
+    {
+        warningSerieTimer = new TimerSystem(minTimeBetweenWarningSounds, EndWarningSerie, loseSightSoundCountPerSerie, PlayWarningSound);
+        betweenWarningSerieTimer = new TimerSystem(minTimeBetweenWarningSeries, StartWarningSerie);
+    }
+
+    public void StartWarningFeedback()
+    {
+        StartWarningSerie();
+    }
+
+    public void UpdateWarningFeedback()
+    {
+        if (!warningSerieTimer.TimerOver)
+        {
+            warningSerieTimer.UpdateTimer();
+        }
+        else
+        {
+            if (!betweenWarningSerieTimer.TimerOver)
+            {
+                betweenWarningSerieTimer.UpdateTimer();
+            }
+        }
+    }
+
+    public void StartWarningSerie()
+    {
+        float coeff = betweenWarningSoundsCurve.Evaluate(outOfRangeTimerSystem.GetTimerCoefficient);
+        warningSerieTimer.ChangeTimerValue(Mathf.Lerp(minTimeBetweenWarningSounds, maxTimeBetweenWarningSounds, coeff));
+        warningSerieTimer.StartTimer();
+
+        //print("Between Sounds : " + Mathf.Lerp(minTimeBetweenWarningSounds, maxTimeBetweenWarningSounds, coeff));
+    }
+
+    public void EndWarningSerie()
+    {
+        float coeff = betweenWarningSeriesCurve.Evaluate(outOfRangeTimerSystem.GetTimerCoefficient);
+        betweenWarningSerieTimer.ChangeTimerValue(Mathf.Lerp(minTimeBetweenWarningSeries, maxTimeBetweenWarningSeries, coeff));
+        betweenWarningSerieTimer.StartTimer();
+
+        //print("Between Series : " + Mathf.Lerp(minTimeBetweenWarningSeries, maxTimeBetweenWarningSeries, coeff));
+    }
+
+    public void PlayWarningSound()
+    {
+        AudioManager.PlaySound(warningSound);
+    }
+    #endregion
 }
