@@ -647,17 +647,20 @@ public class ThirdPersonController : MonoBehaviour
     public void SetUpRenderer()
     {
         rendererWithMaterials = new RendererWithBaseMaterial[characterRenderers.Length];
-        foreach (Renderer render in characterRenderers)
+        for (int i =0; i < characterRenderers.Length; i++)
         {
+            Renderer render = characterRenderers[i];
             RendererWithBaseMaterial parameters = new RendererWithBaseMaterial();
             parameters.renderer = render;
             parameters.normalMtl = render.material;
+            rendererWithMaterials[i] = parameters;
         }
     }
 
+    float minSpeedToAnimateMovement = 5f;
     public void UpdateAnimatorValues()
     {
-        characterAnimator.SetBool("IsMoving", Mathf.Abs(currentHorizontalSpeed) > 0.2f);
+        characterAnimator.SetBool("IsMoving", Mathf.Abs(currentHorizontalSpeed) > minSpeedToAnimateMovement);
         characterAnimator.SetFloat("VerticalSpeed",  isOnGround ? 0 : currentVerticalSpeed);
         characterAnimator.transform.localRotation = Quaternion.Euler(0, currentShootDirection == ShootDirection.Left ? -90 : 90, 0);
     }

@@ -95,6 +95,29 @@ public class FirstPersonController : MonoBehaviour
         }
     }
 
+    public float GetLowDistance
+    {
+        get
+        {
+            if (bottomBound)
+            {
+                float distance = transform.position.y - thirdPersonController.transform.position.y;
+                print(distance);
+                if (transform.position.y < bottomBound.position.y)
+                {
+                    return distance;
+                }
+            }
+            if (thirdPersonController && maxDistanceFromThirdPersonCharacter != 0)
+            {
+                float distance = transform.position.y - thirdPersonController.transform.position.y;
+                if (Mathf.Abs(distance) > maxDistanceFromThirdPersonCharacter)
+                    return distance;
+            }
+            return standByDistanceFromBottom;
+        }
+    }
+
     public void SetUpBounds(Transform bottom, Transform top)
     {
         bottomBound = bottom;
@@ -117,6 +140,9 @@ public class FirstPersonController : MonoBehaviour
         }
     }
 
+    float standByDistanceFromBottom = 1f;
+    //float standBySpeed = 10f;
+    float standByAcceleration = 10f;
     public void UpdateJetpackValues(bool isJetpackInputDown)
     {
         if (/*!gameOver*/true)
@@ -133,8 +159,18 @@ public class FirstPersonController : MonoBehaviour
                     switch (boundsState)
                     {
                         case JetpackBoundsState.TooLow:
-                            currentVerticalAcceleration = outOfBoundsUpAcceleration;
-                            currentMaxUpSpeed = isJetpackInputDown ? currentMaxUpSpeed : outOfBoundsUpMaxSpeed;
+                            float distanceFromLow = GetLowDistance;
+                            //print(distanceFromLow);
+                            if (Mathf.Abs(distanceFromLow) > standByDistanceFromBottom)
+                            {
+                                currentVerticalAcceleration = outOfBoundsUpAcceleration;
+                                currentMaxUpSpeed = isJetpackInputDown ? currentMaxUpSpeed : outOfBoundsUpMaxSpeed;
+                            }
+                            else
+                            {
+                                print("HERE");
+                                currentVerticalAcceleration = standByAcceleration * -Mathf.Sign(distanceFromLow);
+                            }
                             break;
 
                         case JetpackBoundsState.Neutral:
