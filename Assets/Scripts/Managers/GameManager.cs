@@ -136,6 +136,7 @@ public class GameManager : MonoBehaviour
     }
 
     bool won = false;
+    float waitTime = 2f;
     public void Victory()
     {
         OnEndOfGameEvent?.Invoke();
@@ -144,6 +145,13 @@ public class GameManager : MonoBehaviour
         thirdPersonController.Win();
         firstPersonController.Win();
         won = true;
+        StartCoroutine(WinCoroutine());
+    }
+
+    IEnumerator WinCoroutine()
+    {
+        yield return new WaitForSeconds(waitTime);
+        UIManager.Instance.ShowEnd();
     }
 
     #region Checkpoints
@@ -164,6 +172,9 @@ public class GameManager : MonoBehaviour
             return;
 
         passedCheckpoint.Add(cp);
+
+        if (passedCheckpoint.Count > 1)
+            UIManager.Instance.PlayCheckpointPassFeedback();
     }
 
     public void RespawnOnLastCheckpoint()

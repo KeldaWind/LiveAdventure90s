@@ -99,4 +99,30 @@ public class UIManager : MonoBehaviour
         pointerAnim.Play("None");
         OnInteraction = false;
     }
+
+
+    [Header("Final Integrations")]
+    [SerializeField] GameObject checkpointPassObject = default;
+    [SerializeField] float checkpointAnimDuration = 1f;
+    [SerializeField] GameObject endPanelCanvas = default;
+
+    public void PlayCheckpointPassFeedback()
+    {
+        StartCoroutine(CheckpointCoroutine());
+    }
+
+    public IEnumerator CheckpointCoroutine()
+    {
+        if (checkpointPassObject)
+            checkpointPassObject.SetActive(true);
+        yield return new WaitForSeconds(checkpointAnimDuration);
+        if (checkpointPassObject)
+            checkpointPassObject.SetActive(false);
+    }
+
+    public void ShowEnd()
+    {
+        if (endPanelCanvas)
+            endPanelCanvas.SetActive(true);
+    }
 }
