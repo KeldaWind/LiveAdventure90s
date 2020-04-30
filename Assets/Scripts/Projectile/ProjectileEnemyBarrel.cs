@@ -53,6 +53,12 @@ public class ProjectileEnemyBarrel : ProjectileBase
 
         currentHorizontalSpeed = direction.x * shootForce;
         currentVerticalSpeed = direction.y * shootForce;
+
+        if (barrelParticles)
+        {
+            barrelRotationModule = barrelParticles.rotationOverLifetime;
+            barrelRotationModule.z = Mathf.Abs(barrelRotationModule.z.constant) * Mathf.Sign(currentHorizontalSpeed);
+        }
     }
 
     public override void HandleCollision(Collider collider, Collision collision)
@@ -210,7 +216,8 @@ public class ProjectileEnemyBarrel : ProjectileBase
     [SerializeField] string damagedFxTag = "PlaceHolder";
     [SerializeField] AudioManager.Sound damagedSound = AudioManager.Sound.H_ImpactShootEnemieProjectile;
     [SerializeField] AudioManager.Sound landingSound = AudioManager.Sound.E_EnnemyProjectileLanding;
-    [SerializeField] string destroyFxTag = "PlaceHolder";
+    [SerializeField] ParticleSystem barrelParticles = default;
+    ParticleSystem.RotationOverLifetimeModule barrelRotationModule = default;
 
     public void PlayDamagedFeedback()
     {

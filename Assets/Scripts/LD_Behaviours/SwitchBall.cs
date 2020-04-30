@@ -151,7 +151,7 @@ public class SwitchBall : MonoBehaviour
 
         for (int i = 0; i < trailPositions.Length; i++)
         {
-            trailPositions[i].transform.position = new Vector3(this.transform.position.x, trailPositions[0].transform.position.y, trailPositions[0].transform.position.z);
+            trailPositions[i].transform.position = new Vector3(this.transform.position.x, trailPositions[i].transform.position.y, trailPositions[i].transform.position.z);
         }
     }
 

@@ -120,9 +120,9 @@ MonoBehaviour:
   shootAngle: 45
   rightShootPosition: {fileID: 6762457594133044538}
   leftShootPosition: {fileID: 6762457592992562201}
-  shootFxTag: PlaceHolderShoot
+  shootFxTag: HeroShoot
   shootSound: 7
-  damagedFxTag: PlaceHolder
+  damagedFxTag: HeroHurt
   damagedSound: 16
   deathFxTag: EnemyDeath
   deathSound: 6
