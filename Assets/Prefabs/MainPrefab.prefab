@@ -2634,6 +2634,12 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 21300000, guid: 91ea77602100f904389be98c720dbc9e,
         type: 3}
+    - target: {fileID: 1566080386528841694, guid: 238c6d137086d00408c538d986a978de,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 233d85aee8c45a34580878a6ece46ff5,
+        type: 3}
     - target: {fileID: 2094206415774904510, guid: 238c6d137086d00408c538d986a978de,
         type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -2800,6 +2806,17 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8141126479921533164, guid: 238c6d137086d00408c538d986a978de,
+        type: 3}
+      propertyPath: enableSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 644985f2ae23729448cf0bff8fc45826,
+        type: 3}
+    - target: {fileID: 8141126479921533164, guid: 238c6d137086d00408c538d986a978de,
+        type: 3}
+      propertyPath: lifeIconSpace
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 238c6d137086d00408c538d986a978de, type: 3}
