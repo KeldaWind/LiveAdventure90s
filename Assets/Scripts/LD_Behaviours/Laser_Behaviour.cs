@@ -17,6 +17,7 @@ public class Laser_Behaviour : MonoBehaviour
     private bool laserIsActive = true;
 
     private Vector3 impactPos;
+    public LayerMask checkMask = default;
 
     public void DeactivateForDuration(float duration)
     {
@@ -88,7 +89,7 @@ public class Laser_Behaviour : MonoBehaviour
         Vector3 direction = (targetPos.transform.localPosition - startPos.transform.localPosition).normalized;
         RaycastHit hit;
 
-        Physics.Raycast(startPos.transform.localPosition, direction, out hit, Mathf.Infinity);
+        Physics.Raycast(startPos.transform.localPosition, direction, out hit, Mathf.Infinity, checkMask);
         Debug.DrawRay(startPos.transform.localPosition, direction, Color.blue, 0.1f);
 
         if (hit.collider != null)
