@@ -2131,7 +2131,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 60, y: -250}
+  m_AnchoredPosition: {x: 30, y: -115}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &8141126479921533164
@@ -2150,7 +2150,7 @@ MonoBehaviour:
     type: 3}
   enableSprite: {fileID: 21300000, guid: e2c8254ef3727cf46861a25c0c9bb85b, type: 3}
   unenableSprite: {fileID: 21300000, guid: ceb8ac71bed3d8345a0279ea4a3dcfa5, type: 3}
-  lifeIconSpace: 50
+  lifeIconSpace: 5
   showDuration: 5
 --- !u!1 &8141126480146692713
 GameObject:

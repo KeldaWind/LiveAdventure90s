@@ -2740,11 +2740,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 21300000, guid: 65f39d8c7294b43429f7dc5cf9594186,
         type: 3}
-    - target: {fileID: 8141126479921533164, guid: 238c6d137086d00408c538d986a978de,
-        type: 3}
-      propertyPath: lifeIconSpace
-      value: 5
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 238c6d137086d00408c538d986a978de, type: 3}
 --- !u!224 &6986223272201066990 stripped
