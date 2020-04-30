@@ -67,7 +67,7 @@ public class GameManager : MonoBehaviour
         OnEndOfGameEvent?.Invoke();
         UIManager.Instance.PlayLoseAnim();
         AudioManager.PlayLoseMusic();
-        StartCoroutine(TimeBeforeRestart(/*UIManager.Instance.GetLoseAnimationDuration()*/5));
+        StartCoroutine(TimeBeforeRestart(UIManager.Instance.GetLoseAnimationDuration()));
     }
 
     IEnumerator TimeBeforeRestart(float duration)
