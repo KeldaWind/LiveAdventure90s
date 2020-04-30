@@ -45,6 +45,11 @@ public class Following_Plateform : MonoBehaviour
     public Vector3 GetCurrentVerticalMovementSpeed => Vector3.up * currentBoostSpeed;
     ThirdPersonController onPlatformThirdPersonCharacter = default;
 
+    public void SetCharacterOn(ThirdPersonController chara)
+    {
+        onPlatformThirdPersonCharacter = chara;
+    }
+
     bool avoidSound = false;
     public IEnumerator AvoidSoundOnStartCoroutine()
     {
@@ -275,6 +280,11 @@ public class Following_Plateform : MonoBehaviour
         {
             currentVerticalSpeed = 0;
             accelerationModifier = 0;
+
+            if (onPlatformThirdPersonCharacter)
+            {
+                onPlatformThirdPersonCharacter.ExpulsePlayerFromPlatform(currentBoostSpeed);
+            }
         }
     }
 

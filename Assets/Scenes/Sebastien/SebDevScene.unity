@@ -2468,6 +2468,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: SwitchBall
       objectReference: {fileID: 0}
+    - target: {fileID: 333045281083292467, guid: 564e03c233b64e74189e799a86ec8f32,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 333045281083292471, guid: 564e03c233b64e74189e799a86ec8f32,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -13894,7 +13899,7 @@ PrefabInstance:
     - target: {fileID: 8194074723323393155, guid: a5d01f94d8a24be4990545539f6a5a45,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8194074723323393159, guid: a5d01f94d8a24be4990545539f6a5a45,
         type: 3}
@@ -29037,12 +29042,12 @@ PrefabInstance:
     - target: {fileID: 1157172677245292075, guid: 987b1e2d3570dca4ab0d20397d5b30cd,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 16.3
       objectReference: {fileID: 0}
     - target: {fileID: 1157172677245292075, guid: 987b1e2d3570dca4ab0d20397d5b30cd,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -10.400001
+      value: 5.2000003
       objectReference: {fileID: 0}
     - target: {fileID: 1157172678052549752, guid: 987b1e2d3570dca4ab0d20397d5b30cd,
         type: 3}
@@ -29207,7 +29212,7 @@ PrefabInstance:
     - target: {fileID: 6986223273157795615, guid: 987b1e2d3570dca4ab0d20397d5b30cd,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -44.998596
+      value: -44.998535
       objectReference: {fileID: 0}
     - target: {fileID: 8621790731889777277, guid: 987b1e2d3570dca4ab0d20397d5b30cd,
         type: 3}
