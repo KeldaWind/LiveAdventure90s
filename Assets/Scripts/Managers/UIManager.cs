@@ -41,6 +41,18 @@ public class UIManager : MonoBehaviour
     public Image pointerImage;
     private bool OnInteraction;
 
+    [Header("Pause")]
+    [SerializeField] GameObject pauseCanvas = default;
+    public void ShowPausePanel()
+    {
+        pauseCanvas.SetActive(true);
+    }
+    
+    public void HidePausePanel()
+    {
+        pauseCanvas.SetActive(false);
+    }
+
     private void Awake()
     {
         Instance = this;
