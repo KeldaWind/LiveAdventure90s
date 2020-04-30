@@ -142,6 +142,7 @@ public class GameManager : MonoBehaviour
         AudioManager.PlayWinMusic();
         UIManager.Instance.PlayWinAnim();
         thirdPersonController.Win();
+        firstPersonController.Win();
         won = true;
     }
 
