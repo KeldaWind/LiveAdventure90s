@@ -65,3 +65,9 @@ MonoBehaviour:
   - fxTag: HeroStep
     fxObject: {fileID: 6070656760861631504, guid: c0ac69bd8d81dc940a30726188af4df1,
       type: 3}
+  - fxTag: EnemyProjectileDestroy
+    fxObject: {fileID: 7096272826924063187, guid: 6bdf6e938aed7c14797550c071888d00,
+      type: 3}
+  - fxTag: HeroHurt
+    fxObject: {fileID: 9167627643478298955, guid: 4c8f334a24d0a6641a66d67b947dfc56,
+      type: 3}
