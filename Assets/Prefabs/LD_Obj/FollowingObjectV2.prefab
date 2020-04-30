@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 960382235289561832}
   - component: {fileID: 3168364829635274078}
   - component: {fileID: 1131828358869918737}
-  m_Layer: 0
+  m_Layer: 18
   m_Name: Renderer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -91,7 +91,7 @@ GameObject:
   - component: {fileID: 8194074723323393156}
   - component: {fileID: 8194074723323393160}
   - component: {fileID: 1584484560}
-  m_Layer: 0
+  m_Layer: 18
   m_Name: FollowingObjectV2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -180,6 +180,7 @@ MonoBehaviour:
   canObjectMove: 0
   isBoostingJump: 0
   plateformVelocity: 0
+  expulsionBoost: 2
   onStartGoingUpSound: 21
   onStartGoingDownSound: 23
 --- !u!54 &1584484560

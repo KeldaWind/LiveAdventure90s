@@ -25,7 +25,6 @@ public class EnemyBase : MonoBehaviour
         currentShootDirection = GetShootDirection;
         if (currentShootDirection != previous)
         {
-            print("Change");
             rendererParent.rotation = Quaternion.Euler(0, currentShootDirection  == ShootDirection.Right ? rightRotation : leftRotation, 0);
         }
         
