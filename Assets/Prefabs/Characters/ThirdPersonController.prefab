@@ -411,7 +411,7 @@ MonoBehaviour:
   normalMaterial: {fileID: 2100000, guid: 5b7565f2227e3ca48b9ed74378dd6e52, type: 2}
   blinkingMaterial: {fileID: 2100000, guid: 3d1e7fe1de30412418e4a1faab74d4e2, type: 2}
   characterAnimator: {fileID: 590237623859873868}
-  damagedFxTag: PlaceHolder
+  damagedFxTag: HeroHurt
   damagedSound: 10
   shootFxTag: HeroShoot
   shootSound: 11
