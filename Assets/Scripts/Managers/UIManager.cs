@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
 using TMPro;
-
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
@@ -24,7 +24,10 @@ public class UIManager : MonoBehaviour
     public Animator winAnim;
     public Animator loseAnim;
 
-
+    [Header("Pointer Animations")]
+    public Animator pointerAnim;
+    public Image pointerImage;
+    private bool OnInteraction;
 
     private void Awake()
     {
@@ -48,5 +51,25 @@ public class UIManager : MonoBehaviour
     public void PlayLoseAnim()
     {
         loseAnim.Play("Lose");
+    }
+
+    public void OnPointerInteraction()
+    {
+        if (OnInteraction)
+            return;
+
+        pointerImage.enabled = false;
+        pointerAnim.Play("MovingObjectInRange");
+        OnInteraction = true;
+    }
+
+    public void OnNormalInteraction()
+    {
+        if (!OnInteraction)
+            return;
+
+        pointerImage.enabled = true;
+        pointerAnim.Play("None");
+        OnInteraction = false;
     }
 }

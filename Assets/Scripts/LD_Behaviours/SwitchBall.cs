@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SwitchBall : MonoBehaviour
@@ -28,6 +27,11 @@ public class SwitchBall : MonoBehaviour
     private float highestTrailPos;
 
     bool avoidSound = false;
+
+    [Header("FX")]
+    public ParticleSystem attractionFX;
+
+
     public IEnumerator AvoidSoundOnStartCoroutine()
     {
         avoidSound = true;
@@ -66,6 +70,15 @@ public class SwitchBall : MonoBehaviour
             isAccelerating = false;
             isBallMoving = false;
         }
+
+        if(GameManager.Instance.GetCameraWorldPosition.y > lowestTrailPos && GameManager.Instance.GetCameraWorldPosition.y < highestTrailPos)
+        {
+            UIManager.Instance.OnPointerInteraction();
+        }
+        else
+        {
+            UIManager.Instance.OnNormalInteraction();
+        }
     }
 
     void MoveKeyBallOnTrail(float direction)
@@ -93,7 +106,16 @@ public class SwitchBall : MonoBehaviour
 
         objectPos.position = new Vector3(objectPos.position.x, newYPos, objectPos.position.z);
 
-        isBallMoving = true;
+        if (!isBallMoving)
+        {
+            isBallMoving = true;
+            attractionFX.Play();
+        }
+        else if (isBallMoving && objectPos.position.y <= lowestTrailPos || objectPos.position.y >= highestTrailPos)
+        {
+            isBallMoving = false;
+            attractionFX.Stop(false, ParticleSystemStopBehavior.StopEmittingAndClear);
+        }
     }
 
     float GetLowestTrailPos(ObjectHolder_Event[] trail)
@@ -126,6 +148,11 @@ public class SwitchBall : MonoBehaviour
     {
         lowestTrailPos = GetLowestTrailPos(trailPositions);
         highestTrailPos = GetHighestTrailPos(trailPositions);
+
+        for (int i = 0; i < trailPositions.Length; i++)
+        {
+            trailPositions[i].transform.position = new Vector3(this.transform.position.x, trailPositions[i].transform.position.y, trailPositions[i].transform.position.z);
+        }
     }
 
     [Header("Feedbacks")]

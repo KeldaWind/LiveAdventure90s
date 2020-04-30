@@ -8011,6 +8011,12 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 137258378}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &141370953 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1219250552556206484, guid: 8df3eaa9bee58d34a9372646ff56853b,
+    type: 3}
+  m_PrefabInstance: {fileID: 1219250552419033053}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &146890523
 GameObject:
   m_ObjectHideFlags: 0
@@ -27536,7 +27542,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-278626
+  m_Name: pb_Mesh-473636
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -57678,8 +57684,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1150127197}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 50.5, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 50.058556, y: -3.5968046, z: 99.13699}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2132190015}
@@ -57709,8 +57715,8 @@ Transform:
   - {fileID: 1339046275}
   - {fileID: 18766184}
   - {fileID: 215438629}
-  m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_Father: {fileID: 141370953}
+  m_RootOrder: 93
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1152631014
 GameObject:
@@ -107781,7 +107787,7 @@ PrefabInstance:
     - target: {fileID: 1219250552556206484, guid: 8df3eaa9bee58d34a9372646ff56853b,
         type: 3}
       propertyPath: m_RootOrder
-      value: 8
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 1219250552556206484, guid: 8df3eaa9bee58d34a9372646ff56853b,
         type: 3}
@@ -107802,6 +107808,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Atelier1-Tutorial
+      objectReference: {fileID: 0}
+    - target: {fileID: 4006346723562440997, guid: 8df3eaa9bee58d34a9372646ff56853b,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 94
       objectReference: {fileID: 0}
     - target: {fileID: 5944891825710396874, guid: 8df3eaa9bee58d34a9372646ff56853b,
         type: 3}
