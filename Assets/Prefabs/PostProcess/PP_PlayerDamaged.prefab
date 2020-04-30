@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2311264661352519692}
   - component: {fileID: 2311264661352519693}
   - component: {fileID: 2311264661352519690}
+  - component: {fileID: 1387924253544300045}
   m_Layer: 14
   m_Name: PP_PlayerDamaged
   m_TagString: Untagged
@@ -109,7 +110,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   minChromaticIntensity: 0
-  maxChromaticIntensity: 0.75
+  maxChromaticIntensity: 0.85
   colorGrading: {fileID: 0}
   postExposureAnimation:
     serializedVersion: 2
@@ -148,14 +149,14 @@ MonoBehaviour:
       inWeight: 0.33333334
       outWeight: 0.04156276
     - serializedVersion: 3
-      time: 0.15
+      time: 0.1
       value: 1
       inSlope: -0.5740847
-      outSlope: -0.5740847
-      tangentMode: 0
+      outSlope: -2.4349885
+      tangentMode: 1
       weightedMode: 0
       inWeight: 0.33333334
-      outWeight: 0.064104445
+      outWeight: 0.030202279
     - serializedVersion: 3
       time: 1
       value: 0
@@ -169,7 +170,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   startColorFilter: {r: 0, g: 0, b: 0, a: 0}
-  endColorFilter: {r: 0.8867924, g: 0.5479708, b: 0.5479708, a: 1}
+  endColorFilter: {r: 0.8490566, g: 0.43654326, b: 0.43654326, a: 1}
   vignette: {fileID: 0}
   vignetteAnimation:
     serializedVersion: 2
@@ -179,3 +180,17 @@ MonoBehaviour:
     m_RotationOrder: 4
   minVignetteIntensity: 0
   maxVignetteIntensity: 0
+--- !u!114 &1387924253544300045
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2311264661352519691}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ee4114b443ca664fbe41fd3f35d3c82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  postProcessAnimator: {fileID: 2311264661352519690}
+  thirdPersonController: {fileID: 0}
