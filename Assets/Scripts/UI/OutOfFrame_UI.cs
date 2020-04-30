@@ -5,6 +5,18 @@ using TMPro;
 
 public class OutOfFrame_UI : MonoBehaviour
 {
+    public void Show()
+    {
+        outOfFrameWarning.enabled = true;
+        outOfFrameTimer.enabled = true;
+    }
+
+    public void Hide()
+    {
+        outOfFrameWarning.enabled = false;
+        outOfFrameTimer.enabled = false;
+    }
+
     [Header("Get Components")]
     public TextMeshProUGUI outOfFrameWarning;
     public TextMeshProUGUI outOfFrameTimer;
