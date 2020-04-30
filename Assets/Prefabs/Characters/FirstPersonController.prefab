@@ -247,7 +247,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   pitchChangingCoeff: 0.1
   jetpackOnSoundSource: {fileID: 8020860427220986285}
-  maxJetpackOnVolume: 0.5
+  maxJetpackOnVolume: 0.3
   jetpackOffSoundSource: {fileID: 6467287028850672953}
   maxJetpackOffVolume: 0.1
   jetpackSoundTransitionDuration: 0.5

@@ -355,7 +355,7 @@ MonoBehaviour:
         m_PostInfinity: 2
         m_RotationOrder: 4
       m_ConstantMin: 0
-      m_ConstantMax: 0
+      m_ConstantMax: 0.8
     pitch:
       m_Mode: 0
       m_CurveMultiplier: 0
@@ -571,7 +571,7 @@ MonoBehaviour:
         m_PostInfinity: 2
         m_RotationOrder: 4
       m_ConstantMin: 0
-      m_ConstantMax: 0
+      m_ConstantMax: 0.6
     pitch:
       m_Mode: 0
       m_CurveMultiplier: 0
@@ -606,29 +606,65 @@ MonoBehaviour:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
-      m_ConstantMin: 0
-      m_ConstantMax: 0
+      m_ConstantMin: 1
+      m_ConstantMax: 1
     pitch:
-      m_Mode: 0
-      m_CurveMultiplier: 0
+      m_Mode: 3
+      m_CurveMultiplier: 1
       m_CurveMin:
         serializedVersion: 2
-        m_Curve: []
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 1
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
       m_CurveMax:
         serializedVersion: 2
-        m_Curve: []
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 1
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
-      m_ConstantMin: 0
-      m_ConstantMax: 0
+      m_ConstantMin: 0.9
+      m_ConstantMax: 1.2
   - sound: 8
     AudioClip: {fileID: 8300000, guid: 919149735f00e94409f845f94d5ea95f, type: 3}
     volumeMultiplier:
-      m_Mode: 0
+      m_Mode: 3
       m_CurveMultiplier: 0
       m_CurveMin:
         serializedVersion: 2
@@ -642,10 +678,10 @@ MonoBehaviour:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
-      m_ConstantMin: 0
-      m_ConstantMax: 0
+      m_ConstantMin: 0.7
+      m_ConstantMax: 0.9
     pitch:
-      m_Mode: 0
+      m_Mode: 3
       m_CurveMultiplier: 0
       m_CurveMin:
         serializedVersion: 2
@@ -659,8 +695,8 @@ MonoBehaviour:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
-      m_ConstantMin: 0
-      m_ConstantMax: 0
+      m_ConstantMin: 0.9
+      m_ConstantMax: 1.2
   - sound: 9
     AudioClip: {fileID: 8300000, guid: 5954014d9babefd4c9336a847a0b90bd, type: 3}
     volumeMultiplier:
@@ -715,9 +751,9 @@ MonoBehaviour:
         m_PostInfinity: 2
         m_RotationOrder: 4
       m_ConstantMin: 0
-      m_ConstantMax: 0
+      m_ConstantMax: 0.8
     pitch:
-      m_Mode: 0
+      m_Mode: 3
       m_CurveMultiplier: 0
       m_CurveMin:
         serializedVersion: 2
@@ -731,8 +767,8 @@ MonoBehaviour:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
-      m_ConstantMin: 0
-      m_ConstantMax: 0
+      m_ConstantMin: 0.9
+      m_ConstantMax: 1.2
   - sound: 11
     AudioClip: {fileID: 8300000, guid: 7a6c67102835e5e4fb87fed054128463, type: 3}
     volumeMultiplier:
@@ -823,9 +859,9 @@ MonoBehaviour:
         m_PostInfinity: 2
         m_RotationOrder: 4
       m_ConstantMin: 0
-      m_ConstantMax: 0
+      m_ConstantMax: 0.3
     pitch:
-      m_Mode: 0
+      m_Mode: 3
       m_CurveMultiplier: 0
       m_CurveMin:
         serializedVersion: 2
@@ -839,8 +875,8 @@ MonoBehaviour:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
-      m_ConstantMin: 0
-      m_ConstantMax: 0
+      m_ConstantMin: 0.9
+      m_ConstantMax: 1.2
   - sound: 13
     AudioClip: {fileID: 8300000, guid: 7552a69b53964664eac8ba9e93f90f69, type: 3}
     volumeMultiplier:
@@ -931,9 +967,9 @@ MonoBehaviour:
         m_PostInfinity: 2
         m_RotationOrder: 4
       m_ConstantMin: 0
-      m_ConstantMax: 0
+      m_ConstantMax: 0.5
     pitch:
-      m_Mode: 0
+      m_Mode: 3
       m_CurveMultiplier: 0
       m_CurveMin:
         serializedVersion: 2
@@ -947,8 +983,8 @@ MonoBehaviour:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
-      m_ConstantMin: 0
-      m_ConstantMax: 0
+      m_ConstantMin: 0.9
+      m_ConstantMax: 1.2
   - sound: 16
     AudioClip: {fileID: 8300000, guid: 1028a1d13a289f647ae1761b14039f0e, type: 3}
     volumeMultiplier:
@@ -967,9 +1003,9 @@ MonoBehaviour:
         m_PostInfinity: 2
         m_RotationOrder: 4
       m_ConstantMin: 0
-      m_ConstantMax: 0
+      m_ConstantMax: 0.5
     pitch:
-      m_Mode: 0
+      m_Mode: 3
       m_CurveMultiplier: 0
       m_CurveMin:
         serializedVersion: 2
@@ -983,8 +1019,8 @@ MonoBehaviour:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
-      m_ConstantMin: 0
-      m_ConstantMax: 0
+      m_ConstantMin: 0.9
+      m_ConstantMax: 1.2
   - sound: 17
     AudioClip: {fileID: 8300000, guid: 1028a1d13a289f647ae1761b14039f0e, type: 3}
     volumeMultiplier:
@@ -1005,7 +1041,7 @@ MonoBehaviour:
       m_ConstantMin: 0
       m_ConstantMax: 0
     pitch:
-      m_Mode: 0
+      m_Mode: 3
       m_CurveMultiplier: 0
       m_CurveMin:
         serializedVersion: 2
@@ -1019,8 +1055,8 @@ MonoBehaviour:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
-      m_ConstantMin: 0
-      m_ConstantMax: 0
+      m_ConstantMin: 0.9
+      m_ConstantMax: 1.2
   - sound: 19
     AudioClip: {fileID: 8300000, guid: f5b2198be3b6a9a4691d1bf328c9d5c5, type: 3}
     volumeMultiplier:
@@ -1111,9 +1147,9 @@ MonoBehaviour:
         m_PostInfinity: 2
         m_RotationOrder: 4
       m_ConstantMin: 0
-      m_ConstantMax: 0
+      m_ConstantMax: 0.3
     pitch:
-      m_Mode: 0
+      m_Mode: 3
       m_CurveMultiplier: 0
       m_CurveMin:
         serializedVersion: 2
@@ -1127,8 +1163,8 @@ MonoBehaviour:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
-      m_ConstantMin: 0
-      m_ConstantMax: 0
+      m_ConstantMin: 0.9
+      m_ConstantMax: 1.2
   - sound: 21
     AudioClip: {fileID: 8300000, guid: 4c83f770b8882b34e8bfc95feb52a6af, type: 3}
     volumeMultiplier:
@@ -1147,10 +1183,10 @@ MonoBehaviour:
         m_PostInfinity: 2
         m_RotationOrder: 4
       m_ConstantMin: 0
-      m_ConstantMax: 0
+      m_ConstantMax: 0.3
     pitch:
       m_Mode: 0
-      m_CurveMultiplier: 0
+      m_CurveMultiplier: 1
       m_CurveMin:
         serializedVersion: 2
         m_Curve: []
@@ -1159,12 +1195,30 @@ MonoBehaviour:
         m_RotationOrder: 4
       m_CurveMax:
         serializedVersion: 2
-        m_Curve: []
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 1
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
-      m_ConstantMin: 0
-      m_ConstantMax: 0
+      m_ConstantMin: 0.9
+      m_ConstantMax: 1
   - sound: 22
     AudioClip: {fileID: 8300000, guid: 4c83f770b8882b34e8bfc95feb52a6af, type: 3}
     volumeMultiplier:
@@ -1238,7 +1292,7 @@ MonoBehaviour:
       m_ConstantMin: 1.2
       m_ConstantMax: 1.5
   - sound: 23
-    AudioClip: {fileID: 8300000, guid: 4c83f770b8882b34e8bfc95feb52a6af, type: 3}
+    AudioClip: {fileID: 8300000, guid: 6630e62788148244ab50f859fe2d9b65, type: 3}
     volumeMultiplier:
       m_Mode: 0
       m_CurveMultiplier: 0
@@ -1255,9 +1309,9 @@ MonoBehaviour:
         m_PostInfinity: 2
         m_RotationOrder: 4
       m_ConstantMin: 0
-      m_ConstantMax: 1
+      m_ConstantMax: 0.2
     pitch:
-      m_Mode: 3
+      m_Mode: 0
       m_CurveMultiplier: 0
       m_CurveMin:
         serializedVersion: 2
@@ -1271,8 +1325,8 @@ MonoBehaviour:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
-      m_ConstantMin: 0.8
-      m_ConstantMax: 0.9
+      m_ConstantMin: 0.9
+      m_ConstantMax: 1
   - sound: 25
     AudioClip: {fileID: 8300000, guid: 6d03c1abfa674e94c97a7834e8a4eff0, type: 3}
     volumeMultiplier:
@@ -1291,9 +1345,9 @@ MonoBehaviour:
         m_PostInfinity: 2
         m_RotationOrder: 4
       m_ConstantMin: 0
-      m_ConstantMax: 0
+      m_ConstantMax: 0.6
     pitch:
-      m_Mode: 0
+      m_Mode: 3
       m_CurveMultiplier: 0
       m_CurveMin:
         serializedVersion: 2
@@ -1307,8 +1361,8 @@ MonoBehaviour:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
-      m_ConstantMin: 0
-      m_ConstantMax: 0
+      m_ConstantMin: 0.9
+      m_ConstantMax: 1.2
   - sound: 26
     AudioClip: {fileID: 8300000, guid: 5fcb210ed6a84e149b68af41a9b349d9, type: 3}
     volumeMultiplier:
@@ -1327,9 +1381,9 @@ MonoBehaviour:
         m_PostInfinity: 2
         m_RotationOrder: 4
       m_ConstantMin: 0
-      m_ConstantMax: 0
+      m_ConstantMax: 0.6
     pitch:
-      m_Mode: 0
+      m_Mode: 3
       m_CurveMultiplier: 0
       m_CurveMin:
         serializedVersion: 2
@@ -1343,8 +1397,8 @@ MonoBehaviour:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
-      m_ConstantMin: 0
-      m_ConstantMax: 0
+      m_ConstantMin: 0.9
+      m_ConstantMax: 1.2
   - sound: 28
     AudioClip: {fileID: 8300000, guid: 8074892560030f248aaa8f90e9dd57e0, type: 3}
     volumeMultiplier:
@@ -1650,8 +1704,8 @@ MonoBehaviour:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
-      m_ConstantMin: 0.5
-      m_ConstantMax: 0.6
+      m_ConstantMin: 0.1
+      m_ConstantMax: 0.2
     pitch:
       m_Mode: 3
       m_CurveMultiplier: 0
@@ -1686,8 +1740,8 @@ MonoBehaviour:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
-      m_ConstantMin: 0.5
-      m_ConstantMax: 0.6
+      m_ConstantMin: 0.1
+      m_ConstantMax: 0.2
     pitch:
       m_Mode: 3
       m_CurveMultiplier: 0
