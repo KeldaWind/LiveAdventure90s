@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3321645951245293060}
   - component: {fileID: 7786522577645543816}
   - component: {fileID: 5679783729878832138}
+  - component: {fileID: 9167627643478298955}
   m_Layer: 0
   m_Name: VFXHeroHurt
   m_TagString: Untagged
@@ -4814,6 +4815,22 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 0
+--- !u!114 &9167627643478298955
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2712656310399603482}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7162abbcd7036f46932c9fab3408e6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  particlesToPlay:
+  - {fileID: 7786522577645543816}
+  - {fileID: 7504899324758158902}
+  - {fileID: 6002963876711236517}
 --- !u!1 &3475819604645976825
 GameObject:
   m_ObjectHideFlags: 0
