@@ -738,10 +738,11 @@ public class ThirdPersonController : MonoBehaviour
 
     public void PlayShootFeedback()
     {
-        Transform source = currentShootDirection == ShootDirection.Left ? leftShootPosition : rightShootPosition;
+        Vector3 pos = charaFlower.GetCurrentShootPosition;
+        Quaternion rot = Quaternion.Euler(0, currentShootDirection == ShootDirection.Left ? 180 : 0, 0);
 
         AudioManager.PlaySound(shootSound);
-        FxManager.Instance.PlayFx(shootFxTag, source.position, source.rotation, Vector3.one);
+        FxManager.Instance.PlayFx(shootFxTag, pos, rot, Vector3.one);
     }
 
     public void PlayOnLandedFeedback()
@@ -771,6 +772,17 @@ public class ThirdPersonController : MonoBehaviour
     public WalkingDirection CurrentWalkingDirection => IsWalking ? (currentHorizontalSpeed > 0f ? WalkingDirection.Right : WalkingDirection.Left) : WalkingDirection.Neutral;
     public bool IsWalking => IsOnGround && Mathf.Abs(currentHorizontalSpeed) > 0f;
     #endregion
+
+    public void Respawn(Transform respawnPos, ShootDirection direction)
+    {
+        dead = false;
+        characterAnimator.SetBool("IsDead", dead);
+
+        transform.position = new Vector3(respawnPos.position.x, respawnPos.position.y, transform.position.z);
+        currentShootDirection = direction;
+        charaFlower.SetCurrentGlobalTarget(currentShootDirection == ShootDirection.Left ? leftShootPosition : rightShootPosition, currentShootDirection);
+        lifeSystem.ResetLife();
+    }
 }
 
 public enum ShootDirection

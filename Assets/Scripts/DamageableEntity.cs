@@ -40,6 +40,12 @@ public class DamageableEntity : MonoBehaviour
         OnDamageableEntitySetUp?.Invoke(currentLife);
     }
 
+    public void ResetLife()
+    {
+        currentLife = maxLife;
+        OnLifeAmountChanged?.Invoke(0, currentLife);
+    }
+
     void LoseLife(int amount)
     {
         amount = Mathf.Abs(amount);
