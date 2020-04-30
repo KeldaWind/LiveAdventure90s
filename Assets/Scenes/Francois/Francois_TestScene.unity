@@ -1688,6 +1688,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -1345447540487064758, guid: 564e03c233b64e74189e799a86ec8f32,
         type: 3}
+      propertyPath: trailPositions.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -1345447540487064758, guid: 564e03c233b64e74189e799a86ec8f32,
+        type: 3}
       propertyPath: trailPositions.Array.data[0]
       value: 
       objectReference: {fileID: 221937075}
