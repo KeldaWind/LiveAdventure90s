@@ -67,13 +67,16 @@ public class GameManager : MonoBehaviour
         OnEndOfGameEvent?.Invoke();
         UIManager.Instance.PlayLoseAnim();
         AudioManager.PlayLoseMusic();
-        StartCoroutine(TimeBeforeRestart(/*UIManager.Instance.GetLoseAnimationDuration()*/5));
+        StartCoroutine(TimeBeforeRestart(UIManager.Instance.GetLoseAnimationDuration()));
     }
 
     IEnumerator TimeBeforeRestart(float duration)
     {
         yield return new WaitForSeconds(duration);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        if (GetCurrentCheckpoint)
+            RespawnOnLastCheckpoint();
+        else
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     public void Victory()
@@ -82,6 +85,35 @@ public class GameManager : MonoBehaviour
         AudioManager.PlayWinMusic();
         UIManager.Instance.PlayWinAnim();
     }
+
+    #region Checkpoints
+    List<Checkpoint> passedCheckpoint = new List<Checkpoint>();
+    public Checkpoint GetCurrentCheckpoint {
+        get
+        {
+            if (passedCheckpoint.Count > 0)
+                return passedCheckpoint[passedCheckpoint.Count - 1];
+            else
+                return null;
+        } 
+    }
+
+    public void PassCheckpoint(Checkpoint cp)
+    {
+        if (passedCheckpoint.Contains(cp))
+            return;
+
+        passedCheckpoint.Add(cp);
+    }
+
+    public void RespawnOnLastCheckpoint()
+    {
+        thirdPersonController.Respawn(GetCurrentCheckpoint.GetRespawnTransform, GetCurrentCheckpoint.GetRespawnDirection);
+        firstPersonController.Respawn(GetCurrentCheckpoint.GetRespawnTransform);
+    
+        AudioManager.PlayAmbianceMusic();
+    }
+    #endregion
 
     #region Important Values
     public Vector3 GetCameraWorldPosition => firstPersonController.GetCameraWorldPosition;

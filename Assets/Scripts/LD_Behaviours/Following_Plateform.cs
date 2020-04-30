@@ -44,6 +44,12 @@ public class Following_Plateform : MonoBehaviour
     float currentVerticalSpeed = 0f;
     public Vector3 GetCurrentVerticalMovementSpeed => Vector3.up * currentBoostSpeed;
     ThirdPersonController onPlatformThirdPersonCharacter = default;
+    [SerializeField] float expulsionBoost = 2f;
+
+    public void SetCharacterOn(ThirdPersonController chara)
+    {
+        onPlatformThirdPersonCharacter = chara;
+    }
 
     bool avoidSound = false;
     public IEnumerator AvoidSoundOnStartCoroutine()
@@ -89,7 +95,13 @@ public class Following_Plateform : MonoBehaviour
             if (diff > 0)
                 PlayGoingUpSound();
             else
+            {
+                if (onPlatformThirdPersonCharacter)
+                {
+                    onPlatformThirdPersonCharacter.ExpulsePlayerFromPlatform(currentBoostSpeed * expulsionBoost);
+                }
                 PlayGoingDownSound();
+            }
         }
 
 
@@ -275,6 +287,11 @@ public class Following_Plateform : MonoBehaviour
         {
             currentVerticalSpeed = 0;
             accelerationModifier = 0;
+
+            if (onPlatformThirdPersonCharacter)
+            {
+                onPlatformThirdPersonCharacter.ExpulsePlayerFromPlatform(currentBoostSpeed * expulsionBoost);
+            }
         }
     }
 

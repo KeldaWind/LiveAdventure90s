@@ -76,6 +76,14 @@ public class GameAssets : MonoBehaviour
             ambianceMusicSource.volume = ambianceMusicVolume;
             ambianceMusicSource.Play();
         }
+        if (winMusicSource)
+        {
+            winMusicSource.Stop();
+        }
+        if (loseMusicSource)
+        {
+            loseMusicSource.Stop();
+        }
     }
 
     public void PlayWinMusic()

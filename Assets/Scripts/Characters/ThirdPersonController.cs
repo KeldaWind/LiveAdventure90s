@@ -40,10 +40,11 @@ public class ThirdPersonController : MonoBehaviour
         // characterRenderer.material = normalMaterial;
         SetUpRenderer();
 
-        walkStepFrequenceSystem = new FrequenceSystem(stepFeedbackPerSecond);
-        walkStepFrequenceSystem.SetUp(PlayFootFeedbackSound);
+        /*walkStepFrequenceSystem = new FrequenceSystem(stepFeedbackPerSecond);
+        walkStepFrequenceSystem.SetUp(PlayFootFeedbackSound);*/
 
         //AudioManager.PlayAmbianceMusic();
+        charaFlower.SetCurrentGlobalTarget(currentShootDirection == ShootDirection.Left ? leftShootPosition : rightShootPosition, currentShootDirection);
     }
 
     void Update()
@@ -106,7 +107,12 @@ public class ThirdPersonController : MonoBehaviour
 
         if (currentHorizontalInput != 0)
         {
+            ShootDirection previous = currentShootDirection;
             currentShootDirection = currentHorizontalInput > 0 ? ShootDirection.Right : ShootDirection.Left;
+            if(previous != currentShootDirection)
+            {
+                charaFlower.SetCurrentGlobalTarget(currentShootDirection == ShootDirection.Left ? leftShootPosition : rightShootPosition, currentShootDirection);
+            }
         }
 
         if (GetJumpKeyDown)
@@ -183,8 +189,8 @@ public class ThirdPersonController : MonoBehaviour
 
         selfBody.velocity = new Vector3(currentHorizontalSpeed, currentVerticalSpeed, 0) + movementBoost;
 
-        if (IsWalking)
-            walkStepFrequenceSystem.UpdateFrequence();
+        /*if (IsWalking)
+            walkStepFrequenceSystem.UpdateFrequence();*/
     }
 
     RaycastHit currentGround = new RaycastHit();
@@ -198,6 +204,10 @@ public class ThirdPersonController : MonoBehaviour
             float diff = newHeight - previousPlatformHeight;
             transform.position += Vector3.up * diff;
             previousPlatformHeight = newHeight;
+
+            // Patch for repeat landing bug
+            if (currentVerticalSpeed < 2f)
+                currentVerticalSpeed = 0;
         }
 
         bool startIsOnGround = isOnGround;
@@ -206,7 +216,15 @@ public class ThirdPersonController : MonoBehaviour
 
         Collider previousCollider = currentGround.collider;
         RaycastHit hit = new RaycastHit();
-        isOnGround = Physics.BoxCast(transform.position + selfCollider.center, actualSize * 0.5f, Vector3.down, out hit, transform.rotation, onGroundCheckDistance, movementsCheckMask);
+        isOnGround = Physics.BoxCast(
+            transform.position + selfCollider.center, 
+            actualSize * 0.5f, 
+            Vector3.down, 
+            out hit, 
+            transform.rotation, 
+            onGroundCheckDistance, 
+            movementsCheckMask);
+
         if (isOnGround && currentVerticalSpeed < 0)
         {
             currentVerticalSpeed = 0;
@@ -227,21 +245,37 @@ public class ThirdPersonController : MonoBehaviour
 
         if (IsOnGround)
         {
-            if(previousCollider != hit.collider)
+            //print("YES");
+            if (previousCollider != hit.collider)
             {
+                Following_Plateform previousFollowingPlatform = currentStepingOnFollowingPlatform;
+
                 HandleCollision(null, hit.collider);
                 currentGround = hit;
                 currentStepingOnFollowingPlatform = currentGround.collider.GetComponent<Following_Plateform>();
                 if (currentStepingOnFollowingPlatform)
                 {
                     previousPlatformHeight = currentStepingOnFollowingPlatform.transform.position.y;
+                    currentStepingOnFollowingPlatform.SetCharacterOn(this);
+                }
+                else
+                {
+                    if (previousFollowingPlatform)
+                    {
+                        previousFollowingPlatform.SetCharacterOn(null);
+                    }
                 }
             }
         }
         else
         {
+            //print("NO");
             currentGround = new RaycastHit();
-            currentStepingOnFollowingPlatform = null;
+            if (currentStepingOnFollowingPlatform)
+            {
+                currentStepingOnFollowingPlatform.SetCharacterOn(null);
+                currentStepingOnFollowingPlatform = null;
+            }
         }
     }
 
@@ -312,6 +346,12 @@ public class ThirdPersonController : MonoBehaviour
         {
             jumpDurationSystem.UpdateTimer();
         }
+    }
+
+    public void ExpulsePlayerFromPlatform(float force)
+    {
+        if (currentVerticalSpeed < force)
+            currentVerticalSpeed = force;
     }
 
     public void StartJumping()
@@ -416,6 +456,10 @@ public class ThirdPersonController : MonoBehaviour
     [SerializeField] float bulletsPerSecond = 10f;
     FrequenceSystem shootingFrequenceSystem = default;
 
+    public System.Action OnPlayerShotProjectile = default;
+
+    [SerializeField] ThirdPersonCharacterFlower charaFlower = default;
+
     public void StartShooting()
     {
         if (shootingFrequenceSystem.IsStopped && !dead)
@@ -439,14 +483,20 @@ public class ThirdPersonController : MonoBehaviour
         Vector3 shootDirection = currentShootDirection == ShootDirection.Right ? Vector3.right : Vector3.left;
         shootDirection = Quaternion.Euler(0, 0, randomAngle) * shootDirection;
 
-        Vector3 shootPosition = (currentShootDirection == ShootDirection.Right ? rightShootPosition : leftShootPosition).position;
-        Quaternion shootRotation = (currentShootDirection == ShootDirection.Right ? rightShootPosition : leftShootPosition).rotation;
+        //Vector3 shootPosition = (currentShootDirection == ShootDirection.Right ? rightShootPosition : leftShootPosition).position;
+        Vector3 shootPosition = charaFlower.GetCurrentShootPosition;        
+        
+        //Quaternion shootRotation = (currentShootDirection == ShootDirection.Right ? rightShootPosition : leftShootPosition).rotation;
+        Quaternion shootRotation = Quaternion.Euler(0, 0, currentShootDirection == ShootDirection.Right ? 0 : 180);
         ProjectileBase newProjectile = Instantiate(projectilePrefab, shootPosition, shootRotation);
         newProjectile.ShootProjectile(shootDirection, gameObject);
 
         currentHorizontalSpeed += shootRecoil * (currentShootDirection == ShootDirection.Right ? -1 : 1);
 
         PlayShootFeedback();
+
+        charaFlower.SetShooting();
+        OnPlayerShotProjectile?.Invoke();
     }
 
     public void CheckForShootAgain()
@@ -457,6 +507,7 @@ public class ThirdPersonController : MonoBehaviour
         {
             shootingFrequenceSystem.Stop();
             shootingFrequenceSystem.ResetFrequence();
+            charaFlower.ResetShooting();
         }
     }
     #endregion
@@ -599,9 +650,10 @@ public class ThirdPersonController : MonoBehaviour
         }
     }
 
+    public System.Action OnCharacterReceivedDamage = default;
     public void OnReceivedDamages(int delta, int remainingLife, GameObject damageInstigator)
     {
-        print("Remaining life : " + remainingLife);
+        //print("Remaining life : " + remainingLife);
         if (isJumping)
         {
             EndJumping();
@@ -619,6 +671,7 @@ public class ThirdPersonController : MonoBehaviour
         recoveringTimer.StartTimer();
 
         PlayDamagedFeedback();
+        OnCharacterReceivedDamage?.Invoke();
     }
 
     bool dead = false;
@@ -685,10 +738,11 @@ public class ThirdPersonController : MonoBehaviour
 
     public void PlayShootFeedback()
     {
-        Transform source = currentShootDirection == ShootDirection.Left ? leftShootPosition : rightShootPosition;
+        Vector3 pos = charaFlower.GetCurrentShootPosition;
+        Quaternion rot = Quaternion.Euler(0, currentShootDirection == ShootDirection.Left ? 180 : 0, 0);
 
         AudioManager.PlaySound(shootSound);
-        FxManager.Instance.PlayFx(shootFxTag, source.position, source.rotation, Vector3.one);
+        FxManager.Instance.PlayFx(shootFxTag, pos, rot, Vector3.one);
     }
 
     public void PlayOnLandedFeedback()
@@ -718,6 +772,17 @@ public class ThirdPersonController : MonoBehaviour
     public WalkingDirection CurrentWalkingDirection => IsWalking ? (currentHorizontalSpeed > 0f ? WalkingDirection.Right : WalkingDirection.Left) : WalkingDirection.Neutral;
     public bool IsWalking => IsOnGround && Mathf.Abs(currentHorizontalSpeed) > 0f;
     #endregion
+
+    public void Respawn(Transform respawnPos, ShootDirection direction)
+    {
+        dead = false;
+        characterAnimator.SetBool("IsDead", dead);
+
+        transform.position = new Vector3(respawnPos.position.x, respawnPos.position.y, transform.position.z);
+        currentShootDirection = direction;
+        charaFlower.SetCurrentGlobalTarget(currentShootDirection == ShootDirection.Left ? leftShootPosition : rightShootPosition, currentShootDirection);
+        lifeSystem.ResetLife();
+    }
 }
 
 public enum ShootDirection

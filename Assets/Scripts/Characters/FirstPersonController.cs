@@ -169,7 +169,7 @@ public class FirstPersonController : MonoBehaviour
                             }
                             else
                             {
-                                currentVerticalAcceleration = standByAcceleration * -Mathf.Sign(distanceFromLow);
+                                currentVerticalAcceleration = isJetpackInputDown ? currentMaxUpSpeed : standByAcceleration * -Mathf.Sign(distanceFromLow);
                             }
                             break;
 
@@ -325,6 +325,13 @@ public class FirstPersonController : MonoBehaviour
     public void SetGameOver()
     {
         gameOver = true;
+    }
+
+    public void Respawn(Transform respawnPos)
+    {
+        gameOver = false;
+        transform.position = new Vector3(transform.position.x, respawnPos.position.y, transform.position.z);
+        currentJetpackVerticalSpeed = jetpackMaxUpSpeed;
     }
 }
 
