@@ -21,14 +21,6 @@ public class Life_UI : MonoBehaviour
 
 
 
-    private void Update()
-    {
-        if(isShown)
-        {
-            HideIn();
-        }
-    }
-
     public void SetLife(int currentLife)
     {
         lifePoints = new List<Image>();
@@ -49,14 +41,10 @@ public class Life_UI : MonoBehaviour
 
             lifePoints.Add(pointImage);
         }
-
-        ShowLifePoints();
     }
 
     public void RefreshLife(int amount, int current)
     {
-        ShowLifePoints();
-
         for (int i = 0; i < current; i++)
         {
             lifePoints[i].sprite = enableSprite;
@@ -70,45 +58,5 @@ public class Life_UI : MonoBehaviour
         }
 
         SetLife(current);
-    }
-
-    void ShowLifePoints()
-    {
-        if (lifePoints == null)
-            return;
-
-        for (int i = 0; i < lifePoints.Count; i++)
-        {
-            lifePoints[i].gameObject.SetActive(true);
-        }
-
-        StartHideTimer();
-    }
-
-    void StartHideTimer()
-    {
-        currentShowTime = showDuration;
-        isShown = true;
-    }
-
-    void HideIn()
-    {
-        if(currentShowTime > 0)
-        {
-            currentShowTime -= Time.deltaTime;
-        }
-        else
-        {
-            isShown = false;
-            Hide();
-        }
-    }
-
-    void Hide()
-    {
-        for (int i = 0; i < lifePoints.Count; i++)
-        {
-            lifePoints[i].gameObject.SetActive(false);
-        }
     }
 }

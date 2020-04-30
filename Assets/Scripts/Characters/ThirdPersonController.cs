@@ -37,10 +37,11 @@ public class ThirdPersonController : MonoBehaviour
 
         SetUpLifeSystem();
 
-        characterRenderer.material = normalMaterial;
+        // characterRenderer.material = normalMaterial;
+        SetUpRenderer();
 
-        walkStepFrequenceSystem = new FrequenceSystem(stepFeedbackPerSecond);
-        walkStepFrequenceSystem.SetUp(PlayFootFeedbackSound);
+        /*walkStepFrequenceSystem = new FrequenceSystem(stepFeedbackPerSecond);
+        walkStepFrequenceSystem.SetUp(PlayFootFeedbackSound);*/
 
         //AudioManager.PlayAmbianceMusic();
     }
@@ -182,8 +183,8 @@ public class ThirdPersonController : MonoBehaviour
 
         selfBody.velocity = new Vector3(currentHorizontalSpeed, currentVerticalSpeed, 0) + movementBoost;
 
-        if (IsWalking)
-            walkStepFrequenceSystem.UpdateFrequence();
+        /*if (IsWalking)
+            walkStepFrequenceSystem.UpdateFrequence();*/
     }
 
     RaycastHit currentGround = new RaycastHit();
@@ -228,12 +229,22 @@ public class ThirdPersonController : MonoBehaviour
         {
             if(previousCollider != hit.collider)
             {
+                Following_Plateform previousFollowingPlatform = currentStepingOnFollowingPlatform;
+
                 HandleCollision(null, hit.collider);
                 currentGround = hit;
                 currentStepingOnFollowingPlatform = currentGround.collider.GetComponent<Following_Plateform>();
                 if (currentStepingOnFollowingPlatform)
                 {
                     previousPlatformHeight = currentStepingOnFollowingPlatform.transform.position.y;
+                    currentStepingOnFollowingPlatform.SetCharacterOn(this);
+                }
+                else
+                {
+                    if (previousFollowingPlatform)
+                    {
+                        currentStepingOnFollowingPlatform.SetCharacterOn(null);
+                    }
                 }
             }
         }
@@ -311,6 +322,12 @@ public class ThirdPersonController : MonoBehaviour
         {
             jumpDurationSystem.UpdateTimer();
         }
+    }
+
+    public void ExpulsePlayerFromPlatform(float force)
+    {
+        if (currentVerticalSpeed < force)
+            currentVerticalSpeed = force;
     }
 
     public void StartJumping()
@@ -415,6 +432,8 @@ public class ThirdPersonController : MonoBehaviour
     [SerializeField] float bulletsPerSecond = 10f;
     FrequenceSystem shootingFrequenceSystem = default;
 
+    public System.Action OnPlayerShotProjectile = default;
+
     public void StartShooting()
     {
         if (shootingFrequenceSystem.IsStopped && !dead)
@@ -446,6 +465,8 @@ public class ThirdPersonController : MonoBehaviour
         currentHorizontalSpeed += shootRecoil * (currentShootDirection == ShootDirection.Right ? -1 : 1);
 
         PlayShootFeedback();
+
+        OnPlayerShotProjectile?.Invoke();
     }
 
     public void CheckForShootAgain()
@@ -567,11 +588,20 @@ public class ThirdPersonController : MonoBehaviour
             if (IsRecovering)
             {
                 float blinkingCoeff = Mathf.Cos(recoveringTimer.GetTimerCounter * Mathf.PI * 2 * recoveringBlinkingFrequence);
-                characterRenderer.material = blinkingCoeff > 0 ? blinkingMaterial : normalMaterial;
+                /*characterRenderer.material = blinkingCoeff > 0 ? blinkingMaterial : normalMaterial;*/
+                foreach (RendererWithBaseMaterial parameters in rendererWithMaterials)
+                {
+                    parameters.renderer.material = blinkingCoeff > 0 ? blinkingMaterial : parameters.normalMtl;
+                }
             }
             else
-                characterRenderer.material = normalMaterial;
-        }
+            {
+                foreach (RendererWithBaseMaterial parameters in rendererWithMaterials)
+                {
+                    parameters.renderer.material = parameters.normalMtl;
+                }
+            }
+            }
     }
 
     bool checkCollisionAgain = false;
@@ -627,14 +657,30 @@ public class ThirdPersonController : MonoBehaviour
     #endregion
 
     [Header("Rendering")]
-    [SerializeField] Renderer characterRenderer = default;
+    [SerializeField] Renderer[] characterRenderers = new Renderer[0];
     [SerializeField] Material normalMaterial = default;
     [SerializeField] Material blinkingMaterial = default;
     [SerializeField] Animator characterAnimator = default;
 
+    struct RendererWithBaseMaterial { public Renderer renderer; public Material normalMtl; }
+    RendererWithBaseMaterial[] rendererWithMaterials = new RendererWithBaseMaterial[0];
+    public void SetUpRenderer()
+    {
+        rendererWithMaterials = new RendererWithBaseMaterial[characterRenderers.Length];
+        for (int i =0; i < characterRenderers.Length; i++)
+        {
+            Renderer render = characterRenderers[i];
+            RendererWithBaseMaterial parameters = new RendererWithBaseMaterial();
+            parameters.renderer = render;
+            parameters.normalMtl = render.material;
+            rendererWithMaterials[i] = parameters;
+        }
+    }
+
+    float minSpeedToAnimateMovement = 5f;
     public void UpdateAnimatorValues()
     {
-        characterAnimator.SetBool("IsMoving", Mathf.Abs(currentHorizontalSpeed) > 0.2f);
+        characterAnimator.SetBool("IsMoving", Mathf.Abs(currentHorizontalSpeed) > minSpeedToAnimateMovement);
         characterAnimator.SetFloat("VerticalSpeed",  isOnGround ? 0 : currentVerticalSpeed);
         characterAnimator.transform.localRotation = Quaternion.Euler(0, currentShootDirection == ShootDirection.Left ? -90 : 90, 0);
     }
