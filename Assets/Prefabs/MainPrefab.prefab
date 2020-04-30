@@ -2555,6 +2555,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4967143056407649486}
     m_Modifications:
+    - target: {fileID: 3419614710328438420, guid: 238c6d137086d00408c538d986a978de,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6191864732599510997, guid: 238c6d137086d00408c538d986a978de,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7749436515868930127, guid: 238c6d137086d00408c538d986a978de,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8141126479571019353, guid: 238c6d137086d00408c538d986a978de,
         type: 3}
       propertyPath: m_RenderMode
@@ -2684,6 +2699,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Canvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 8141126479873304953, guid: 238c6d137086d00408c538d986a978de,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 238c6d137086d00408c538d986a978de, type: 3}
