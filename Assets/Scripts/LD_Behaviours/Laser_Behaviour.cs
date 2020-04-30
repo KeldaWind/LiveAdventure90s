@@ -94,7 +94,7 @@ public class Laser_Behaviour : MonoBehaviour
         if (hit.collider != null)
         {
             impactPos = hit.point;
-            Debug.Log("Impact at : " + impactPos + " with gameobject : " + hit.collider.gameObject.name);
+            //Debug.Log("Impact at : " + impactPos + " with gameobject : " + hit.collider.gameObject.name);
             lineRenderer.SetPosition(1, impactPos);
         }
 
