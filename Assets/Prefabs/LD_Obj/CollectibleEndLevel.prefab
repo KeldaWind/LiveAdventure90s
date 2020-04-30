@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5817120834182579888}
   - component: {fileID: 2975966051737287415}
   - component: {fileID: 9071011397204258701}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: CollectibleEndLevel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -164,6 +164,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: VFXCollectible
+      objectReference: {fileID: 0}
+    - target: {fileID: 70280986466559826, guid: 5510b378675421a42acf8f6b89cdb09c,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2524242491729335297, guid: 5510b378675421a42acf8f6b89cdb09c,
         type: 3}
@@ -329,6 +334,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: SM_end_level_treasure
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 0f978a8f4a9a33c4495ed98aadc47214,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0f978a8f4a9a33c4495ed98aadc47214, type: 3}

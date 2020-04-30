@@ -2,6 +2,10 @@
 
 public class ThirdPersonController : MonoBehaviour
 {
+    [Header("Win")]
+    [SerializeField] GameObject fireworksOnWin = default;
+    [SerializeField] float fireworksDownDistance = 3;
+
     [Header("Inputs")]
     [SerializeField] string horizontalAxis = "ThirdPersonHorizontalAxis";
     [SerializeField] float minimumAxisValueToConsiderHorizontalMovement = 0.25f;
@@ -81,13 +85,17 @@ public class ThirdPersonController : MonoBehaviour
     bool won = false;
     public void Win()
     {
-        print("WIN");
         won = true;
         characterAnimator.SetBool("Won", true);
         lifeSystem.SetImmuneToDamages();
 
         isShootingInputDown = false;
         currentHorizontalInput = 0;
+
+        if (fireworksOnWin)
+        {
+            Instantiate(fireworksOnWin, new Vector3(0, transform.position.y - fireworksDownDistance, 0), Quaternion.identity);
+        }
     }
     public void HandleInputs()
     {

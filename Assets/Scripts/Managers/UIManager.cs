@@ -71,6 +71,7 @@ public class UIManager : MonoBehaviour
     {
         winAnim.Play("Win");
         HideAllUI();
+        outOfFrameUI.Win();
     }
 
     public void PlayLoseAnim()
