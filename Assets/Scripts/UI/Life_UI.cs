@@ -6,6 +6,16 @@ using TMPro;
 
 public class Life_UI : MonoBehaviour
 {
+    public void Show()
+    {
+        gameObject.SetActive(true);
+    }
+
+    public void Hide()
+    {
+        gameObject.SetActive(false);
+    }
+
     [Header("Get Components")]
     public GameObject lifePointPrefab;
     private List<Image> lifePoints;
