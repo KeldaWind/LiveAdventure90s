@@ -733,7 +733,7 @@ public class ThirdPersonController : MonoBehaviour
     public void PlayDamagedFeedback()
     {
         AudioManager.PlaySound(damagedSound);
-        FxManager.Instance.PlayFx(damagedFxTag, transform.position + Vector3.up, Quaternion.identity, Vector3.one);
+        FxManager.Instance.PlayFx(damagedFxTag, transform.position + Vector3.up, Quaternion.identity, Vector3.one * 2);
     }
 
     public void PlayShootFeedback()
