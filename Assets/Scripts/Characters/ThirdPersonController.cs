@@ -78,9 +78,20 @@ public class ThirdPersonController : MonoBehaviour
         UpdatePhysics();
     }
 
+    bool won = false;
+    public void Win()
+    {
+        print("WIN");
+        won = true;
+        characterAnimator.SetBool("Won", true);
+        lifeSystem.SetImmuneToDamages();
+
+        isShootingInputDown = false;
+        currentHorizontalInput = 0;
+    }
     public void HandleInputs()
     {
-        if(dead)
+        if(dead || won)
         {
             return;
         }
@@ -462,7 +473,7 @@ public class ThirdPersonController : MonoBehaviour
 
     public void StartShooting()
     {
-        if (shootingFrequenceSystem.IsStopped && !dead)
+        if (shootingFrequenceSystem.IsStopped && !dead && !won)
         {
             ShootProjectile();
             shootingFrequenceSystem.Resume();
@@ -501,7 +512,7 @@ public class ThirdPersonController : MonoBehaviour
 
     public void CheckForShootAgain()
     {
-        if (isShootingInputDown && !IsStunned && !dead)
+        if (isShootingInputDown && !IsStunned && !dead && !won)
             ShootProjectile();
         else
         {

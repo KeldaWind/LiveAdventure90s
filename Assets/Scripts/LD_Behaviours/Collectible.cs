@@ -5,6 +5,8 @@ using UnityEngine.Events;
 
 public class Collectible : MonoBehaviour
 {
+    [SerializeField] bool isEndLevelCollectible = false;
+
     [Header("Idle")]
     [SerializeField] float idleAmplitude = 0.5f;
     [SerializeField] float idleDuration = default;
@@ -67,6 +69,12 @@ public class Collectible : MonoBehaviour
     {
         OnCollectEvent?.Invoke();
         PlayLootFeedback();
+
+        if (isEndLevelCollectible)
+        {
+            GameManager.Instance.Victory();
+        }
+
         Destroy(gameObject);
     }
 
