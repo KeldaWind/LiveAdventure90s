@@ -19,6 +19,8 @@ public class Laser_Behaviour : MonoBehaviour
     private Vector3 impactPos;
     public LayerMask checkMask = default;
 
+    public Transform rendererParent = default;
+
     public void DeactivateForDuration(float duration)
     {
         deactivationTimer = new TimerSystem(duration, EndDeactivation);
@@ -44,6 +46,12 @@ public class Laser_Behaviour : MonoBehaviour
     private void Awake()
     {
         lineRenderer.SetPosition(0, startPos.transform.localPosition);
+
+        Vector3 dir = (targetPos.transform.position - startPos.transform.position).normalized;
+
+        float rotZ = Mathf.Atan2(dir.x, dir.y) * Mathf.Rad2Deg;
+
+        rendererParent.rotation = Quaternion.Euler(0, 0, -rotZ);
     }
 
     private void Update()
@@ -80,27 +88,35 @@ public class Laser_Behaviour : MonoBehaviour
         Quaternion newRotation = Quaternion.LookRotation(direction, Vector3.up);
         laserCollider.transform.localScale = new Vector3(0.5f, 0.5f, magnitude);
         laserCollider.transform.rotation = newRotation;
-        laserCollider.transform.position = startPos.transform.localPosition + (direction * (magnitude * 0.5f));
+        //laserCollider.transform.position = startPos.transform.localPosition + (direction * (magnitude * 0.5f));
+        laserCollider.transform.position = startPos.transform.position + (direction * (magnitude * 0.5f));
     }
 
     void FindNextTarget()
     {
-        float magnitude = (targetPos.transform.localPosition - startPos.transform.localPosition).magnitude;
-        Vector3 direction = (targetPos.transform.localPosition - startPos.transform.localPosition).normalized;
+        //float magnitude = (targetPos.transform.localPosition - startPos.transform.localPosition).magnitude;
+        float magnitude = (targetPos.transform.position - startPos.transform.position).magnitude;
+        //Vector3 direction = (targetPos.transform.localPosition - startPos.transform.localPosition).normalized;
+        Vector3 direction = (targetPos.transform.position - startPos.transform.position).normalized;
         RaycastHit hit;
 
-        Physics.Raycast(startPos.transform.localPosition, direction, out hit, Mathf.Infinity, checkMask);
-        Debug.DrawRay(startPos.transform.localPosition, direction, Color.blue, 0.1f);
+        //Physics.Raycast(startPos.transform.localPosition, direction, out hit, Mathf.Infinity, checkMask);
+        Physics.Raycast(startPos.transform.position, direction, out hit, Mathf.Infinity, checkMask);
+        //Debug.DrawRay(startPos.transform.localPosition, direction, Color.blue, 0.1f);
 
         if (hit.collider != null)
         {
             impactPos = hit.point;
             //Debug.Log("Impact at : " + impactPos + " with gameobject : " + hit.collider.gameObject.name);
-            lineRenderer.SetPosition(1, impactPos);
+            lineRenderer.SetPosition(1, impactPos - transform.position);
+            //Debug.DrawRay(impactPos, (Vector3.up + Vector3.right) * 100f, Color.red);
+
+            magnitude = Vector3.Distance(startPos.transform.position, impactPos);
         }
 
 
-        
+
+
 
 
         SetLaserCollider(magnitude, direction);
