@@ -40,8 +40,8 @@ public class ThirdPersonController : MonoBehaviour
         // characterRenderer.material = normalMaterial;
         SetUpRenderer();
 
-        walkStepFrequenceSystem = new FrequenceSystem(stepFeedbackPerSecond);
-        walkStepFrequenceSystem.SetUp(PlayFootFeedbackSound);
+        /*walkStepFrequenceSystem = new FrequenceSystem(stepFeedbackPerSecond);
+        walkStepFrequenceSystem.SetUp(PlayFootFeedbackSound);*/
 
         //AudioManager.PlayAmbianceMusic();
     }
@@ -183,8 +183,8 @@ public class ThirdPersonController : MonoBehaviour
 
         selfBody.velocity = new Vector3(currentHorizontalSpeed, currentVerticalSpeed, 0) + movementBoost;
 
-        if (IsWalking)
-            walkStepFrequenceSystem.UpdateFrequence();
+        /*if (IsWalking)
+            walkStepFrequenceSystem.UpdateFrequence();*/
     }
 
     RaycastHit currentGround = new RaycastHit();
@@ -229,12 +229,22 @@ public class ThirdPersonController : MonoBehaviour
         {
             if(previousCollider != hit.collider)
             {
+                Following_Plateform previousFollowingPlatform = currentStepingOnFollowingPlatform;
+
                 HandleCollision(null, hit.collider);
                 currentGround = hit;
                 currentStepingOnFollowingPlatform = currentGround.collider.GetComponent<Following_Plateform>();
                 if (currentStepingOnFollowingPlatform)
                 {
                     previousPlatformHeight = currentStepingOnFollowingPlatform.transform.position.y;
+                    currentStepingOnFollowingPlatform.SetCharacterOn(this);
+                }
+                else
+                {
+                    if (previousFollowingPlatform)
+                    {
+                        currentStepingOnFollowingPlatform.SetCharacterOn(null);
+                    }
                 }
             }
         }
@@ -312,6 +322,12 @@ public class ThirdPersonController : MonoBehaviour
         {
             jumpDurationSystem.UpdateTimer();
         }
+    }
+
+    public void ExpulsePlayerFromPlatform(float force)
+    {
+        if (currentVerticalSpeed < force)
+            currentVerticalSpeed = force;
     }
 
     public void StartJumping()
@@ -416,6 +432,8 @@ public class ThirdPersonController : MonoBehaviour
     [SerializeField] float bulletsPerSecond = 10f;
     FrequenceSystem shootingFrequenceSystem = default;
 
+    public System.Action OnPlayerShotProjectile = default;
+
     public void StartShooting()
     {
         if (shootingFrequenceSystem.IsStopped && !dead)
@@ -447,6 +465,8 @@ public class ThirdPersonController : MonoBehaviour
         currentHorizontalSpeed += shootRecoil * (currentShootDirection == ShootDirection.Right ? -1 : 1);
 
         PlayShootFeedback();
+
+        OnPlayerShotProjectile?.Invoke();
     }
 
     public void CheckForShootAgain()

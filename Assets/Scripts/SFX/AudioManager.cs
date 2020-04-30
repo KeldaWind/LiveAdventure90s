@@ -41,6 +41,8 @@ public static class AudioManager
         THEME_TitleScreen_loop,/*NEED*/
         THEME_GameOver,//
         THEME_YouWin,//
+        H_FootstepRight,
+        H_FootstepLeft,
         None
     }
 

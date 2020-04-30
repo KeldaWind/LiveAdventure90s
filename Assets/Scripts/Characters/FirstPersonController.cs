@@ -169,7 +169,7 @@ public class FirstPersonController : MonoBehaviour
                             }
                             else
                             {
-                                currentVerticalAcceleration = standByAcceleration * -Mathf.Sign(distanceFromLow);
+                                currentVerticalAcceleration = isJetpackInputDown ? currentMaxUpSpeed : standByAcceleration * -Mathf.Sign(distanceFromLow);
                             }
                             break;
 
