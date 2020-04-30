@@ -75,8 +75,11 @@ public class FirstPersonController : MonoBehaviour
         {
             if (bottomBound)
             {
-                if (transform.position.y < bottomBound.position.y)
+                float distance = transform.position.y - bottomBound.position.y;
+                if (transform.position.y < bottomBound.position.y || Mathf.Abs(distance) < standByDistanceFromBottom)
+                {
                     return JetpackBoundsState.TooLow;
+                }
             }
             if(topBound)
             {
@@ -101,9 +104,8 @@ public class FirstPersonController : MonoBehaviour
         {
             if (bottomBound)
             {
-                float distance = transform.position.y - thirdPersonController.transform.position.y;
-                print(distance);
-                if (transform.position.y < bottomBound.position.y)
+                float distance = transform.position.y - bottomBound.position.y;
+                if (transform.position.y < bottomBound.position.y || Mathf.Abs(distance) < standByDistanceFromBottom)
                 {
                     return distance;
                 }
@@ -111,7 +113,7 @@ public class FirstPersonController : MonoBehaviour
             if (thirdPersonController && maxDistanceFromThirdPersonCharacter != 0)
             {
                 float distance = transform.position.y - thirdPersonController.transform.position.y;
-                if (Mathf.Abs(distance) > maxDistanceFromThirdPersonCharacter)
+                if (Mathf.Abs(distance) > maxDistanceFromThirdPersonCharacter || Mathf.Abs(distance) < standByDistanceFromBottom)
                     return distance;
             }
             return standByDistanceFromBottom;
@@ -140,9 +142,9 @@ public class FirstPersonController : MonoBehaviour
         }
     }
 
-    float standByDistanceFromBottom = 1f;
-    //float standBySpeed = 10f;
-    float standByAcceleration = 10f;
+    [Header("Jetpack Stand By")]
+    [SerializeField] float standByDistanceFromBottom = 2f;
+    [SerializeField] float standByAcceleration = 5f;
     public void UpdateJetpackValues(bool isJetpackInputDown)
     {
         if (/*!gameOver*/true)
@@ -160,7 +162,6 @@ public class FirstPersonController : MonoBehaviour
                     {
                         case JetpackBoundsState.TooLow:
                             float distanceFromLow = GetLowDistance;
-                            //print(distanceFromLow);
                             if (Mathf.Abs(distanceFromLow) > standByDistanceFromBottom)
                             {
                                 currentVerticalAcceleration = outOfBoundsUpAcceleration;
@@ -168,7 +169,6 @@ public class FirstPersonController : MonoBehaviour
                             }
                             else
                             {
-                                print("HERE");
                                 currentVerticalAcceleration = standByAcceleration * -Mathf.Sign(distanceFromLow);
                             }
                             break;
@@ -216,7 +216,6 @@ public class FirstPersonController : MonoBehaviour
         #endregion
 
         currentPitch = Mathf.Lerp(currentPitch, targetPitchValue, pitchChangingCoeff);
-        //print(currentPitch);
         transform.rotation = Quaternion.Euler(currentPitch, 0, 0);
 
         UpdateSound();
