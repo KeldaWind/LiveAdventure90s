@@ -60,13 +60,17 @@ public class PostProcessAnimator : MonoBehaviour
         vignette = volume.profile.GetSetting<Vignette>();
 
         //Set Min values
-        minBloomIntensity = bloom.intensity.value;
-        minVignetteIntensity = vignette.intensity.value;
-        minChromaticIntensity = chromaticAberration.intensity.value;
-        minPostExposure = colorGrading.postExposure.value;
-        minSaturation = colorGrading.saturation.value;
-        minContrast = colorGrading.contrast.value;
-        startColorFilter = colorGrading.colorFilter.value;
+        if(bloom) minBloomIntensity = bloom.intensity.value;
+        if(vignette) minVignetteIntensity = vignette.intensity.value;
+        if(chromaticAberration) minChromaticIntensity = chromaticAberration.intensity.value;
+        if (colorGrading)
+        {
+            minPostExposure = colorGrading.postExposure.value;
+            minSaturation = colorGrading.saturation.value;
+            minContrast = colorGrading.contrast.value;
+            startColorFilter = colorGrading.colorFilter.value;
+        }
+
     }
 
     protected virtual void Update()
