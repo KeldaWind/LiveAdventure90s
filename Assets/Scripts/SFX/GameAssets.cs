@@ -80,7 +80,6 @@ public class GameAssets : MonoBehaviour
 
     public void PlayWinMusic()
     {
-        print("WIN");
         crossFadingToSource = winMusicSource;
         crossFadingToSource.volume = 0;
         crossFadingToSourceVolume = winMusicVolume;
