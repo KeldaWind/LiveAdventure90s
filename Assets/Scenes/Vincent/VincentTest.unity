@@ -104760,6 +104760,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Additionnal_LD_Block
       objectReference: {fileID: 0}
+    - target: {fileID: 5893982928989483763, guid: 2a7474dd7d4418c408b69883624792a7,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2a7474dd7d4418c408b69883624792a7, type: 3}
 --- !u!1001 &3536429370177275951
