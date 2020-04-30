@@ -632,7 +632,7 @@ public class ThirdPersonController : MonoBehaviour
                     parameters.renderer.material = parameters.normalMtl;
                 }
             }
-            }
+        }
     }
 
     bool checkCollisionAgain = false;

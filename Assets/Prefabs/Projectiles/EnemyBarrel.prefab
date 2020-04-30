@@ -70,7 +70,7 @@ MonoBehaviour:
   barrelCollider: {fileID: 2451139120977189097}
   movementsCheckMask:
     serializedVersion: 2
-    m_Bits: 1847
+    m_Bits: 395063
   gravity: -30
   maxVerticalDownSpeed: -30
   skinWidthMultiplier: 0.99
@@ -84,7 +84,6 @@ MonoBehaviour:
   damagedFxTag: 
   damagedSound: 17
   landingSound: 9
-  destroyFxTag: PlaceHolder
   barrelParticles: {fileID: 5412944176989863296}
 --- !u!54 &5700027043688227679
 Rigidbody:

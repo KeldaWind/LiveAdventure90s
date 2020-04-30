@@ -368,7 +368,7 @@ MonoBehaviour:
   selfCollider: {fileID: 7246618163430893962}
   movementsCheckMask:
     serializedVersion: 2
-    m_Bits: 311
+    m_Bits: 393527
   movementThreshold: 0.01
   skinWidthMultiplier: 0.99
   maxHorizontalSpeed: 12
