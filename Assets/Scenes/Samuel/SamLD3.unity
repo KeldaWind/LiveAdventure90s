@@ -1289,6 +1289,11 @@ PrefabInstance:
       propertyPath: m_LocalScale.x
       value: 0.060000002
       objectReference: {fileID: 0}
+    - target: {fileID: 6106904715902192853, guid: 5f15fc8942cd26240b48c453685f2269,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.01
+      objectReference: {fileID: 0}
     - target: {fileID: 7105357101464354502, guid: 5f15fc8942cd26240b48c453685f2269,
         type: 3}
       propertyPath: m_Name
@@ -3303,7 +3308,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh416892
+  m_Name: pb_Mesh680472
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -4364,6 +4369,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 210620437}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &217894542 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3774516838788396374, guid: 6843271bfd8b4464886944904b4ffeb5,
+    type: 3}
+  m_PrefabInstance: {fileID: 1285736372}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ccb704eb26e8a84d9cac9aaabcfc892, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &225411875
 GameObject:
   m_ObjectHideFlags: 0
@@ -7497,6 +7514,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.x
       value: 0.060000002
+      objectReference: {fileID: 0}
+    - target: {fileID: 6106904715902192853, guid: 5f15fc8942cd26240b48c453685f2269,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.01
       objectReference: {fileID: 0}
     - target: {fileID: 7105357101464354502, guid: 5f15fc8942cd26240b48c453685f2269,
         type: 3}
@@ -23354,7 +23376,7 @@ PrefabInstance:
     - target: {fileID: 6673697110840443834, guid: 802058209a4bff0479ff5f56c02a3841,
         type: 3}
       propertyPath: OnBallArrival.m_PersistentCalls.m_Calls.Array.size
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6673697110840443834, guid: 802058209a4bff0479ff5f56c02a3841,
         type: 3}
@@ -23370,7 +23392,7 @@ PrefabInstance:
         type: 3}
       propertyPath: OnBallArrival.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 45010800}
+      objectReference: {fileID: 217894542}
     - target: {fileID: 6673697110840443834, guid: 802058209a4bff0479ff5f56c02a3841,
         type: 3}
       propertyPath: OnBallArrival.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
@@ -23384,7 +23406,7 @@ PrefabInstance:
     - target: {fileID: 6673697110840443834, guid: 802058209a4bff0479ff5f56c02a3841,
         type: 3}
       propertyPath: OnBallArrival.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_BoolArgument
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6673697110840443834, guid: 802058209a4bff0479ff5f56c02a3841,
         type: 3}
@@ -34836,7 +34858,7 @@ PrefabInstance:
     - target: {fileID: 4466734729310450961, guid: 402a2789c248bf14ea51643b9b10ea91,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1.5
+      value: -0.05
       objectReference: {fileID: 0}
     - target: {fileID: 4466734729310450961, guid: 402a2789c248bf14ea51643b9b10ea91,
         type: 3}
@@ -34881,7 +34903,7 @@ PrefabInstance:
     - target: {fileID: 4466734729310450961, guid: 402a2789c248bf14ea51643b9b10ea91,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.025000004
+      value: 0.01
       objectReference: {fileID: 0}
     - target: {fileID: 4466734729310450961, guid: 402a2789c248bf14ea51643b9b10ea91,
         type: 3}
