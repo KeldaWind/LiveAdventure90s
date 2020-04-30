@@ -7,10 +7,11 @@ using UnityEngine.Playables;
 
 public class Menu : MonoBehaviour
 {
-    [Header("")]
+    [Header("Params")]
     public Animator pressAnim;
     private bool canPress = false;
     public PlayableAsset playable;
+    public AudioSource music = default;
 
     private void Awake()
     {
@@ -36,6 +37,8 @@ public class Menu : MonoBehaviour
     IEnumerator TimeBeforeTimelineEnd(float duration)
     {
         yield return new WaitForSeconds(duration);
+        if (music)
+            music.Play();
 
         canPress = true;
     }
