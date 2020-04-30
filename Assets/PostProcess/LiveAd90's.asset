@@ -147,7 +147,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adb84e30e02715445aeb9959894e3b4d, type: 3}
   m_Name: ColorGrading
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   enabled:
     overrideState: 1
     value: 1
@@ -239,13 +239,13 @@ MonoBehaviour:
     value: 100
   lift:
     overrideState: 1
-    value: {x: 1, y: 0.78469664, z: 0.66439116, w: -0.46850267}
+    value: {x: 0.41316563, y: 0.46192908, z: 1, w: -0.46850267}
   gamma:
     overrideState: 1
-    value: {x: 0.9847443, y: 0.9694883, z: 1, w: -0.28021014}
+    value: {x: 0.5192741, y: 1, z: 0.8429761, w: -0.28021014}
   gain:
     overrideState: 1
-    value: {x: 1, y: 1, z: 1, w: 0.55336595}
+    value: {x: 0.8738365, y: 0.7945379, z: 1, w: 0.55336595}
   masterCurve:
     overrideState: 0
     value:
