@@ -358,6 +358,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e78daaeb1885a164ea71560a8bb75523, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fireworksOnWin: {fileID: 3695829888189260430, guid: 598b0714369a50a42b42cbb91fe171d3,
+    type: 3}
+  fireworksDownDistance: 3
   horizontalAxis: ThirdPersonHorizontalAxis
   minimumAxisValueToConsiderHorizontalMovement: 0.25
   jumpingGamepadInput: 330

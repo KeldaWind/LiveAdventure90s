@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class FirstPersonController : MonoBehaviour
 {
+    bool won = false;
+    public void Win()
+    {
+        won = true;
+    }
+
     [Header("Inputs")]
     [SerializeField] KeyCode jetpackGamepadInput = KeyCode.JoystickButton5;
     [SerializeField] KeyCode jetpackGamepadAltInput = KeyCode.JoystickButton6;
@@ -73,26 +79,33 @@ public class FirstPersonController : MonoBehaviour
     {
         get
         {
-            if (bottomBound)
-            {
-                float distance = transform.position.y - bottomBound.position.y;
-                if (transform.position.y < bottomBound.position.y || Mathf.Abs(distance) < standByDistanceFromBottom)
+            /*if (!won)
+            {*/
+                if (bottomBound)
                 {
-                    return JetpackBoundsState.TooLow;
+                    float distance = transform.position.y - bottomBound.position.y;
+                    if (transform.position.y < bottomBound.position.y || Mathf.Abs(distance) < standByDistanceFromBottom)
+                    {
+                        return JetpackBoundsState.TooLow;
+                    }
                 }
-            }
-            if(topBound)
-            {
-                if (transform.position.y > topBound.position.y)
-                    return JetpackBoundsState.TooHigh;
-            }
+                if (topBound)
+                {
+                    if (transform.position.y > topBound.position.y)
+                        return JetpackBoundsState.TooHigh;
+                }
 
-            if (thirdPersonController && maxDistanceFromThirdPersonCharacter != 0)
+                if (thirdPersonController && maxDistanceFromThirdPersonCharacter != 0)
+                {
+                    float distance = transform.position.y - thirdPersonController.transform.position.y;
+                    if (Mathf.Abs(distance) > maxDistanceFromThirdPersonCharacter)
+                        return distance > 0 ? JetpackBoundsState.TooHigh : JetpackBoundsState.TooLow;
+                }
+            /*}
+            else
             {
-                float distance = transform.position.y - thirdPersonController.transform.position.y;
-                if (Mathf.Abs(distance) > maxDistanceFromThirdPersonCharacter)
-                    return distance > 0 ? JetpackBoundsState.TooHigh : JetpackBoundsState.TooLow;
-            }
+
+            }*/
 
             return JetpackBoundsState.Neutral;
         }
@@ -147,7 +160,7 @@ public class FirstPersonController : MonoBehaviour
     [SerializeField] float standByAcceleration = 5f;
     public void UpdateJetpackValues(bool isJetpackInputDown)
     {
-        if (/*!gameOver*/true)
+        if (!won)
         {
             switch (inUseVersion)
             {
@@ -191,6 +204,19 @@ public class FirstPersonController : MonoBehaviour
         }
         else
         {
+            float distanceFromFirstPersonCharacter = (thirdPersonController.transform.position.y + 3) - transform.position.y;
+            float currentVerticalAcceleration = standByAcceleration * Mathf.Sign(distanceFromFirstPersonCharacter);
+
+            if(Mathf.Sign(currentJetpackVerticalSpeed) != Mathf.Abs(distanceFromFirstPersonCharacter))
+            {
+                currentVerticalAcceleration *= 3;
+            }
+
+            currentJetpackVerticalSpeed = Mathf.Clamp(currentJetpackVerticalSpeed + currentVerticalAcceleration * Time.deltaTime, jetpackMaxDownSpeed, jetpackMaxUpSpeed);
+        }
+
+        /*else
+        {
             if (currentJetpackVerticalSpeed == 0)
                 return;
 
@@ -201,7 +227,7 @@ public class FirstPersonController : MonoBehaviour
             print(accelerationDirection * gameOverDeceleration * Time.deltaTime);
             currentJetpackVerticalSpeed = 
                 Mathf.Clamp(currentJetpackVerticalSpeed + accelerationDirection * gameOverDeceleration * Time.deltaTime, min, max);
-        }
+        }*/
 
         #region Manage Pitch
         float targetPitchValue = 0;

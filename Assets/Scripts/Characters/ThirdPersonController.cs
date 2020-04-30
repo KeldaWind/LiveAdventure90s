@@ -2,6 +2,10 @@
 
 public class ThirdPersonController : MonoBehaviour
 {
+    [Header("Win")]
+    [SerializeField] GameObject fireworksOnWin = default;
+    [SerializeField] float fireworksDownDistance = 3;
+
     [Header("Inputs")]
     [SerializeField] string horizontalAxis = "ThirdPersonHorizontalAxis";
     [SerializeField] float minimumAxisValueToConsiderHorizontalMovement = 0.25f;
@@ -78,9 +82,24 @@ public class ThirdPersonController : MonoBehaviour
         UpdatePhysics();
     }
 
+    bool won = false;
+    public void Win()
+    {
+        won = true;
+        characterAnimator.SetBool("Won", true);
+        lifeSystem.SetImmuneToDamages();
+
+        isShootingInputDown = false;
+        currentHorizontalInput = 0;
+
+        if (fireworksOnWin)
+        {
+            Instantiate(fireworksOnWin, new Vector3(0, transform.position.y - fireworksDownDistance, 0), Quaternion.identity);
+        }
+    }
     public void HandleInputs()
     {
-        if(dead)
+        if(dead || won)
         {
             return;
         }
@@ -462,7 +481,7 @@ public class ThirdPersonController : MonoBehaviour
 
     public void StartShooting()
     {
-        if (shootingFrequenceSystem.IsStopped && !dead)
+        if (shootingFrequenceSystem.IsStopped && !dead && !won)
         {
             ShootProjectile();
             shootingFrequenceSystem.Resume();
@@ -501,7 +520,7 @@ public class ThirdPersonController : MonoBehaviour
 
     public void CheckForShootAgain()
     {
-        if (isShootingInputDown && !IsStunned && !dead)
+        if (isShootingInputDown && !IsStunned && !dead && !won)
             ShootProjectile();
         else
         {

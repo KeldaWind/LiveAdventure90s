@@ -17,6 +17,12 @@ public class OutOfFrame_UI : MonoBehaviour
         outOfFrameTimer.enabled = false;
     }
 
+    bool won = false;
+    public void Win()
+    {
+        won = true;
+    }
+
     [Header("Get Components")]
     public TextMeshProUGUI outOfFrameWarning;
     public TextMeshProUGUI outOfFrameTimer;
@@ -41,6 +47,9 @@ public class OutOfFrame_UI : MonoBehaviour
 
     void Update()
     {
+        if (won)
+            return;
+
         if (isHeroOutOfFrame)
         {
             if (GameManager.Instance.herosDirection.y > 0)

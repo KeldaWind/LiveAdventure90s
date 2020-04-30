@@ -269,7 +269,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '- Press any Button to Start -'
+  m_text: '- Press Start/Enter to Play-'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1ab0232d1a7a79c45aaaa9141c7241ea, type: 2}
   m_sharedMaterial: {fileID: 1594196205899266908, guid: 1ab0232d1a7a79c45aaaa9141c7241ea,
