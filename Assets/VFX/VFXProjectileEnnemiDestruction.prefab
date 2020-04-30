@@ -48,6 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   particlesToPlay:
   - {fileID: 8603232932933186041}
+  - {fileID: 1346155892377546180}
 --- !u!198 &8603232932933186041
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -123,7 +124,7 @@ ParticleSystem:
       m_RotationOrder: 4
   moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
-  scalingMode: 1
+  scalingMode: 0
   randomSeed: 0
   InitialModule:
     serializedVersion: 3
@@ -4935,7 +4936,7 @@ ParticleSystem:
       m_RotationOrder: 4
   moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
-  scalingMode: 1
+  scalingMode: 0
   randomSeed: 0
   InitialModule:
     serializedVersion: 3

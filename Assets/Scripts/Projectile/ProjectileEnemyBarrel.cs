@@ -210,6 +210,7 @@ public class ProjectileEnemyBarrel : ProjectileBase
     [SerializeField] string damagedFxTag = "PlaceHolder";
     [SerializeField] AudioManager.Sound damagedSound = AudioManager.Sound.H_ImpactShootEnemieProjectile;
     [SerializeField] AudioManager.Sound landingSound = AudioManager.Sound.E_EnnemyProjectileLanding;
+    [SerializeField] string destroyFxTag = "PlaceHolder";
 
     public void PlayDamagedFeedback()
     {
