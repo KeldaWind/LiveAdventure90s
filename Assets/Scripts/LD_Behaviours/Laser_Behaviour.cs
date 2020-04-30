@@ -94,14 +94,14 @@ public class Laser_Behaviour : MonoBehaviour
 
         //Physics.Raycast(startPos.transform.localPosition, direction, out hit, Mathf.Infinity, checkMask);
         Physics.Raycast(startPos.transform.position, direction, out hit, Mathf.Infinity, checkMask);
-        Debug.DrawRay(startPos.transform.localPosition, direction, Color.blue, 0.1f);
+        //Debug.DrawRay(startPos.transform.localPosition, direction, Color.blue, 0.1f);
 
         if (hit.collider != null)
         {
             impactPos = hit.point;
             //Debug.Log("Impact at : " + impactPos + " with gameobject : " + hit.collider.gameObject.name);
             lineRenderer.SetPosition(1, impactPos - transform.position);
-            Debug.DrawRay(impactPos, (Vector3.up + Vector3.right) * 100f, Color.red);
+            //Debug.DrawRay(impactPos, (Vector3.up + Vector3.right) * 100f, Color.red);
 
             magnitude = Vector3.Distance(startPos.transform.position, impactPos);
         }
